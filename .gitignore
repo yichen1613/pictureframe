@@ -35,3 +35,6 @@ proguard/
 
 # Windows files
 Thumbs.db
+
+# Ant file for Test module
+PictureFrameTest/ant.properties
