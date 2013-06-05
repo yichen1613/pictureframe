@@ -11,6 +11,7 @@ public class UserTable {
     public static final String COL_USERID = "uid";
     public static final String COL_NAME = "name";
     public static final String COL_PASSWORD = "password";
+    public static final String COL_EMAIL = "email";
     public static final String COL_IMG = "img";
 
     // SQL statement for database creation
@@ -20,6 +21,7 @@ public class UserTable {
             + COL_USERID + " INTEGER NOT NULL, "
             + COL_NAME + " TEXT NOT NULL, "
             + COL_PASSWORD + " TEXT NOT NULL, "
+            + COL_EMAIL + " TEXT NOT NULL, "
             + COL_IMG + " TEXT NOT NULL"
             + ");";
 
