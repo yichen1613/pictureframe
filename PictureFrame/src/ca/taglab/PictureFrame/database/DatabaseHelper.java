@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "user_table.db";
+    private static final String DATABASE_NAME = "PictureFrame.db";
     private static final int DATABASE_VERSION = 1;
 
     public DatabaseHelper(Context context) {
@@ -16,11 +16,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         UserTable.onCreate(db);
+        MessageTable.onCreate(db);
+        MessageTypeTable.onCreate(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         UserTable.onUpgrade(db, oldVersion, newVersion);
+        MessageTable.onUpgrade(db, oldVersion, newVersion);
+        MessageTypeTable.onUpgrade(db, oldVersion, newVersion);
     }
 
 }
