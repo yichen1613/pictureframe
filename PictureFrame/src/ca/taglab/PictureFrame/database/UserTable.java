@@ -8,7 +8,6 @@ public class UserTable {
     // Database table
     public static final String TABLE_NAME = "User";
     public static final String COL_ID = "_id";
-    public static final String COL_USERID = "uid";
     public static final String COL_NAME = "name";
     public static final String COL_PASSWORD = "password";
     public static final String COL_EMAIL = "email";
@@ -18,7 +17,6 @@ public class UserTable {
     private static final String CREATE_USER_TABLE =
             "CREATE TABLE " + TABLE_NAME + " ("
             + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + COL_USERID + " INTEGER NOT NULL, "
             + COL_NAME + " TEXT NOT NULL, "
             + COL_PASSWORD + " TEXT NOT NULL, "
             + COL_EMAIL + " TEXT NOT NULL, "

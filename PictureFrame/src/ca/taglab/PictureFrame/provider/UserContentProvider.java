@@ -19,28 +19,20 @@ public class UserContentProvider extends ContentProvider {
     // Used for the UriMatcher
     private static final int USERS = 1;
     private static final int USER_ID = 2;
-    private static final int USER_IMAGES = 3;
-    private static final int IMAGES = 4;
 
-    private static final String AUTHORITY = "ca.taglab.PictureFrame.provider";
+    public static final String AUTHORITY = "ca.taglab.PictureFrame.provider";
 
-    public static final Uri USERS_URI = Uri.parse("content://" + AUTHORITY + "/users");
-    public static final Uri IMAGES_URI = Uri.parse("content://" + AUTHORITY + "/users/img");
+    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/users");
 
-    //TODO: Add MIME types for USER_IMAGES, IMAGES, then add cases to getType().
-    // MIME type providing all users, a single user, all (unique) images, a single user's images
+    // MIME type providing all users, a single user
     public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/users";
     public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/users";
-    //public static final String CONTENT_IMAGES_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/users/img";
-    //public static final String CONTENT_USER_IMAGES_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/users/img";
 
-    // Construct a URI matcher to detect URIs referencing all users, a single user, all images, or a single user's images
+    // Construct a URI matcher to detect URIs referencing all users, a single user
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
     static {
         uriMatcher.addURI(AUTHORITY, "users", USERS);
         uriMatcher.addURI(AUTHORITY, "users/#", USER_ID);
-        uriMatcher.addURI(AUTHORITY, "users/#/img", USER_IMAGES);
-        uriMatcher.addURI(AUTHORITY, "users/img", IMAGES);
     }
 
     @Override
@@ -77,17 +69,7 @@ public class UserContentProvider extends ContentProvider {
                 break;
             case USER_ID:
                 String uid = uri.getLastPathSegment();
-                queryBuilder.appendWhere(UserTable.COL_USERID + "=" + uid);
-                break;
-            case USER_IMAGES:
-                String path = uri.getPath();
-                int firstSlash = path.indexOf("/");
-                int lastSlash = path.lastIndexOf("/");
-                String user_id = path.substring(firstSlash + 1, lastSlash);
-                queryBuilder.appendWhere(UserTable.COL_USERID + "=" + user_id);
-                break;
-            case IMAGES:
-                queryBuilder.setDistinct(true);
+                queryBuilder.appendWhere(UserTable.COL_ID + "=" + uid);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -110,10 +92,6 @@ public class UserContentProvider extends ContentProvider {
                 row_id = sqlDB.insert(UserTable.TABLE_NAME, null, values);
                 getContext().getContentResolver().notifyChange(uri, null);
                 return Uri.parse("users/" + user_id);
-            case USER_IMAGES:
-                row_id = sqlDB.insert(UserTable.TABLE_NAME, null, values);
-                getContext().getContentResolver().notifyChange(uri, null);
-                return Uri.parse("users/" + user_id + "/img");
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
@@ -130,10 +108,10 @@ public class UserContentProvider extends ContentProvider {
             case USER_ID:
                 String id = uri.getLastPathSegment();
                 if (TextUtils.isEmpty(selection)) {
-                    rowsDeleted = sqlDB.delete(UserTable.TABLE_NAME, UserTable.COL_USERID + "=" + id, null);
+                    rowsDeleted = sqlDB.delete(UserTable.TABLE_NAME, UserTable.COL_ID + "=" + id, null);
                 }
                 else {
-                    rowsDeleted = sqlDB.delete(UserTable.TABLE_NAME, UserTable.COL_USERID + "=" + id + " and " + selection, selectionArgs);
+                    rowsDeleted = sqlDB.delete(UserTable.TABLE_NAME, UserTable.COL_ID + "=" + id + " and " + selection, selectionArgs);
                 }
                 break;
             default:
@@ -154,10 +132,10 @@ public class UserContentProvider extends ContentProvider {
             case USER_ID:
                 String id = uri.getLastPathSegment();
                 if (TextUtils.isEmpty(selection)) {
-                    rowsUpdated = sqlDB.update(UserTable.TABLE_NAME, values, UserTable.COL_USERID + "=" + id, null);
+                    rowsUpdated = sqlDB.update(UserTable.TABLE_NAME, values, UserTable.COL_ID + "=" + id, null);
                 }
                 else {
-                    rowsUpdated = sqlDB.update(UserTable.TABLE_NAME, values, UserTable.COL_USERID + "=" + " and " + selection, selectionArgs);
+                    rowsUpdated = sqlDB.update(UserTable.TABLE_NAME, values, UserTable.COL_ID + "=" + " and " + selection, selectionArgs);
                 }
                 break;
             default:
