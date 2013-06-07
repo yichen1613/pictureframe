@@ -18,7 +18,7 @@ public class UserTable {
             "CREATE TABLE " + TABLE_NAME + " ("
             + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + COL_NAME + " TEXT NOT NULL, "
-            + COL_PASSWORD + " TEXT NOT NULL, "
+            + COL_PASSWORD + " TEXT, "
             + COL_EMAIL + " TEXT NOT NULL, "
             + COL_IMG + " TEXT NOT NULL"
             + ");";
