@@ -41,6 +41,11 @@ public class MyActivity extends Activity {
         startActivity(intent);
     }
 
+    public void startMailSenderActivity(View view) {
+        Intent intent = new Intent(this, MailSenderActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     public void onDestroy() {
         db.close();

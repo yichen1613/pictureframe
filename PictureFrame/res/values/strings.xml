@@ -19,6 +19,7 @@
     <!-- Titles -->
     <string name="app_name">PictureFrame</string>
     <string name="title_activity_message_history">Message History</string>
+    <string name="title_activity_mail_sender">Email Sender</string>
     <string name="title_crossfade">Simple Crossfade</string>
     <string name="title_card_flip">Card Flip</string>
     <string name="title_screen_slide">Screen Slide</string>

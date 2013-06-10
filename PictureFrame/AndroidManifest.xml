@@ -3,6 +3,7 @@
           package="ca.taglab.PictureFrame"
           android:versionCode="1"
           android:versionName="1.0">
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-sdk android:minSdkVersion="17"/>
     <application android:label="@string/app_name" android:icon="@drawable/ic_launcher">
         <activity android:name="MyActivity"
@@ -26,6 +27,12 @@
                   android:uiOptions="splitActionBarWhenNarrow">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value="ca.taglab.PictureFrame.MyActivity" />
+        </activity>
+        <activity android:name="ca.taglab.PictureFrame.MailSenderActivity"
+                  android:label="@string/title_activity_mail_sender"
+                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity">
+             <meta-data android:name="android.support.PARENT_ACTIVITY"
+                        android:value="ca.taglab.PictureFrame.MyActivity" />
         </activity>
         <provider android:name=".provider.UserContentProvider"
                   android:authorities="ca.taglab.PictureFrame.provider" >
