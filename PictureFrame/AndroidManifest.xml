@@ -20,6 +20,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ca.taglab.PictureFrame.MyActivity" />
         </activity>
+        <activity android:name="ca.taglab.PictureFrame.ScreenSlideActivity"
+                  android:label="@string/title_screen_slide"
+                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity"
+                  android:uiOptions="splitActionBarWhenNarrow">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                       android:value="ca.taglab.PictureFrame.MyActivity" />
+        </activity>
         <provider android:name=".provider.UserContentProvider"
                   android:authorities="ca.taglab.PictureFrame.provider" >
         </provider>
