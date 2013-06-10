@@ -4,16 +4,16 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
         >
-    <TextView
+    <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Hello World, MyActivity"
-            />
+            android:layout_marginTop="50dp"
+            android:text="Add image"
+            android:id="@+id/button" android:onClick="addImage"/>
     <Button android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Message History"
-            android:onClick="startMessageHistoryActivity"
-            />
+            android:onClick="startMessageHistoryActivity" />
 </LinearLayout>
 
