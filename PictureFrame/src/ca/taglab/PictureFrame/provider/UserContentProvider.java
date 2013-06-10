@@ -86,12 +86,11 @@ public class UserContentProvider extends ContentProvider {
     public Uri insert(Uri uri, ContentValues values) {
         SQLiteDatabase sqlDB = dbHelper.getWritableDatabase();
         long row_id = 0;
-        int user_id = values.getAsInteger("uid");
         switch (uriMatcher.match(uri)) {
             case USERS:
                 row_id = sqlDB.insert(UserTable.TABLE_NAME, null, values);
                 getContext().getContentResolver().notifyChange(uri, null);
-                return Uri.parse("users/" + user_id);
+                return Uri.parse("users/" + row_id);
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }

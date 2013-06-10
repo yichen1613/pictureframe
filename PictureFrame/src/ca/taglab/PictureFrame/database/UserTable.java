@@ -13,6 +13,13 @@ public class UserTable {
     public static final String COL_EMAIL = "email";
     public static final String COL_IMG = "img";
 
+    public static final String[] PROJECTION = {
+            COL_ID,
+            COL_NAME,
+            COL_EMAIL,
+            COL_IMG
+    };
+
     // SQL statement for database creation
     private static final String CREATE_USER_TABLE =
             "CREATE TABLE " + TABLE_NAME + " ("
