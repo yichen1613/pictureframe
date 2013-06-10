@@ -12,6 +12,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name="ca.taglab.PictureFrame.MessageHistoryActivity"
+                  android:label="@string/title_activity_message_history"
+                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity"
+                  android:theme="@style/Theme.CustomTranslucent">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.taglab.PictureFrame.MyActivity" />
+        </activity>
         <provider android:name=".provider.UserContentProvider"
                   android:authorities="ca.taglab.PictureFrame.provider" >
         </provider>
