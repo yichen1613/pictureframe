@@ -50,5 +50,6 @@ public class MyActivity extends Activity {
     @Override
     public void onDestroy() {
         db.close();
+        super.onDestroy();
     }
 }
