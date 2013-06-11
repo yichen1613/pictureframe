@@ -26,7 +26,7 @@
                 android:value="ca.taglab.PictureFrame.MyActivity" />
         </activity>
         <activity android:name="ca.taglab.PictureFrame.ScreenSlideActivity"
-                  android:label="@string/title_screen_slide"
+                  android:label="@string/title_view_gallery"
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity"
                   android:uiOptions="splitActionBarWhenNarrow">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
@@ -38,6 +38,9 @@
              <meta-data android:name="android.support.PARENT_ACTIVITY"
                         android:value="ca.taglab.PictureFrame.MyActivity" />
         </activity>
+        <activity android:name=".database.AddPicture"
+                  android:label="@string/title_add_picture"
+                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
         <provider android:name=".provider.UserContentProvider"
                   android:authorities="ca.taglab.PictureFrame.provider" >
         </provider>

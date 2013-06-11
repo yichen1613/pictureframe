@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-        >
-    <Button android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:text="Add image"
-            android:id="@+id/button" android:onClick="addImage"/>
-    <Button android:id="@+id/message_history_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Message History"
-            android:onClick="startMessageHistoryActivity" />
-    <Button android:id="@+id/email_sender_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Email Sender"
-            android:onClick="startMailSenderActivity" />
-</LinearLayout>
-
+<ListView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp" />
