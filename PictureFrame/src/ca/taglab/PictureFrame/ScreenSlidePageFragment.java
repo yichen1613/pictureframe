@@ -195,13 +195,23 @@ public class ScreenSlidePageFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == TAKE_PICTURE) {
-            try {
-                String photo_location = getLastImageId();
-                new SendEmailAsyncTask(mEmail, "PictureFrame: I have a photo for you", "", photo_location).execute();
-                Toast.makeText(getActivity(), "Photo stored at " + photo_location + " sent to: " + mEmail, Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                Log.e("SendEmailAsyncTask", e.getMessage(), e);
-                Toast.makeText(getActivity(), "Photo to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
+            if (resultCode == getActivity().RESULT_OK) {
+                // Image captured and saved
+                try {
+                    String photo_location = getLastImageId();
+                    new SendEmailAsyncTask(mEmail, "PictureFrame: I have a photo for you", "", photo_location).execute();
+                    Toast.makeText(getActivity(), "Photo stored at " + photo_location + " sent to: " + mEmail, Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Log.e("SendEmailAsyncTask", e.getMessage(), e);
+                    Toast.makeText(getActivity(), "Photo to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else if (resultCode == getActivity().RESULT_CANCELED) {
+                // User cancelled photo capture
+                Toast.makeText(getActivity(), "Photo capture was cancelled", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(getActivity(), "Photo capture failed", Toast.LENGTH_SHORT).show();
             }
         } else {
             // Failed
