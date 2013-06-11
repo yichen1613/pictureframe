@@ -16,14 +16,13 @@
 
 package ca.taglab.PictureFrame;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
+import ca.taglab.PictureFrame.adapter.CursorPagerAdapter;
 import ca.taglab.PictureFrame.database.UserTable;
 import ca.taglab.PictureFrame.provider.UserContentProvider;
 
@@ -79,6 +78,38 @@ public class ScreenSlideActivity extends FragmentActivity {
                 invalidateOptionsMenu();
             }
         });
+    }
+
+    public void videoClicked(View v) {
+        Toast.makeText(
+                getApplicationContext(),
+                "Video clicked",
+                Toast.LENGTH_SHORT
+        ).show();
+    }
+
+    public void audioClicked(View v) {
+        Toast.makeText(
+                getApplicationContext(),
+                "Audio clicked",
+                Toast.LENGTH_SHORT
+        ).show();
+    }
+
+    public void photoClicked(View v) {
+        Toast.makeText(
+                getApplicationContext(),
+                "Photo clicked",
+                Toast.LENGTH_SHORT
+        ).show();
+    }
+
+    public void waveClicked(View v) {
+        Toast.makeText(
+                getApplicationContext(),
+                "Wave clicked",
+                Toast.LENGTH_SHORT
+        ).show();
     }
 
 }

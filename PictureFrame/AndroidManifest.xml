@@ -28,7 +28,7 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value="ca.taglab.PictureFrame.MyActivity" />
         </activity>
-        <activity android:name="ca.taglab.PictureFrame.MailSenderActivity"
+        <activity android:name=".email.MailSenderActivity"
                   android:label="@string/title_activity_mail_sender"
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity">
              <meta-data android:name="android.support.PARENT_ACTIVITY"

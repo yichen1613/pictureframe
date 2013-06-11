@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import ca.taglab.PictureFrame.database.DatabaseHelper;
 import ca.taglab.PictureFrame.database.UserTable;
+import ca.taglab.PictureFrame.email.MailSenderActivity;
 import ca.taglab.PictureFrame.provider.UserContentProvider;
 
 public class MyActivity extends Activity {

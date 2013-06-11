@@ -16,11 +16,15 @@
 
 package ca.taglab.PictureFrame;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import ca.taglab.PictureFrame.database.UserTable;
@@ -51,6 +55,14 @@ public class ScreenSlidePageFragment extends Fragment {
      */
     private long mId;
 
+    private View mPhoto;
+    private View mVideo;
+    private View mAudio;
+    private View mWave;
+    private View mCancel;
+    private int mShortAnimationDuration;
+    private boolean optionsOpen;
+
     public ScreenSlidePageFragment() {
     }
 
@@ -69,22 +81,141 @@ public class ScreenSlidePageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         // Inflate the layout containing a title and body text.
-        ViewGroup rootView = (ViewGroup) inflater
+        final ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_screen_slide_page, container, false);
 
         ((TextView) rootView.findViewById(R.id.name)).setText(mName);
+        rootView.findViewById(R.id.control).getBackground().setAlpha(200);
+
+        optionsOpen = false;
+
+        mPhoto = rootView.findViewById(R.id.photo);
+        mVideo = rootView.findViewById(R.id.video);
+        mAudio = rootView.findViewById(R.id.audio);
+        mWave = rootView.findViewById(R.id.wave);
+        mCancel = rootView.findViewById(R.id.close);
+
+        mPhoto.getBackground().setAlpha(200);
+        mVideo.getBackground().setAlpha(200);
+        mAudio.getBackground().setAlpha(200);
+        mWave.getBackground().setAlpha(200);
+
+        mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(
-                        v.getContext().getApplicationContext(),
-                        "Clicked",
-                        Toast.LENGTH_SHORT
-                ).show();
+                if (!optionsOpen) showOptions();
+            }
+        });
+
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (optionsOpen) hideOptions();
             }
         });
 
         return rootView;
+    }
+
+
+    private void hideOptions() {
+        mPhoto.animate()
+                .alpha(0f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mPhoto.setVisibility(View.GONE);
+                    }
+                });
+
+        mVideo.animate()
+                .alpha(0f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mVideo.setVisibility(View.GONE);
+                    }
+                });
+
+        mAudio.animate()
+                .alpha(0f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mAudio.setVisibility(View.GONE);
+                    }
+                });
+
+        mWave.animate()
+                .alpha(0f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mWave.setVisibility(View.GONE);
+                    }
+                });
+
+        mCancel.animate()
+                .alpha(0f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mCancel.setVisibility(View.INVISIBLE);
+                    }
+                });
+
+        optionsOpen = false;
+    }
+
+
+    private void showOptions() {
+        mPhoto.setAlpha(0f);
+        mPhoto.setVisibility(View.VISIBLE);
+
+        mVideo.setAlpha(0f);
+        mVideo.setVisibility(View.VISIBLE);
+
+        mAudio.setAlpha(0f);
+        mAudio.setVisibility(View.VISIBLE);
+
+        mWave.setAlpha(0f);
+        mWave.setVisibility(View.VISIBLE);
+
+        mCancel.setAlpha(0f);
+        mCancel.setVisibility(View.VISIBLE);
+
+        mPhoto.animate()
+                .alpha(1f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(null);
+
+        mVideo.animate()
+                .alpha(1f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(null);
+
+        mAudio.animate()
+                .alpha(1f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(null);
+
+        mWave.animate()
+                .alpha(1f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(null);
+
+        mCancel.animate()
+                .alpha(1f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(null);
+
+        optionsOpen = true;
     }
 }
