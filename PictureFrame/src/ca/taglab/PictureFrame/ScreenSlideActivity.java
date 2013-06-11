@@ -80,36 +80,4 @@ public class ScreenSlideActivity extends FragmentActivity {
         });
     }
 
-    public void videoClicked(View v) {
-        Toast.makeText(
-                getApplicationContext(),
-                "Video clicked",
-                Toast.LENGTH_SHORT
-        ).show();
-    }
-
-    public void audioClicked(View v) {
-        Toast.makeText(
-                getApplicationContext(),
-                "Audio clicked",
-                Toast.LENGTH_SHORT
-        ).show();
-    }
-
-    public void photoClicked(View v) {
-        Toast.makeText(
-                getApplicationContext(),
-                "Photo clicked",
-                Toast.LENGTH_SHORT
-        ).show();
-    }
-
-    public void waveClicked(View v) {
-        Toast.makeText(
-                getApplicationContext(),
-                "Wave clicked",
-                Toast.LENGTH_SHORT
-        ).show();
-    }
-
 }
