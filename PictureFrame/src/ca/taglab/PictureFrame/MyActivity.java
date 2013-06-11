@@ -58,14 +58,8 @@ public class MyActivity extends ListActivity {
     }
 
     @Override
-<<<<<<< HEAD
     protected void onListItemClick(ListView listView, View view, int position, long id) {
         // Launch the activity associated with this list position
         startActivity(new Intent(MyActivity.this, mSamples[position].activityClass));
-=======
-    public void onDestroy() {
-        db.close();
-        super.onDestroy();
->>>>>>> 994a6b7b6e5f4334134211c8fde7b142d26d21cb
     }
 }

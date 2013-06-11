@@ -18,6 +18,12 @@ package ca.taglab.PictureFrame;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -83,6 +89,9 @@ public class ScreenSlidePageFragment extends Fragment {
         // Inflate the layout containing a title and body text.
         final ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_screen_slide_page, container, false);
+
+        Bitmap picture = BitmapFactory.decodeFile(mImgPath);
+        rootView.setBackground(new BitmapDrawable(getResources(), picture));
 
         ((TextView) rootView.findViewById(R.id.name)).setText(mName);
         rootView.findViewById(R.id.control).getBackground().setAlpha(200);
