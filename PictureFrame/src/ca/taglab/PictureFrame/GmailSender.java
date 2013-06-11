@@ -2,12 +2,12 @@ package ca.taglab.PictureFrame;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.mail.Message;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
+import javax.activation.FileDataSource;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +20,7 @@ public class GmailSender extends javax.mail.Authenticator {
     private String user;
     private String password;
     private Session session;
+    private Multipart _multipart;
 
     static {
         Security.addProvider(new ca.taglab.PictureFrame.provider.JSSEProvider());
@@ -41,27 +42,41 @@ public class GmailSender extends javax.mail.Authenticator {
         props.setProperty("mail.smtp.quitwait", "false");
 
         session = Session.getDefaultInstance(props, this);
+        _multipart = new MimeMultipart();
     }
 
     protected PasswordAuthentication getPasswordAuthentication() {
         return new PasswordAuthentication(user, password);
     }
 
-    public synchronized void sendMail(String subject, String body, String sender, String recipients) throws Exception {
-        try{
-            MimeMessage message = new MimeMessage(session);
-            DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
-            message.setSender(new InternetAddress(sender));
-            message.setSubject(subject);
-            message.setDataHandler(handler);
-            if (recipients.indexOf(',') > 0)
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
-            else
-                message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
-            Transport.send(message);
-        }catch(Exception e){
-
+    public synchronized void sendMail(String subject, String body, String sender, String recipients, String attachment) throws Exception {
+        MimeMessage message = new MimeMessage(session);
+        DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
+        message.setSender(new InternetAddress(sender));
+        message.setSubject(subject);
+        message.setDataHandler(handler);
+        if (!attachment.isEmpty()) {
+            this.addAttachment(attachment);
+            message.setContent(_multipart);
         }
+        if (recipients.indexOf(',') > 0)
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
+        else
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
+        Transport.send(message);
+    }
+
+    public void addAttachment(String filename) throws Exception {
+        BodyPart messageBodyPart = new MimeBodyPart();
+        DataSource source = new FileDataSource(filename);
+        messageBodyPart.setDataHandler(new DataHandler(source));
+        messageBodyPart.setFileName(filename);
+
+        _multipart.addBodyPart(messageBodyPart);
+
+        // BodyPart messageBodyPart2 = new MimeBodyPart();
+        // messageBodyPart2.setText(subject);
+        // _multipart.addBodyPart(messageBodyPart2);
     }
 
     public class ByteArrayDataSource implements DataSource {

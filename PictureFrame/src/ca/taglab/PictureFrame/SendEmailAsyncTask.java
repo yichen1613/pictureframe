@@ -20,25 +20,20 @@ public class SendEmailAsyncTask extends AsyncTask<Void, Void, Boolean> {
         this.subject = subject;
         this.body = body;
         this.attachment_location = attachment_location;
-//        String[] toArr = { "anselina.chia@gmail.com"};
-//        m.setTo(toArr);
-//        m.setFrom("from mail@gmail.com");
-//        m.setSubject("Email from Android");
-//        m.setBody("body.");
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
         if (BuildConfig.DEBUG) Log.v(SendEmailAsyncTask.class.getName(), "doInBackground()");
         try {
-            sender.sendMail(this.subject, this.body, "blair.intouch@gmail.com", this.recipients);
+            sender.sendMail(this.subject, this.body, "blair.intouch@gmail.com", this.recipients, this.attachment_location);
             return true;
         } catch (AuthenticationFailedException e) {
             Log.e(SendEmailAsyncTask.class.getName(), "Bad account details");
             e.printStackTrace();
             return false;
         } catch (MessagingException e) {
-            Log.e(SendEmailAsyncTask.class.getName(), "failed");
+            Log.e(SendEmailAsyncTask.class.getName(), "Message to " + this.recipients + " failed");
             e.printStackTrace();
             return false;
         } catch (Exception e) {

@@ -18,7 +18,11 @@ public class MailSenderActivity extends Activity {
         send.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 try {
-                    new SendEmailAsyncTask("anselina.chia@gmail.com", "PictureFrame: I'm thinking of you", "This is the body text", "/sdcard/1.jpg").execute();
+                    // To send an attachment (the body of the email will be empty)
+                    new SendEmailAsyncTask("anselina.chia@gmail.com", "PictureFrame: You have a new image", "", "/sdcard/Attachments/Untitled-1.jpg").execute();
+
+                    // To send a wave (set param attachment_location as an empty string)
+                    //new SendEmailAsyncTask("anselina.chia@gmail.com", "PictureFrame: I'm thinking of you", "This is the body text", "").execute();
                 } catch (Exception e) {
                     Log.e("SendMail", e.getMessage(), e);
                 }
