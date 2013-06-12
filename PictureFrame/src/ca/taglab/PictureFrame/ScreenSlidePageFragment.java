@@ -337,4 +337,9 @@ public class ScreenSlidePageFragment extends Fragment {
 
         optionsOpen = true;
     }
+
+
+    private void messageSent() {
+
+    }
 }

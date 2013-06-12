@@ -17,8 +17,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/ic_launcher" >
+    android:layout_height="match_parent" >
 
     <LinearLayout
             android:id="@+id/control"
@@ -49,7 +48,7 @@
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/content_email"
+                android:src="@drawable/mail_inactive"
                 android:contentDescription="@string/app_name" />
 
     </LinearLayout>
@@ -60,7 +59,7 @@
         android:layout_height="297dp"
         android:src="@drawable/video"
         android:layout_alignParentLeft="true"
-        android:background="@android:color/holo_red_light"
+        android:background="@drawable/red"
         android:visibility="gone"
         android:onClick="videoClicked"
         android:contentDescription="@string/app_name" />
@@ -71,7 +70,7 @@
         android:layout_height="297dp"
         android:layout_alignParentRight="true"
         android:src="@drawable/camera"
-        android:background="@android:color/holo_blue_light"
+        android:background="@drawable/blue"
         android:visibility="gone"
         android:onClick="photoClicked"
         android:contentDescription="@string/app_name" />
@@ -82,7 +81,7 @@
         android:layout_height="297dp"
         android:layout_above="@id/control"
         android:src="@drawable/microphone"
-        android:background="@android:color/holo_green_light"
+        android:background="@drawable/green"
         android:visibility="gone"
         android:onClick="audioClicked"
         android:contentDescription="@string/app_name" />
@@ -94,7 +93,7 @@
         android:layout_above="@id/control"
         android:layout_alignParentRight="true"
         android:src="@drawable/wave"
-        android:background="@android:color/holo_orange_light"
+        android:background="@drawable/orange"
         android:visibility="gone"
         android:onClick="waveClicked"
         android:contentDescription="@string/app_name" />
