@@ -37,8 +37,6 @@ import android.widget.Toast;
 import ca.taglab.PictureFrame.database.UserTable;
 import ca.taglab.PictureFrame.email.SendEmailAsyncTask;
 
-import java.io.File;
-
 /**
  * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
  * the page number, along with some dummy text.
@@ -73,8 +71,12 @@ public class ScreenSlidePageFragment extends Fragment {
     private int mShortAnimationDuration;
     private boolean optionsOpen;
 
-    private static final int TAKE_PICTURE = 100;
+    private static final int CAPTURE_PICTURE = 100;
+    private static final int CAPTURE_VIDEO = 110;
+    private static final int CAPTURE_AUDIO = 120;
     Uri mCapturedImageURI;
+    Uri mCapturedVideoURI;
+    Uri mCapturedAudioURI;
 
     public ScreenSlidePageFragment() {
     }
@@ -117,7 +119,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);
-                    startActivityForResult(intent, TAKE_PICTURE);
+                    startActivityForResult(intent, CAPTURE_PICTURE);
                 } catch (Exception e) {
                     Log.e("ScreenSlidePageFragment", "Camera intent failed");
                 }
@@ -129,11 +131,16 @@ public class ScreenSlidePageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    new SendEmailAsyncTask(mEmail, "PictureFrame: I have a video message for you", "", "").execute();
-                    Toast.makeText(getActivity(), "Video sent to: " + mEmail, Toast.LENGTH_SHORT).show();
+                    String filename = String.valueOf(System.currentTimeMillis()) + ".3gp";
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Video.Media.TITLE, filename);
+                    mCapturedVideoURI = getActivity().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+
+                    Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedVideoURI);
+                    startActivityForResult(intent, CAPTURE_VIDEO);
                 } catch (Exception e) {
-                    Log.e("SendEmailAsyncTask", e.getMessage(), e);
-                    Toast.makeText(getActivity(), "Video to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
+                    Log.e("ScreenSlidePageFragment", "Video intent failed");
                 }
             }
         });
@@ -142,13 +149,18 @@ public class ScreenSlidePageFragment extends Fragment {
         mAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    new SendEmailAsyncTask(mEmail, "PictureFrame: I have an audio message for you", "", "").execute();
-                    Toast.makeText(getActivity(), "Audio sent to: " + mEmail, Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    Log.e("SendEmailAsyncTask", e.getMessage(), e);
-                    Toast.makeText(getActivity(), "Audio to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
-                }
+//                try {
+//                    String filename = String.valueOf(System.currentTimeMillis()) + ".wav";
+//                    ContentValues values = new ContentValues();
+//                    values.put(MediaStore.Audio.Media.TITLE, filename);
+//                    mCapturedAudioURI = getActivity().getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
+//
+//                    Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedAudioURI);
+//                    startActivityForResult(intent, CAPTURE_AUDIO);
+//                } catch (Exception e) {
+//                    Log.e("ScreenSlidePageFragment", "Audio recorder intent failed");
+//                }
             }
         });
 
@@ -194,50 +206,129 @@ public class ScreenSlidePageFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == TAKE_PICTURE) {
-            if (resultCode == getActivity().RESULT_OK) {
-                // Image captured and saved
-                try {
-                    String photo_location = getLastImageId();
-                    new SendEmailAsyncTask(mEmail, "PictureFrame: I have a photo for you", "", photo_location).execute();
-                    Toast.makeText(getActivity(), "Photo stored at " + photo_location + " sent to: " + mEmail, Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    Log.e("SendEmailAsyncTask", e.getMessage(), e);
-                    Toast.makeText(getActivity(), "Photo to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
+        switch (requestCode) {
+            case CAPTURE_PICTURE:
+                if (resultCode == getActivity().RESULT_OK) {
+                    // Image captured and saved
+                    try {
+                        String photo_location = getLastImageId();
+                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have a photo for you", "", photo_location).execute();
+                        Toast.makeText(getActivity(), "Photo stored at " + photo_location + " sent to: " + mEmail, Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Log.e("SendEmailAsyncTask", e.getMessage(), e);
+                        Toast.makeText(getActivity(), "Photo to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (resultCode == getActivity().RESULT_CANCELED) {
+                    // User cancelled photo capture
+                    Toast.makeText(getActivity(), "Photo capture was cancelled", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Photo capture failed", Toast.LENGTH_SHORT).show();
                 }
-            }
-            else if (resultCode == getActivity().RESULT_CANCELED) {
-                // User cancelled photo capture
-                Toast.makeText(getActivity(), "Photo capture was cancelled", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(getActivity(), "Photo capture failed", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            // Failed
+                break;
+
+            case CAPTURE_VIDEO:
+                if (resultCode == getActivity().RESULT_OK) {
+                    // Video captured and saved
+                    try {
+                        String video_location = getLastVideoId();
+                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have a video message for you", "", video_location).execute();
+                        Toast.makeText(getActivity(), "Video sent to: " + mEmail, Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Log.e("SendEmailAsyncTask", e.getMessage(), e);
+                        Toast.makeText(getActivity(), "Video to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (resultCode == getActivity().RESULT_CANCELED) {
+                    // User cancelled video capture
+                    Toast.makeText(getActivity(), "Video capture was cancelled", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Video capture failed", Toast.LENGTH_SHORT).show();
+                }
+                break;
+
+//            case CAPTURE_AUDIO:
+//                if (resultCode == getActivity().RESULT_OK) {
+//                    // Audio captured and saved
+//                    try {
+//                        String audio_location = getLastAudioId();
+//                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have an audio message for you", "", audio_location).execute();
+//                        Toast.makeText(getActivity(), "Audio sent to: " + mEmail, Toast.LENGTH_SHORT).show();
+//                    } catch (Exception e) {
+//                        Log.e("SendEmailAsyncTask", e.getMessage(), e);
+//                        Toast.makeText(getActivity(), "Audio to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
+//                    }
+//                } else if (resultCode == getActivity().RESULT_CANCELED) {
+//                    // User cancelled audio capture
+//                    Toast.makeText(getActivity(), "Audio capture was cancelled", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(getActivity(), "Audio capture failed", Toast.LENGTH_SHORT).show();
+//                }
+//                break;
+
+            default:
+                Log.e("ScreenSlidePageFragment", "Intent to start an activity failed");
+                break;
         }
     }
 
     /**
-     * Get the last image filepath from the media store
+     * Get the last image file path from the media store
      * @return
      */
-    private String getLastImageId(){
+    private String getLastImageId() {
         final String[] imageColumns = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DATA };
         final String imageOrderBy = MediaStore.Images.Media._ID+" DESC";
         Cursor imageCursor = getActivity().getContentResolver().query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, imageColumns, null, null, imageOrderBy);
-        if(imageCursor.moveToFirst()){
+        if (imageCursor.moveToFirst()) {
             int id = imageCursor.getInt(imageCursor.getColumnIndex(MediaStore.Images.Media._ID));
             String fullPath = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DATA));
             Log.d("ScreenSlidePageFragment", "getLastImageId::id " + id);
             Log.d("ScreenSlidePageFragment", "getLastImageId::path " + fullPath);
             imageCursor.close();
             return fullPath;
-        }else{
+        } else {
             return "";
         }
     }
 
+    /**
+     * Get the last video file path from the media store
+     * @return
+     */
+    private String getLastVideoId() {
+        final String[] videoColumns = { MediaStore.Video.Media._ID, MediaStore.Video.Media.DATA };
+        final String videoOrderBy = MediaStore.Video.Media._ID+" DESC";
+        Cursor cursor = getActivity().getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColumns, null, null, videoOrderBy);
+        if (cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID));
+            String fullPath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+            Log.d("ScreenSlidePageFragment", "getLastVideoId::id " + id);
+            Log.d("ScreenSlidePageFragment", "getLastVideoId::path " + fullPath);
+            cursor.close();
+            return fullPath;
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * Get the last audio file path from the media store
+     * @return
+     */
+//    private String getLastAudioId(){
+//        final String[] audioColumns = { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA };
+//        final String audioOrderBy = MediaStore.Audio.Media._ID+" DESC";
+//        Cursor cursor = getActivity().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, audioColumns, null, null, audioOrderBy);
+//        if(cursor.moveToFirst()){
+//            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+//            String fullPath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+//            Log.d("ScreenSlidePageFragment", "getLastAudioId::id " + id);
+//            Log.d("ScreenSlidePageFragment", "getLastAudioId::path " + fullPath);
+//            cursor.close();
+//            return fullPath;
+//        }else{
+//            return "";
+//        }
+//    }
 
     private void hideOptions() {
         mPhoto.animate()
