@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <drawable name="light_red">#FF5F5F</drawable>
+    <drawable name="dark_red">#CC0000</drawable>
+
+
+    <drawable name="light_green">#A8D324</drawable>
+    <drawable name="dark_green">#669900</drawable>
+
+    <drawable name="light_blue">#50C0E9</drawable>
+    <drawable name="dark_blue">#0064CC</drawable>
+
+    <drawable name="light_orange">#FFC641</drawable>
+    <drawable name="dark_orange">#FF8A00</drawable>
+
+</resources>
