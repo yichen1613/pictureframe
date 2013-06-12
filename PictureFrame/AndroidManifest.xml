@@ -32,12 +32,6 @@
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                        android:value="ca.taglab.PictureFrame.MyActivity" />
         </activity>
-        <activity android:name=".email.MailSenderActivity"
-                  android:label="@string/title_activity_mail_sender"
-                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity">
-             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                        android:value="ca.taglab.PictureFrame.MyActivity" />
-        </activity>
         <activity android:name=".database.AddPicture"
                   android:label="@string/title_add_picture"
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />

@@ -19,7 +19,6 @@
     <!-- Titles -->
     <string name="app_name">PictureFrame</string>
     <string name="title_activity_message_history">Message History</string>
-    <string name="title_activity_mail_sender">Email Sender</string>
     <string name="title_add_picture">Add picture</string>
     <string name="title_view_gallery">View picture frame</string>
     <string name="title_log_in">Email login</string>

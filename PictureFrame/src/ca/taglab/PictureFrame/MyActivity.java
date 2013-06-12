@@ -2,7 +2,6 @@ package ca.taglab.PictureFrame;
 
 import android.app.Activity;
 import android.app.ListActivity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,9 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import ca.taglab.PictureFrame.database.AddPicture;
 import ca.taglab.PictureFrame.database.DatabaseHelper;
-import ca.taglab.PictureFrame.database.UserTable;
-import ca.taglab.PictureFrame.email.MailSenderActivity;
-import ca.taglab.PictureFrame.provider.UserContentProvider;
 
 public class MyActivity extends ListActivity {
     private static Sample[] mSamples;
@@ -45,7 +41,6 @@ public class MyActivity extends ListActivity {
         mSamples = new Sample[] {
                 //new Sample(R.string.title_log_in, )
                 new Sample(R.string.title_add_picture, AddPicture.class),
-                new Sample(R.string.title_activity_mail_sender, MailSenderActivity.class),
                 new Sample(R.string.title_activity_message_history, MessageHistoryActivity.class),
                 new Sample(R.string.title_view_gallery, ScreenSlideActivity.class)
         };
