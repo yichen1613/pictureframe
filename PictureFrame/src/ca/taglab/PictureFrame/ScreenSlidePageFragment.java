@@ -33,7 +33,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import ca.taglab.PictureFrame.database.UserTable;
 import ca.taglab.PictureFrame.email.SendEmailAsyncTask;
 
@@ -73,10 +72,8 @@ public class ScreenSlidePageFragment extends Fragment {
 
     private static final int CAPTURE_PICTURE = 100;
     private static final int CAPTURE_VIDEO = 110;
-    private static final int CAPTURE_AUDIO = 120;
     Uri mCapturedImageURI;
     Uri mCapturedVideoURI;
-    Uri mCapturedAudioURI;
 
     public ScreenSlidePageFragment() {
     }
@@ -149,18 +146,7 @@ public class ScreenSlidePageFragment extends Fragment {
         mAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                try {
-//                    String filename = String.valueOf(System.currentTimeMillis()) + ".wav";
-//                    ContentValues values = new ContentValues();
-//                    values.put(MediaStore.Audio.Media.TITLE, filename);
-//                    mCapturedAudioURI = getActivity().getContentResolver().insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, values);
-//
-//                    Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedAudioURI);
-//                    startActivityForResult(intent, CAPTURE_AUDIO);
-//                } catch (Exception e) {
-//                    Log.e("ScreenSlidePageFragment", "Audio recorder intent failed");
-//                }
+                // nothing
             }
         });
 
@@ -170,10 +156,10 @@ public class ScreenSlidePageFragment extends Fragment {
             public void onClick(View v) {
                 try {
                     new SendEmailAsyncTask(mEmail, "PictureFrame: I'm thinking of you", "Wave sent via PictureFrame", "").execute();
-                    Toast.makeText(getActivity(), "Wave sent to: " + mEmail, Toast.LENGTH_SHORT).show();
+                    // Wave sent to: mEmail
                 } catch (Exception e) {
                     Log.e("SendEmailAsyncTask", e.getMessage(), e);
-                    Toast.makeText(getActivity(), "Wave to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
+                    // Wave to mEmail failed
                 }
             }
         });
@@ -213,16 +199,16 @@ public class ScreenSlidePageFragment extends Fragment {
                     try {
                         String photo_location = getLastImageId();
                         new SendEmailAsyncTask(mEmail, "PictureFrame: I have a photo for you", "", photo_location).execute();
-                        Toast.makeText(getActivity(), "Photo stored at " + photo_location + " sent to: " + mEmail, Toast.LENGTH_SHORT).show();
+                        // Photo stored at photo_location sent to: mEmail
                     } catch (Exception e) {
                         Log.e("SendEmailAsyncTask", e.getMessage(), e);
-                        Toast.makeText(getActivity(), "Photo to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
+                        // Photo to mEmail failed
                     }
                 } else if (resultCode == getActivity().RESULT_CANCELED) {
                     // User cancelled photo capture
-                    Toast.makeText(getActivity(), "Photo capture was cancelled", Toast.LENGTH_SHORT).show();
+
                 } else {
-                    Toast.makeText(getActivity(), "Photo capture failed", Toast.LENGTH_SHORT).show();
+                    // Photo capture failed
                 }
                 break;
 
@@ -232,37 +218,17 @@ public class ScreenSlidePageFragment extends Fragment {
                     try {
                         String video_location = getLastVideoId();
                         new SendEmailAsyncTask(mEmail, "PictureFrame: I have a video message for you", "", video_location).execute();
-                        Toast.makeText(getActivity(), "Video sent to: " + mEmail, Toast.LENGTH_SHORT).show();
+                        // Video sent to mEmail
                     } catch (Exception e) {
                         Log.e("SendEmailAsyncTask", e.getMessage(), e);
-                        Toast.makeText(getActivity(), "Video to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
+                        // Video to mEmail failed
                     }
                 } else if (resultCode == getActivity().RESULT_CANCELED) {
                     // User cancelled video capture
-                    Toast.makeText(getActivity(), "Video capture was cancelled", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getActivity(), "Video capture failed", Toast.LENGTH_SHORT).show();
+                    // Video capture failed
                 }
                 break;
-
-//            case CAPTURE_AUDIO:
-//                if (resultCode == getActivity().RESULT_OK) {
-//                    // Audio captured and saved
-//                    try {
-//                        String audio_location = getLastAudioId();
-//                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have an audio message for you", "", audio_location).execute();
-//                        Toast.makeText(getActivity(), "Audio sent to: " + mEmail, Toast.LENGTH_SHORT).show();
-//                    } catch (Exception e) {
-//                        Log.e("SendEmailAsyncTask", e.getMessage(), e);
-//                        Toast.makeText(getActivity(), "Audio to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
-//                    }
-//                } else if (resultCode == getActivity().RESULT_CANCELED) {
-//                    // User cancelled audio capture
-//                    Toast.makeText(getActivity(), "Audio capture was cancelled", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    Toast.makeText(getActivity(), "Audio capture failed", Toast.LENGTH_SHORT).show();
-//                }
-//                break;
 
             default:
                 Log.e("ScreenSlidePageFragment", "Intent to start an activity failed");
@@ -310,25 +276,6 @@ public class ScreenSlidePageFragment extends Fragment {
         }
     }
 
-    /**
-     * Get the last audio file path from the media store
-     * @return
-     */
-//    private String getLastAudioId(){
-//        final String[] audioColumns = { MediaStore.Audio.Media._ID, MediaStore.Audio.Media.DATA };
-//        final String audioOrderBy = MediaStore.Audio.Media._ID+" DESC";
-//        Cursor cursor = getActivity().getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, audioColumns, null, null, audioOrderBy);
-//        if(cursor.moveToFirst()){
-//            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-//            String fullPath = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-//            Log.d("ScreenSlidePageFragment", "getLastAudioId::id " + id);
-//            Log.d("ScreenSlidePageFragment", "getLastAudioId::path " + fullPath);
-//            cursor.close();
-//            return fullPath;
-//        }else{
-//            return "";
-//        }
-//    }
 
     private void hideOptions() {
         mPhoto.animate()
