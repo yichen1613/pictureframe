@@ -35,7 +35,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import ca.taglab.PictureFrame.database.UserTable;
 import ca.taglab.PictureFrame.email.SendEmailAsyncTask;
 
@@ -73,10 +72,8 @@ public class ScreenSlidePageFragment extends Fragment {
 
     private static final int CAPTURE_PICTURE = 100;
     private static final int CAPTURE_VIDEO = 110;
-    private static final int CAPTURE_AUDIO = 120;
     Uri mCapturedImageURI;
     Uri mCapturedVideoURI;
-    Uri mCapturedAudioURI;
 
     public ScreenSlidePageFragment() {
     }
@@ -152,10 +149,14 @@ public class ScreenSlidePageFragment extends Fragment {
         mAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+<<<<<<< HEAD
                 Intent intent = new Intent(getActivity(), MessageHistoryActivity.class);
                 startActivity(intent);
                 hideOptions();
                 messageSent(v);
+=======
+                // nothing
+>>>>>>> a2f8aa08e204c89cf07c1a6855233c0a195e6848
             }
         });
 
@@ -165,12 +166,19 @@ public class ScreenSlidePageFragment extends Fragment {
             public void onClick(View v) {
                 try {
                     new SendEmailAsyncTask(mEmail, "PictureFrame: I'm thinking of you", "Wave sent via PictureFrame", "").execute();
+<<<<<<< HEAD
                     //Toast.makeText(getActivity(), "Wave sent to: " + mEmail, Toast.LENGTH_SHORT).show();
                     hideOptions();
                     messageSent(v);
                 } catch (Exception e) {
                     Log.e("SendEmailAsyncTask", e.getMessage(), e);
                     //Toast.makeText(getActivity(), "Wave to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
+=======
+                    // Wave sent to: mEmail
+                } catch (Exception e) {
+                    Log.e("SendEmailAsyncTask", e.getMessage(), e);
+                    // Wave to mEmail failed
+>>>>>>> a2f8aa08e204c89cf07c1a6855233c0a195e6848
                 }
             }
         });
@@ -212,17 +220,30 @@ public class ScreenSlidePageFragment extends Fragment {
                     try {
                         String photo_location = getLastImageId();
                         new SendEmailAsyncTask(mEmail, "PictureFrame: I have a photo for you", "", photo_location).execute();
+<<<<<<< HEAD
                         messageSent(mPhoto);
                         //Toast.makeText(getActivity(), "Photo stored at " + photo_location + " sent to: " + mEmail, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         Log.e("SendEmailAsyncTask", e.getMessage(), e);
                         //Toast.makeText(getActivity(), "Photo to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
+=======
+                        // Photo stored at photo_location sent to: mEmail
+                    } catch (Exception e) {
+                        Log.e("SendEmailAsyncTask", e.getMessage(), e);
+                        // Photo to mEmail failed
+>>>>>>> a2f8aa08e204c89cf07c1a6855233c0a195e6848
                     }
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // User cancelled photo capture
+<<<<<<< HEAD
                     //Toast.makeText(getActivity(), "Photo capture was cancelled", Toast.LENGTH_SHORT).show();
                 } else {
                     //Toast.makeText(getActivity(), "Photo capture failed", Toast.LENGTH_SHORT).show();
+=======
+
+                } else {
+                    // Photo capture failed
+>>>>>>> a2f8aa08e204c89cf07c1a6855233c0a195e6848
                 }
                 break;
 
@@ -232,17 +253,29 @@ public class ScreenSlidePageFragment extends Fragment {
                     try {
                         String video_location = getLastVideoId();
                         new SendEmailAsyncTask(mEmail, "PictureFrame: I have a video message for you", "", video_location).execute();
+<<<<<<< HEAD
                         messageSent(mVideo);
                         //Toast.makeText(getActivity(), "Video sent to: " + mEmail, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         Log.e("SendEmailAsyncTask", e.getMessage(), e);
                         //Toast.makeText(getActivity(), "Video to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
+=======
+                        // Video sent to mEmail
+                    } catch (Exception e) {
+                        Log.e("SendEmailAsyncTask", e.getMessage(), e);
+                        // Video to mEmail failed
+>>>>>>> a2f8aa08e204c89cf07c1a6855233c0a195e6848
                     }
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // User cancelled video capture
+<<<<<<< HEAD
                    // Toast.makeText(getActivity(), "Video capture was cancelled", Toast.LENGTH_SHORT).show();
                 } else {
                    // Toast.makeText(getActivity(), "Video capture failed", Toast.LENGTH_SHORT).show();
+=======
+                } else {
+                    // Video capture failed
+>>>>>>> a2f8aa08e204c89cf07c1a6855233c0a195e6848
                 }
                 break;
 

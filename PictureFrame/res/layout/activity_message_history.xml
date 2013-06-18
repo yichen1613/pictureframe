@@ -1,8 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:padding="10dp"
-          android:textSize="20sp" >
-</TextView>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+    <ListView android:id="@android:id/list"
+              android:layout_height="590dp"
+              android:layout_width="fill_parent"
+              android:divider="#57A5FF"
+              android:dividerHeight="4px" />
+
+    <LinearLayout
+            android:id="@+id/control"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true" >
+
+        <ImageView
+                android:id="@+id/close"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/cancel"
+                android:visibility="invisible"
+                android:contentDescription="@string/app_name" />
+
+        <TextView
+                android:id="@+id/name"
+                android:layout_width="1050dp"
+                android:layout_height="wrap_content"
+                android:textSize="100sp"
+                android:gravity="center" />
+
+        <ImageView
+                android:id="@+id/msg"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/mail_inactive"
+                android:contentDescription="@string/app_name" />
+
+    </LinearLayout>
+
+</RelativeLayout>
