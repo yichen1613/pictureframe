@@ -1,11 +1,13 @@
 package ca.taglab.PictureFrame;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
+import ca.taglab.PictureFrame.adapter.MobileArrayAdapter;
 
 public class MessageHistoryActivity extends ListActivity {
 
@@ -34,21 +36,17 @@ public class MessageHistoryActivity extends ListActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_message_history);
 
-        setListAdapter(new ArrayAdapter<String>(this, R.layout.activity_message_history, MESSAGES));
+        Context context = getApplicationContext();
 
-        ListView listView = getListView();
-        listView.setTextFilterEnabled(true);
+        setListAdapter(new MobileArrayAdapter(context, R.layout.list_message_history, MESSAGES));
+    }
 
-        // Change colour of the divider line
-        listView.setDivider(new ColorDrawable(Color.parseColor("#57A5FF")));
-        listView.setDividerHeight(4);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(), ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
-            }
-        });
+    @Override
+    protected void onListItemClick(ListView l, View v, int position, long id) {
+        // get selected items
+        String selectedValue = (String) getListAdapter().getItem(position);
+        Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
     }
 }
