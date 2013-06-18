@@ -80,7 +80,7 @@
         android:layout_width="640dp"
         android:layout_height="297dp"
         android:layout_above="@id/control"
-        android:src="@drawable/microphone"
+        android:src="@drawable/mail_normal"
         android:background="@drawable/green"
         android:visibility="gone"
         android:onClick="audioClicked"
@@ -97,5 +97,20 @@
         android:visibility="gone"
         android:onClick="waveClicked"
         android:contentDescription="@string/app_name" />
+
+    <LinearLayout
+        android:layout_height="600dp"
+        android:layout_width="match_parent"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/confirm"
+            android:layout_width="500dp"
+            android:layout_height="500dp"
+            android:visibility="gone"
+            android:src="@drawable/confirm_orange"
+            android:contentDescription="@string/app_name" />
+
+    </LinearLayout>
 
 </RelativeLayout>
