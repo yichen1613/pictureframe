@@ -41,7 +41,6 @@ public class MyActivity extends ListActivity {
         mSamples = new Sample[] {
                 //new Sample(R.string.title_log_in, )
                 new Sample(R.string.title_add_picture, AddPicture.class),
-                new Sample(R.string.title_activity_message_history, MessageHistoryActivity.class),
                 new Sample(R.string.title_view_gallery, ScreenSlideActivity.class)
         };
 

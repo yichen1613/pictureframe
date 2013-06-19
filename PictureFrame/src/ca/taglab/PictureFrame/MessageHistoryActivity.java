@@ -70,7 +70,6 @@ public class MessageHistoryActivity extends ListActivity {
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        //mCancel.setVisibility(View.INVISIBLE);
                         finish();
                     }
                 });
