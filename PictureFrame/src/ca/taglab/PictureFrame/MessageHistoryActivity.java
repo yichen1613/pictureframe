@@ -75,7 +75,25 @@ public class MessageHistoryActivity extends ListActivity {
             Toast.makeText(this, "Picture: " + getApplicationContext().getText(selectedValue.resId), Toast.LENGTH_SHORT).show();
 
         } else if (selectedValue.msgType.equals("video")) {
-            Toast.makeText(this, "Video: " + getApplicationContext().getText(selectedValue.resId), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Video: " + getApplicationContext().getText(selectedValue.resId), Toast.LENGTH_SHORT).show();
+
+            final VideoView vd = (VideoView) findViewById(R.id.VideoView);
+            vd.setVisibility(VideoView.VISIBLE);
+
+            Uri uri = Uri.parse("android.resource://" + getPackageName() + "/" + selectedValue.resId);
+            MediaController mediaController = new MediaController(this);
+            vd.setMediaController(mediaController);
+            vd.setVideoURI(uri);
+
+            vd.start();
+
+            // After video playback is done, hide the video player
+            vd.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+                    vd.setVisibility(VideoView.INVISIBLE);
+                }
+            });
 
         } else {
             Log.e("MessageHistoryActivity", "onListItemClick() - unsupported message type");
