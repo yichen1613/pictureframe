@@ -69,13 +69,13 @@ public class MessageHistoryActivity extends ListActivity {
         MessageItem selectedValue = (MessageItem) getListAdapter().getItem(position);
 
         if (selectedValue.msgType.equals("text")) {
-            Toast.makeText(this, "Text: " + getApplicationContext().getText(selectedValue.resId), Toast.LENGTH_SHORT).show();
+            Log.v("MessageHistoryActivity", "Text selected: " + getApplicationContext().getText(selectedValue.resId));
 
         } else if (selectedValue.msgType.equals("picture")) {
-            Toast.makeText(this, "Picture: " + getApplicationContext().getText(selectedValue.resId), Toast.LENGTH_SHORT).show();
+            Log.v("MessageHistoryActivity", "Picture selected: " + getApplicationContext().getText(selectedValue.resId));
 
         } else if (selectedValue.msgType.equals("video")) {
-            //Toast.makeText(this, "Video: " + getApplicationContext().getText(selectedValue.resId), Toast.LENGTH_SHORT).show();
+            Log.v("MessageHistoryActivity", "Video selected: " + getApplicationContext().getText(selectedValue.resId));
 
             final VideoView vd = (VideoView) findViewById(R.id.VideoView);
             vd.setVisibility(VideoView.VISIBLE);

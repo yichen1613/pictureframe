@@ -14,12 +14,12 @@ import ca.taglab.PictureFrame.R;
 public class MobileArrayAdapter extends ArrayAdapter<MessageHistoryActivity.MessageItem> {
 
     private LayoutInflater mInflater;
-    private MessageHistoryActivity.MessageItem[] messages;
-
     private Context mContext;
     private int mViewResourceId;
+
     private TextView textView;
     private ImageView imageView;
+    private MessageHistoryActivity.MessageItem[] messages;
 
     public MobileArrayAdapter(Context context, int viewResourceId, MessageHistoryActivity.MessageItem[] messages) {
         super(context, viewResourceId, messages);
