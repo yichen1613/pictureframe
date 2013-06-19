@@ -9,7 +9,7 @@
               android:layout_height="593dp"
               android:layout_width="fill_parent"
               android:divider="@drawable/light_blue"
-              android:dividerHeight="4px" />
+              android:dividerHeight="15px" />
 
     <LinearLayout
             android:id="@+id/control"
@@ -39,6 +39,7 @@
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_gravity="center_vertical"
+                android:visibility="invisible"
                 android:src="@drawable/mail_inactive"
                 android:contentDescription="@string/app_name" />
 
