@@ -44,11 +44,11 @@
                 android:gravity="center" />
 
         <ImageView
-                android:id="@+id/msg"
+                android:id="@+id/help"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/mail_inactive"
+                android:src="@drawable/help"
                 android:contentDescription="@string/app_name" />
 
     </LinearLayout>
