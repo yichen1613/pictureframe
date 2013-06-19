@@ -1,5 +1,7 @@
 package ca.taglab.PictureFrame;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +15,11 @@ import ca.taglab.PictureFrame.database.UserTable;
 
 public class MessageHistoryActivity extends ListActivity {
 
+    private View mCancel;
+    private int mShortAnimationDuration;
+
+    private String mName;
+
     static final String[] MESSAGES = new String[]
             { "This is message 1. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing",
               "This is message 2. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing",
@@ -25,7 +32,6 @@ public class MessageHistoryActivity extends ListActivity {
               "This is message 9. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing",
               "This is message 10. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing" };
 
-    private String mName;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,15 @@ public class MessageHistoryActivity extends ListActivity {
         Intent intent = getIntent();
         mName = intent.getExtras().getString("user_name");
         ((TextView) findViewById(R.id.name)).setText(mName);
+
+        mShortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        mCancel = findViewById(R.id.close);
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideOptions();
+            }
+        });
 
         Context context = getApplicationContext();
 
@@ -46,5 +61,18 @@ public class MessageHistoryActivity extends ListActivity {
         // get selected items
         String selectedValue = (String) getListAdapter().getItem(position);
         Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
+    }
+
+    private void hideOptions() {
+        mCancel.animate()
+                .alpha(0f)
+                .setDuration(mShortAnimationDuration)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        //mCancel.setVisibility(View.INVISIBLE);
+                        finish();
+                    }
+                });
     }
 }
