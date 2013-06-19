@@ -1,27 +1,34 @@
 package ca.taglab.PictureFrame.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ca.taglab.PictureFrame.MessageHistoryActivity;
 import ca.taglab.PictureFrame.R;
 
-public class MobileArrayAdapter extends ArrayAdapter<String> {
+public class MobileArrayAdapter extends ArrayAdapter<MessageHistoryActivity.MessageItem> {
 
     private LayoutInflater mInflater;
-    private String[] values;
+    private MessageHistoryActivity.MessageItem[] messages;
 
+    private Context mContext;
     private int mViewResourceId;
+    private TextView textView;
+    private ImageView imageView;
 
-    public MobileArrayAdapter(Context context, int viewResourceId, String[] values) {
-        super(context, viewResourceId, values);
+    public MobileArrayAdapter(Context context, int viewResourceId, MessageHistoryActivity.MessageItem[] messages) {
+        super(context, viewResourceId, messages);
 
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        this.values = values;
+        mContext = context;
+        this.messages = messages;
         this.mViewResourceId = viewResourceId;
     }
 
@@ -30,13 +37,21 @@ public class MobileArrayAdapter extends ArrayAdapter<String> {
 
         convertView = mInflater.inflate(mViewResourceId, null);
 
-        //((TextView) convertView.findViewById(R.id.name)).setText(mName);
+        MessageHistoryActivity.MessageItem msg = messages[position];
 
-        //ImageView iv = (ImageView)convertView.findViewById(R.id.option_icon);
-        //iv.setImageDrawable(mIcons.getDrawable(position));
+        if ((msg.msgType).equals("text")) {
+            Log.v("MobileArrayAdapter", "TextView contents: " + mContext.getText(msg.resId));
+            textView = (TextView) convertView.findViewById(R.id.message);
+            textView.setText(msg.resId);
 
-        TextView textView = (TextView) convertView.findViewById(R.id.message);
-        textView.setText(values[position]);
+        } else if ((msg.msgType).equals("picture")) {
+            Log.v("MobileArrayAdapter", "ImageView contents: " + mContext.getText(msg.resId));
+            imageView = (ImageView) convertView.findViewById(R.id.picture);
+            imageView.setImageDrawable(mContext.getResources().getDrawable(msg.resId));
+
+        } else {
+            // error
+        }
 
         return convertView;
     }

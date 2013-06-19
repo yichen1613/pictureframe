@@ -20,18 +20,25 @@ public class MessageHistoryActivity extends ListActivity {
 
     private String mName;
 
-    static final String[] MESSAGES = new String[]
-            { "This is message 1. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing",
-              "This is message 2. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing",
-              "This is message 3. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing",
-              "This is message 4. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing",
-              "This is message 5. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing",
-              "This is message 6. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing",
-              "This is message 7. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing",
-              "This is message 8. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing",
-              "This is message 9. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing",
-              "This is message 10. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing" };
+    public class MessageItem {
+        public String msgType;
+        public int resId;
 
+        public MessageItem(String msgType, int resId) {
+            this.msgType = msgType;
+            this.resId = resId;
+        }
+    }
+
+    private final MessageItem[] MESSAGES = new MessageItem[] {
+            new MessageItem("text", R.string.message_history_1),
+            new MessageItem("text", R.string.message_history_2),
+            new MessageItem("text", R.string.message_history_3),
+            new MessageItem("picture", R.drawable.person1),
+            new MessageItem("text", R.string.message_history_4),
+            new MessageItem("picture", R.drawable.person2),
+            new MessageItem("text", R.string.message_history_5)
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,7 +54,7 @@ public class MessageHistoryActivity extends ListActivity {
         mCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideOptions();
+                closeActivity();
             }
         });
 
@@ -58,12 +65,19 @@ public class MessageHistoryActivity extends ListActivity {
 
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        // get selected items
-        String selectedValue = (String) getListAdapter().getItem(position);
-        Toast.makeText(this, selectedValue, Toast.LENGTH_SHORT).show();
+        MessageItem selectedValue = (MessageItem) getListAdapter().getItem(position);
+
+        if (selectedValue.msgType.equals("text")) {
+            Toast.makeText(this, "Text: " + getApplicationContext().getText(selectedValue.resId), Toast.LENGTH_SHORT).show();
+        } else if (selectedValue.msgType.equals("picture")) {
+            Toast.makeText(this, "Picture: " + getApplicationContext().getText(selectedValue.resId), Toast.LENGTH_SHORT).show();
+        } else {
+            // something else
+        }
+
     }
 
-    private void hideOptions() {
+    private void closeActivity() {
         mCancel.animate()
                 .alpha(0f)
                 .setDuration(mShortAnimationDuration)
