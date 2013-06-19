@@ -5,13 +5,13 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import ca.taglab.PictureFrame.adapter.MobileArrayAdapter;
-import ca.taglab.PictureFrame.database.UserTable;
 
 public class MessageHistoryActivity extends ListActivity {
 
@@ -33,8 +33,9 @@ public class MessageHistoryActivity extends ListActivity {
     private final MessageItem[] MESSAGES = new MessageItem[] {
             new MessageItem("text", R.string.message_history_1),
             new MessageItem("text", R.string.message_history_2),
-            new MessageItem("text", R.string.message_history_3),
             new MessageItem("picture", R.drawable.person1),
+            new MessageItem("text", R.string.message_history_3),
+            new MessageItem("video", R.raw.hello_video),
             new MessageItem("text", R.string.message_history_4),
             new MessageItem("picture", R.drawable.person2),
             new MessageItem("text", R.string.message_history_5)
@@ -69,10 +70,15 @@ public class MessageHistoryActivity extends ListActivity {
 
         if (selectedValue.msgType.equals("text")) {
             Toast.makeText(this, "Text: " + getApplicationContext().getText(selectedValue.resId), Toast.LENGTH_SHORT).show();
+
         } else if (selectedValue.msgType.equals("picture")) {
             Toast.makeText(this, "Picture: " + getApplicationContext().getText(selectedValue.resId), Toast.LENGTH_SHORT).show();
+
+        } else if (selectedValue.msgType.equals("video")) {
+            Toast.makeText(this, "Video: " + getApplicationContext().getText(selectedValue.resId), Toast.LENGTH_SHORT).show();
+
         } else {
-            // something else
+            Log.e("MessageHistoryActivity", "onListItemClick() - unsupported message type");
         }
 
     }

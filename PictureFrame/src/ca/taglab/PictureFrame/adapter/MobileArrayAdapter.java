@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import ca.taglab.PictureFrame.MessageHistoryActivity;
@@ -49,8 +48,13 @@ public class MobileArrayAdapter extends ArrayAdapter<MessageHistoryActivity.Mess
             imageView = (ImageView) convertView.findViewById(R.id.picture);
             imageView.setImageDrawable(mContext.getResources().getDrawable(msg.resId));
 
+        } else if ((msg.msgType).equals("video")) {
+            Log.v("MobileArrayAdapter", "Video contents: " + mContext.getText(msg.resId));
+            imageView = (ImageView) convertView.findViewById(R.id.picture);
+            imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.hello_video_screenshot));
+
         } else {
-            // error
+            Log.e("MobileArrayAdapter", "Unsupported message type");
         }
 
         return convertView;
