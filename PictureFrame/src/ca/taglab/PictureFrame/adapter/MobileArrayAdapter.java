@@ -30,6 +30,8 @@ public class MobileArrayAdapter extends ArrayAdapter<String> {
 
         convertView = mInflater.inflate(mViewResourceId, null);
 
+        //((TextView) convertView.findViewById(R.id.name)).setText(mName);
+
         //ImageView iv = (ImageView)convertView.findViewById(R.id.option_icon);
         //iv.setImageDrawable(mIcons.getDrawable(position));
 

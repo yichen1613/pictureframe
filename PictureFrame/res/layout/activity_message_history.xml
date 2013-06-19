@@ -6,7 +6,7 @@
                 android:layout_height="match_parent" >
 
     <ListView android:id="@android:id/list"
-              android:layout_height="590dp"
+              android:layout_height="593dp"
               android:layout_width="fill_parent"
               android:divider="#57A5FF"
               android:dividerHeight="4px" />
@@ -25,7 +25,6 @@
                 android:layout_height="110dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/cancel"
-                android:visibility="invisible"
                 android:contentDescription="@string/app_name" />
 
         <TextView

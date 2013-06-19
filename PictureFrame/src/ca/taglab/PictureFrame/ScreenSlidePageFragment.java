@@ -150,9 +150,9 @@ public class ScreenSlidePageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), MessageHistoryActivity.class);
+                intent.putExtra("user_name", mName);
                 startActivity(intent);
                 hideOptions();
-                messageSent(v);
             }
         });
 
