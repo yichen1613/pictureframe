@@ -65,7 +65,6 @@ public class AddPicture extends Activity {
 
         switch(resultCode) {
             case RESULT_OK:
-
                 // automatically set the focus to "Name", and display the keyboard
                 if (name.requestFocus()) {
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -98,6 +97,10 @@ public class AddPicture extends Activity {
 
         getContentResolver().insert(UserContentProvider.CONTENT_URI, values);
 
+        finish();
+    }
+
+    public void cancel(View v) {
         finish();
     }
 }
