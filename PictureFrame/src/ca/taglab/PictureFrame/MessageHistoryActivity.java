@@ -84,6 +84,7 @@ public class MessageHistoryActivity extends ListActivity {
             MediaController mediaController = new MediaController(this);
             vd.setMediaController(mediaController);
             vd.setVideoURI(uri);
+            vd.setZOrderOnTop(true);
 
             vd.start();
 
