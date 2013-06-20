@@ -49,9 +49,8 @@
     <string name="save">Save</string>
 
     <!-- Message History strings -->
-    <string name="message_history_1">This is message 1. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing</string>
-    <string name="message_history_2">This is message 2. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing</string>
-    <string name="message_history_3">This is message 3. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing</string>
-    <string name="message_history_4">This is message 4. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing</string>
-    <string name="message_history_5">This is message 5. Testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing testing</string>
+    <string name="message_history_1">Hi Grandma! I\'m sending you a photo we took at Ben\'s convocation today - it was a very proud moment for all of us.</string>
+    <string name="message_history_2">The cousins came to visit! We went for a bike ride in the park. It was lovely, especially with all the cherry blossoms in full bloom.</string>
+    <string name="message_history_3">Hi Grandma - thought you\'d like to see Simon\'s little one on the swing.</string>
+    <string name="message_history_4">Here is the birthday rose you chose - it\'s now blooming in June!</string>
 </resources>

@@ -32,13 +32,13 @@ public class MessageHistoryActivity extends ListActivity {
 
     private final MessageItem[] MESSAGES = new MessageItem[] {
             new MessageItem("text", R.string.message_history_1),
+            new MessageItem("picture", R.drawable.message_history_1),
             new MessageItem("text", R.string.message_history_2),
-            new MessageItem("picture", R.drawable.person1),
+            new MessageItem("picture", R.drawable.message_history_2),
             new MessageItem("text", R.string.message_history_3),
-            new MessageItem("video", R.raw.hello_video),
+            new MessageItem("video", R.raw.message_history_3),
             new MessageItem("text", R.string.message_history_4),
-            new MessageItem("picture", R.drawable.person2),
-            new MessageItem("text", R.string.message_history_5)
+            new MessageItem("picture", R.drawable.message_history_4)
     };
 
     @Override

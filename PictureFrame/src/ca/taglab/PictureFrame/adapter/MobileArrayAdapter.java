@@ -51,7 +51,7 @@ public class MobileArrayAdapter extends ArrayAdapter<MessageHistoryActivity.Mess
         } else if ((msg.msgType).equals("video")) {
             Log.v("MobileArrayAdapter", "Video contents: " + mContext.getText(msg.resId));
             imageView = (ImageView) convertView.findViewById(R.id.picture);
-            imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.hello_video_screenshot));
+            imageView.setImageDrawable(mContext.getResources().getDrawable(R.drawable.message_history_3));
 
         } else {
             Log.e("MobileArrayAdapter", "Unsupported message type");
