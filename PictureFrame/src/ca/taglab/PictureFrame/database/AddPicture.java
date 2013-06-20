@@ -1,7 +1,6 @@
 package ca.taglab.PictureFrame.database;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,9 +21,8 @@ public class AddPicture extends Activity {
     public static final String TAG = "AddPicture";
 
     private static final int CAMERA_REQUEST = 1;
-    Uri mCaputredImageUri;
+    Uri mCapturedImageUri;
 
-    private ImageView image;
     private String imagePath;
     private EditText email;
     private EditText name;
@@ -33,6 +31,7 @@ public class AddPicture extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_contact_info);
+        getActionBar().hide();
 
         email = (EditText) findViewById(R.id.email);
         name = (EditText) findViewById(R.id.name);
@@ -50,9 +49,9 @@ public class AddPicture extends Activity {
             cursor.close();
             ContentValues values = new ContentValues();
             values.put(MediaStore.Images.Media.TITLE, filename);
-            mCaputredImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            mCapturedImageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
             Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, mCaputredImageUri);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageUri);
             startActivityForResult(intent, CAMERA_REQUEST);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
@@ -66,7 +65,7 @@ public class AddPicture extends Activity {
         switch(resultCode) {
             case RESULT_OK:
                 String[] projection = { MediaStore.Images.Media.DATA };
-                Cursor cursor = managedQuery(mCaputredImageUri, projection, null, null, null);
+                Cursor cursor = managedQuery(mCapturedImageUri, projection, null, null, null);
                 int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 cursor.moveToFirst();
 
