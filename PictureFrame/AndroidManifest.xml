@@ -35,6 +35,9 @@
         <activity android:name=".database.AddPicture"
                   android:label="@string/title_add_picture"
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
+        <activity android:name=".database.AddExistingPicture"
+                  android:label="@string/title_add_existing_picture"
+                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
         <provider android:name=".provider.UserContentProvider"
                   android:authorities="ca.taglab.PictureFrame.provider" >
         </provider>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="0dp"
+                  android:layout_height="fill_parent"
+                  android:layout_weight="1"
+                  android:layout_gravity="left"
+                  android:paddingLeft="10dp"
+                  android:paddingRight="10dp">
+        <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:inputType="textCapWords"
+                android:textSize="35dp"
+                android:hint="Name"/>
+
+        <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textWebEmailAddress"
+                android:textSize="35dp"
+                android:hint="Email" />
+
+        <LinearLayout android:orientation="horizontal"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="70dp">
+            <Button
+                    android:id="@+id/save"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="save"
+                    android:textSize="35dp"
+                    android:text="@string/save" />
+
+            <Button
+                    android:id="@+id/cancel"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:onClick="cancel"
+                    android:textSize="35dp"
+                    android:text="@string/cancel" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="0dp"
+                  android:layout_height="fill_parent"
+                  android:layout_weight="1"
+                  android:layout_gravity="right"
+                  android:paddingLeft="10dp"
+                  android:paddingRight="10dp">
+        <ImageView
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:src="@drawable/ic_launcher"
+                android:contentDescription="@string/app_name" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import ca.taglab.PictureFrame.database.AddExistingPicture;
 import ca.taglab.PictureFrame.database.AddPicture;
 import ca.taglab.PictureFrame.database.DatabaseHelper;
 
@@ -41,6 +42,7 @@ public class MyActivity extends ListActivity {
         mSamples = new Sample[] {
                 //new Sample(R.string.title_log_in, )
                 new Sample(R.string.title_add_picture, AddPicture.class),
+                new Sample(R.string.title_add_existing_picture, AddExistingPicture.class),
                 new Sample(R.string.title_view_gallery, ScreenSlideActivity.class)
         };
 
