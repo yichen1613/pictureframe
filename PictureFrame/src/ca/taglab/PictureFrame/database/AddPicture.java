@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import ca.taglab.PictureFrame.R;
@@ -33,8 +34,8 @@ public class AddPicture extends Activity {
         setContentView(R.layout.add_contact_info);
         getActionBar().hide();
 
-        email = (EditText) findViewById(R.id.email);
         name = (EditText) findViewById(R.id.name);
+        email = (EditText) findViewById(R.id.email);
 
         Cursor cursor = getContentResolver().query(
                 UserContentProvider.CONTENT_URI,
@@ -64,6 +65,12 @@ public class AddPicture extends Activity {
 
         switch(resultCode) {
             case RESULT_OK:
+
+                // automatically set the focus to "Name", and display the keyboard
+                if (name.requestFocus()) {
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                }
+
                 String[] projection = { MediaStore.Images.Media.DATA };
                 Cursor cursor = managedQuery(mCapturedImageUri, projection, null, null, null);
                 int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -84,12 +91,10 @@ public class AddPicture extends Activity {
     public void save(View v) {
         ContentValues values = new ContentValues();
 
-
         values.put(UserTable.COL_NAME, name.getText().toString().trim());
         values.put(UserTable.COL_EMAIL, email.getText().toString().trim());
         values.put(UserTable.COL_IMG, imagePath);
         values.put(UserTable.COL_PASSWORD, "1234");
-
 
         getContentResolver().insert(UserContentProvider.CONTENT_URI, values);
 
