@@ -44,12 +44,11 @@
                 android:gravity="center" />
 
         <ImageView
-                android:id="@+id/help"
+                android:id="@+id/msg"
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_gravity="center_vertical"
-                android:visibility="invisible"
-                android:src="@drawable/help"
+                android:src="@drawable/mail"
                 android:contentDescription="@string/app_name" />
 
     </LinearLayout>
@@ -81,7 +80,7 @@
         android:layout_width="640dp"
         android:layout_height="297dp"
         android:layout_above="@id/control"
-        android:src="@drawable/mail_normal"
+        android:src="@drawable/microphone"
         android:background="@drawable/green"
         android:visibility="gone"
         android:onClick="audioClicked"

@@ -63,6 +63,7 @@ public class ScreenSlidePageFragment extends Fragment {
     private View mVideo;
     private View mAudio;
     private View mWave;
+    private View mMsgHistory;
     private View mCancel;
     private int mShortAnimationDuration;
     private int mLongAnimationDuration;
@@ -104,6 +105,17 @@ public class ScreenSlidePageFragment extends Fragment {
         rootView.findViewById(R.id.control).getBackground().setAlpha(200);
 
         optionsOpen = false;
+
+        mMsgHistory = rootView.findViewById(R.id.msg);
+        mMsgHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MessageHistoryActivity.class);
+                intent.putExtra("user_name", mName);
+                startActivity(intent);
+                hideOptions();
+            }
+        });
 
         mPhoto = rootView.findViewById(R.id.photo);
         mPhoto.setOnClickListener(new View.OnClickListener() {
@@ -149,10 +161,7 @@ public class ScreenSlidePageFragment extends Fragment {
         mAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MessageHistoryActivity.class);
-                intent.putExtra("user_name", mName);
-                startActivity(intent);
-                hideOptions();
+                // implement audio recording
             }
         });
 
