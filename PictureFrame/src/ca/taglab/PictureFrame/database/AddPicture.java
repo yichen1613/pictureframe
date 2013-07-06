@@ -71,7 +71,7 @@ public class AddPicture extends Activity {
                 }
 
                 String[] projection = { MediaStore.Images.Media.DATA };
-                Cursor cursor = managedQuery(mCapturedImageUri, projection, null, null, null);
+                Cursor cursor = getContentResolver().query(mCapturedImageUri, projection, null, null, null);
                 int column_index_data = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 cursor.moveToFirst();
 
