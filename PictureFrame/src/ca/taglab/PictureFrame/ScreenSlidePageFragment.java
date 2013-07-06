@@ -58,6 +58,8 @@ public class ScreenSlidePageFragment extends Fragment {
      * The user's name.
      */
     private String mName;
+    
+    private static final String TAG = "ScreenSlidePageFragment";
 
     private View mPhoto;
     private View mVideo;
@@ -132,7 +134,7 @@ public class ScreenSlidePageFragment extends Fragment {
                     startActivityForResult(intent, CAPTURE_PICTURE);
                     hideOptions();
                 } catch (Exception e) {
-                    Log.e("ScreenSlidePageFragment", "Camera intent failed");
+                    Log.e(TAG, "Camera intent failed");
                 }
             }
         });
@@ -152,7 +154,7 @@ public class ScreenSlidePageFragment extends Fragment {
                     startActivityForResult(intent, CAPTURE_VIDEO);
                     hideOptions();
                 } catch (Exception e) {
-                    Log.e("ScreenSlidePageFragment", "Video intent failed");
+                    Log.e(TAG, "Video intent failed");
                 }
             }
         });
@@ -253,7 +255,7 @@ public class ScreenSlidePageFragment extends Fragment {
                 break;
 
             default:
-                Log.e("ScreenSlidePageFragment", "Intent to start an activity failed");
+                Log.e(TAG, "Intent to start an activity failed");
                 break;
         }
     }
@@ -270,8 +272,8 @@ public class ScreenSlidePageFragment extends Fragment {
         if (imageCursor.moveToFirst()) {
             int id = imageCursor.getInt(imageCursor.getColumnIndex(MediaStore.Images.Media._ID));
             String fullPath = imageCursor.getString(imageCursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            Log.d("ScreenSlidePageFragment", "getLastImageId::id " + id);
-            Log.d("ScreenSlidePageFragment", "getLastImageId::path " + fullPath);
+            Log.d(TAG, "getLastImageId::id " + id);
+            Log.d(TAG, "getLastImageId::path " + fullPath);
             imageCursor.close();
             return fullPath;
         } else {
@@ -291,8 +293,8 @@ public class ScreenSlidePageFragment extends Fragment {
         if (cursor.moveToFirst()) {
             int id = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.Media._ID));
             String fullPath = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
-            Log.d("ScreenSlidePageFragment", "getLastVideoId::id " + id);
-            Log.d("ScreenSlidePageFragment", "getLastVideoId::path " + fullPath);
+            Log.d(TAG, "getLastVideoId::id " + id);
+            Log.d(TAG, "getLastVideoId::path " + fullPath);
             cursor.close();
             return fullPath;
         } else {
