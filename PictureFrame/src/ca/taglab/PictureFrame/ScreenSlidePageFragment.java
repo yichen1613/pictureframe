@@ -164,7 +164,11 @@ public class ScreenSlidePageFragment extends Fragment {
         mAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // implement audio recording
+                Intent intent = new Intent(getActivity(), AudioRecorderActivity.class);
+                intent.putExtra("email", mEmail);
+                startActivity(intent);
+                hideOptions();
+                messageSent(v);
             }
         });
 
@@ -414,6 +418,11 @@ public class ScreenSlidePageFragment extends Fragment {
 
             case R.id.photo:
                 mConfirmation.setImageResource(R.drawable.confirm_blue);
+                mp.start();
+                break;
+            
+            case R.id.audio:
+                mConfirmation.setImageResource(R.drawable.confirm_green);
                 mp.start();
                 break;
 

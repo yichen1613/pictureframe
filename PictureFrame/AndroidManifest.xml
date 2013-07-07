@@ -38,6 +38,9 @@
         <activity android:name=".database.AddExistingPicture"
                   android:label="@string/title_add_existing_picture"
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
+        <activity android:name="ca.taglab.PictureFrame.AudioRecorderActivity"
+                  android:label="@string/title_audio_recorder"
+                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
         <provider android:name=".provider.UserContentProvider"
                   android:authorities="ca.taglab.PictureFrame.provider" >
         </provider>

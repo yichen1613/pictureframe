@@ -23,6 +23,7 @@
     <string name="title_add_existing_picture">Add existing picture</string>
     <string name="title_view_gallery">View picture frame</string>
     <string name="title_log_in">Email login</string>
+    <string name="title_audio_recorder">Record audio</string>
 
     <!-- Actions -->
     <string name="action_toggle">Toggle indicator</string>
