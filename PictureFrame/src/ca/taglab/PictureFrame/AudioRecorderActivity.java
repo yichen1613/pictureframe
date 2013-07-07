@@ -2,6 +2,7 @@ package ca.taglab.PictureFrame;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.widget.LinearLayout;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,6 +30,7 @@ public class AudioRecorderActivity extends Activity {
     private MediaPlayer mPlayer = null;
     
     private SendButton mSendButton = null;
+    private CancelButton mCancelButton = null;
 
     private void onRecord(boolean start) {
         if (start) {
@@ -131,13 +133,10 @@ public class AudioRecorderActivity extends Activity {
     class SendButton extends Button {
         OnClickListener clicker = new OnClickListener() {
             public void onClick(View v) {
-                try {
-                    new SendEmailAsyncTask(mEmail, "PictureFrame: I have an audio message for you", "", mFileName).execute();
-                    //Toast.makeText(getActivity(), "Wave sent to: " + mEmail, Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    Log.e("SendEmailAsyncTask", e.getMessage(), e);
-                    //Toast.makeText(getActivity(), "Wave to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
-                }
+                // set data (audio file location) to pass back
+                Intent data = new Intent();
+                data.putExtra("audio_location", mFileName);
+                setResult(RESULT_OK, data);
                 finish();
             }
         };
@@ -145,6 +144,21 @@ public class AudioRecorderActivity extends Activity {
         public SendButton(Context context) {
             super(context);
             setText("Send");
+            setOnClickListener(clicker);
+        }
+    }
+    
+    class CancelButton extends Button {
+        OnClickListener clicker = new OnClickListener() {
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+        };
+        
+        public CancelButton(Context context) {
+            super(context);
+            setText("Cancel");
             setOnClickListener(clicker);
         }
     }
@@ -178,9 +192,16 @@ public class AudioRecorderActivity extends Activity {
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         0));
         setContentView(ll);
+        mCancelButton = new CancelButton(this);
+        ll.addView(mCancelButton,
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        0));
+        setContentView(ll);
 
-        Intent intent = getIntent();
-        mEmail = intent.getExtras().getString("email");
+        //Intent intent = getIntent();
+        //mEmail = intent.getExtras().getString("email");
     }
 
     @Override

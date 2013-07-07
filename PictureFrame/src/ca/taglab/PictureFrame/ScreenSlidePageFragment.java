@@ -36,6 +36,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import ca.taglab.PictureFrame.database.UserTable;
 import ca.taglab.PictureFrame.email.SendEmailAsyncTask;
 
@@ -76,6 +77,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
     private static final int CAPTURE_PICTURE = 100;
     private static final int CAPTURE_VIDEO = 110;
+    private static final int CAPTURE_AUDIO = 120;
     Uri mCapturedImageURI;
     Uri mCapturedVideoURI;
 
@@ -164,11 +166,14 @@ public class ScreenSlidePageFragment extends Fragment {
         mAudio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AudioRecorderActivity.class);
-                intent.putExtra("email", mEmail);
-                startActivity(intent);
-                hideOptions();
-                messageSent(v);
+                try {
+                    Intent intent = new Intent(getActivity(), AudioRecorderActivity.class);
+                    //intent.putExtra("email", mEmail);
+                    startActivityForResult(intent, CAPTURE_AUDIO);
+                    hideOptions();
+                } catch (Exception e) {
+                    Log.e(TAG, "Audio intent failed");
+                }
             }
         });
 
@@ -259,6 +264,22 @@ public class ScreenSlidePageFragment extends Fragment {
                 }
                 break;
 
+            case CAPTURE_AUDIO:
+                if (resultCode == Activity.RESULT_OK) {
+                    try {
+                        String audio_location = data.getStringExtra("audio_location");
+                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have an audio message for you", "", audio_location).execute();
+                        messageSent(mAudio);
+                    } catch(Exception e) {
+                        Log.e("SendEmailAsyncTask", e.getMessage(), e);
+                    }
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    Toast.makeText(getActivity(), "Audio capture was cancelled", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Audio capture failed", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            
             default:
                 Log.e(TAG, "Intent to start an activity failed");
                 break;
