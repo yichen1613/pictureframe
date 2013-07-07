@@ -57,6 +57,7 @@ public class AudioRecorderActivity extends Activity {
     }
 
     private void stopPlaying() {
+        mPlayer.reset();
         mPlayer.release();
         mPlayer = null;
     }
@@ -79,6 +80,7 @@ public class AudioRecorderActivity extends Activity {
 
     private void stopRecording() {
         mRecorder.stop();
+        mRecorder.reset();
         mRecorder.release();
         mRecorder = null;
         mSendButton.setVisibility(View.VISIBLE);
@@ -204,11 +206,13 @@ public class AudioRecorderActivity extends Activity {
     public void onPause() {
         super.onPause();
         if (mRecorder != null) {
+            mRecorder.reset();
             mRecorder.release();
             mRecorder = null;
         }
 
         if (mPlayer != null) {
+            mPlayer.reset();
             mPlayer.release();
             mPlayer = null;
         }
