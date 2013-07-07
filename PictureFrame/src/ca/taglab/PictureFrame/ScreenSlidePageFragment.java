@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -404,17 +405,21 @@ public class ScreenSlidePageFragment extends Fragment {
 
 
     private void messageSent(View v) {
+        MediaPlayer mp = MediaPlayer.create(getActivity().getApplicationContext(), R.raw.success_low);
         switch(v.getId()) {
             case R.id.video:
                 mConfirmation.setImageResource(R.drawable.confirm_red);
+                mp.start();
                 break;
 
             case R.id.photo:
                 mConfirmation.setImageResource(R.drawable.confirm_blue);
+                mp.start();
                 break;
 
             case R.id.wave:
                 mConfirmation.setImageResource(R.drawable.confirm_orange);
+                mp.start();
                 break;
         }
 
