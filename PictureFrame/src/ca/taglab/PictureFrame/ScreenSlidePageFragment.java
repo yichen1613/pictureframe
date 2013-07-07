@@ -77,8 +77,10 @@ public class ScreenSlidePageFragment extends Fragment {
     private static final int CAPTURE_PICTURE = 100;
     private static final int CAPTURE_VIDEO = 110;
     private static final int CAPTURE_AUDIO = 120;
+    private static final int CAPTURE_AUDIO_CAPTION = 130;
     Uri mCapturedImageURI;
     Uri mCapturedVideoURI;
+    private String[] mAttachments;
 
     public ScreenSlidePageFragment() {
     }
@@ -227,19 +229,18 @@ public class ScreenSlidePageFragment extends Fragment {
                     // Image captured and saved
                     try {
                         String photo_location = getLastImageId();
-                        String[] attachments = { photo_location };
-                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have a photo for you", "", attachments).execute();
-                        messageSent(mPhoto);
-                        //Toast.makeText(getActivity(), "Photo stored at " + photo_location + " sent to: " + mEmail, Toast.LENGTH_SHORT).show();
+                        mAttachments = new String[2];
+                        mAttachments[0] = photo_location;
+                        Intent intent = new Intent(getActivity(), AudioRecorderActivity.class);
+                        startActivityForResult(intent, CAPTURE_AUDIO_CAPTION);
                     } catch (Exception e) {
+                        // Photo to mEmail failed
                         Log.e("SendEmailAsyncTask", e.getMessage(), e);
-                        //Toast.makeText(getActivity(), "Photo to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
                     }
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // User cancelled photo capture
-                    //Toast.makeText(getActivity(), "Photo capture was cancelled", Toast.LENGTH_SHORT).show();
                 } else {
-                    //Toast.makeText(getActivity(), "Photo capture failed", Toast.LENGTH_SHORT).show();
+                    // Photo capture failed
                 }
                 break;
 
@@ -251,16 +252,14 @@ public class ScreenSlidePageFragment extends Fragment {
                         String[] attachments = { video_location };
                         new SendEmailAsyncTask(mEmail, "PictureFrame: I have a video message for you", "", attachments).execute();
                         messageSent(mVideo);
-                        //Toast.makeText(getActivity(), "Video sent to: " + mEmail, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
+                        // Video to mEmail failed
                         Log.e("SendEmailAsyncTask", e.getMessage(), e);
-                        //Toast.makeText(getActivity(), "Video to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
                     }
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // User cancelled video capture
-                   // Toast.makeText(getActivity(), "Video capture was cancelled", Toast.LENGTH_SHORT).show();
                 } else {
-                   // Toast.makeText(getActivity(), "Video capture failed", Toast.LENGTH_SHORT).show();
+                    // Video capture failed
                 }
                 break;
 
@@ -272,16 +271,32 @@ public class ScreenSlidePageFragment extends Fragment {
                         String[] attachments = { audio_location };
                         new SendEmailAsyncTask(mEmail, "PictureFrame: I have an audio message for you", "", attachments).execute();
                         messageSent(mAudio);
-                        // Toast.makeText(getActivity(), "Audio sent to: " + mEmail, Toast.LENGTH_SHORT).show();
                     } catch(Exception e) {
+                        // Audio to mEmail failed
                         Log.e("SendEmailAsyncTask", e.getMessage(), e);
-                        // Toast.makeText(getActivity(), "Audio to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
                     }
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // User cancelled audio capture
-                    // Toast.makeText(getActivity(), "Audio capture was cancelled", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Toast.makeText(getActivity(), "Audio capture failed", Toast.LENGTH_SHORT).show();
+                    // Audio capture failed
+                }
+                break;
+            
+            case CAPTURE_AUDIO_CAPTION:
+                if (resultCode == Activity.RESULT_OK) {
+                    try {
+                        String audio_location = data.getStringExtra("audio_location");
+                        mAttachments[1] = audio_location;
+                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have a photo for you", "", mAttachments).execute();
+                        messageSent(mPhoto);
+                    } catch(Exception e) {
+                        // Photo and audio caption to mEmail failed
+                        Log.e("SendEmailAsyncTask", e.getMessage(), e);
+                    }
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // User cancelled audio capture
+                } else {
+                    // Audio capture failed
                 }
                 break;
             
