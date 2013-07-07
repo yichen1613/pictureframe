@@ -36,7 +36,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import ca.taglab.PictureFrame.database.UserTable;
 import ca.taglab.PictureFrame.email.SendEmailAsyncTask;
 
@@ -168,7 +167,6 @@ public class ScreenSlidePageFragment extends Fragment {
             public void onClick(View v) {
                 try {
                     Intent intent = new Intent(getActivity(), AudioRecorderActivity.class);
-                    //intent.putExtra("email", mEmail);
                     startActivityForResult(intent, CAPTURE_AUDIO);
                     hideOptions();
                 } catch (Exception e) {
@@ -266,17 +264,21 @@ public class ScreenSlidePageFragment extends Fragment {
 
             case CAPTURE_AUDIO:
                 if (resultCode == Activity.RESULT_OK) {
+                    // Audio captured and saved
                     try {
                         String audio_location = data.getStringExtra("audio_location");
                         new SendEmailAsyncTask(mEmail, "PictureFrame: I have an audio message for you", "", audio_location).execute();
                         messageSent(mAudio);
+                        // Toast.makeText(getActivity(), "Audio sent to: " + mEmail, Toast.LENGTH_SHORT).show();
                     } catch(Exception e) {
                         Log.e("SendEmailAsyncTask", e.getMessage(), e);
+                        // Toast.makeText(getActivity(), "Audio to " + mEmail + " failed", Toast.LENGTH_SHORT).show();
                     }
                 } else if (resultCode == Activity.RESULT_CANCELED) {
-                    Toast.makeText(getActivity(), "Audio capture was cancelled", Toast.LENGTH_SHORT).show();
+                    // User cancelled audio capture
+                    // Toast.makeText(getActivity(), "Audio capture was cancelled", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getActivity(), "Audio capture failed", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getActivity(), "Audio capture failed", Toast.LENGTH_SHORT).show();
                 }
                 break;
             
@@ -430,26 +432,26 @@ public class ScreenSlidePageFragment extends Fragment {
 
 
     private void messageSent(View v) {
-        MediaPlayer mp = MediaPlayer.create(getActivity().getApplicationContext(), R.raw.success_low);
+        MediaPlayer mPlayer = MediaPlayer.create(getActivity().getApplicationContext(), R.raw.success_low);
         switch(v.getId()) {
             case R.id.video:
                 mConfirmation.setImageResource(R.drawable.confirm_red);
-                mp.start();
+                mPlayer.start();
                 break;
 
             case R.id.photo:
                 mConfirmation.setImageResource(R.drawable.confirm_blue);
-                mp.start();
+                mPlayer.start();
                 break;
             
             case R.id.audio:
                 mConfirmation.setImageResource(R.drawable.confirm_green);
-                mp.start();
+                mPlayer.start();
                 break;
 
             case R.id.wave:
                 mConfirmation.setImageResource(R.drawable.confirm_orange);
-                mp.start();
+                mPlayer.start();
                 break;
         }
 

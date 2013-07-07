@@ -2,7 +2,6 @@ package ca.taglab.PictureFrame;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.widget.LinearLayout;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,7 +12,6 @@ import android.content.Context;
 import android.util.Log;
 import android.media.MediaRecorder;
 import android.media.MediaPlayer;
-import ca.taglab.PictureFrame.email.SendEmailAsyncTask;
 
 import java.io.IOException;
 
@@ -21,7 +19,6 @@ import java.io.IOException;
 public class AudioRecorderActivity extends Activity {
     private static final String TAG = "AudioRecorderActivity";
     private static String mFileName = null;
-    private String mEmail;
 
     private RecordButton mRecordButton = null;
     private MediaRecorder mRecorder = null;
@@ -199,9 +196,6 @@ public class AudioRecorderActivity extends Activity {
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         0));
         setContentView(ll);
-
-        //Intent intent = getIntent();
-        //mEmail = intent.getExtras().getString("email");
     }
 
     @Override
