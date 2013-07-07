@@ -49,16 +49,22 @@ public class GmailSender extends javax.mail.Authenticator {
         return new PasswordAuthentication(user, password);
     }
 
-    public synchronized void sendMail(String subject, String body, String sender, String recipients, String attachment) throws Exception {
+    public synchronized void sendMail(String subject, String body, String sender, String recipients, String[] attachments) throws Exception {
         MimeMessage message = new MimeMessage(session);
         DataHandler handler = new DataHandler(new ByteArrayDataSource(body.getBytes(), "text/plain"));
         message.setSender(new InternetAddress(sender));
         message.setSubject(subject);
         message.setDataHandler(handler);
-        if (!attachment.isEmpty()) {
-            this.addAttachment(attachment);
+        
+        if (attachments != null) {
+            for (String attachment : attachments) {
+                if (!attachment.isEmpty()) {
+                    this.addAttachment(attachment);
+                }    
+            }
             message.setContent(_multipart);
         }
+        
         if (recipients.indexOf(',') > 0)
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
         else

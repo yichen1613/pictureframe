@@ -180,7 +180,7 @@ public class ScreenSlidePageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    new SendEmailAsyncTask(mEmail, "PictureFrame: I'm thinking of you", "Wave sent via PictureFrame", "").execute();
+                    new SendEmailAsyncTask(mEmail, "PictureFrame: I'm thinking of you", "Wave sent via PictureFrame", null).execute();
                     //Toast.makeText(getActivity(), "Wave sent to: " + mEmail, Toast.LENGTH_SHORT).show();
                     hideOptions();
                     messageSent(v);
@@ -227,7 +227,8 @@ public class ScreenSlidePageFragment extends Fragment {
                     // Image captured and saved
                     try {
                         String photo_location = getLastImageId();
-                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have a photo for you", "", photo_location).execute();
+                        String[] attachments = { photo_location };
+                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have a photo for you", "", attachments).execute();
                         messageSent(mPhoto);
                         //Toast.makeText(getActivity(), "Photo stored at " + photo_location + " sent to: " + mEmail, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
@@ -247,7 +248,8 @@ public class ScreenSlidePageFragment extends Fragment {
                     // Video captured and saved
                     try {
                         String video_location = getLastVideoId();
-                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have a video message for you", "", video_location).execute();
+                        String[] attachments = { video_location };
+                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have a video message for you", "", attachments).execute();
                         messageSent(mVideo);
                         //Toast.makeText(getActivity(), "Video sent to: " + mEmail, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
@@ -267,7 +269,8 @@ public class ScreenSlidePageFragment extends Fragment {
                     // Audio captured and saved
                     try {
                         String audio_location = data.getStringExtra("audio_location");
-                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have an audio message for you", "", audio_location).execute();
+                        String[] attachments = { audio_location };
+                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have an audio message for you", "", attachments).execute();
                         messageSent(mAudio);
                         // Toast.makeText(getActivity(), "Audio sent to: " + mEmail, Toast.LENGTH_SHORT).show();
                     } catch(Exception e) {

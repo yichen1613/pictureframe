@@ -8,34 +8,36 @@ import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
 
 public class SendEmailAsyncTask extends AsyncTask<Void, Void, Boolean> {
+    public static final String TAG = "SendEmailAsyncTask";
+    
     private String recipients;
     private String subject;
     private String body;
-    private String attachment_location;
+    private String[] attachments;
 
     GmailSender sender = new GmailSender("blair.intouch@gmail.com", "familiesintouch");
 
-    public SendEmailAsyncTask(String recipients, String subject, String body, String attachment_location) {
-        if (BuildConfig.DEBUG) Log.v(SendEmailAsyncTask.class.getName(), "SendEmailAsyncTask()");
+    public SendEmailAsyncTask(String recipients, String subject, String body, String[] attachments) {
+        if (BuildConfig.DEBUG) Log.v(TAG, "SendEmailAsyncTask()");
 
         this.recipients = recipients;
         this.subject = subject;
         this.body = body;
-        this.attachment_location = attachment_location;
+        this.attachments = attachments;
     }
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        if (BuildConfig.DEBUG) Log.v(SendEmailAsyncTask.class.getName(), "doInBackground()");
+        if (BuildConfig.DEBUG) Log.v(TAG, "doInBackground()");
         try {
-            sender.sendMail(this.subject, this.body, "blair.intouch@gmail.com", this.recipients, this.attachment_location);
+            sender.sendMail(this.subject, this.body, "blair.intouch@gmail.com", this.recipients, this.attachments);
             return true;
         } catch (AuthenticationFailedException e) {
-            Log.e(SendEmailAsyncTask.class.getName(), "Bad account details");
+            Log.e(TAG, "Bad account details");
             e.printStackTrace();
             return false;
         } catch (MessagingException e) {
-            Log.e(SendEmailAsyncTask.class.getName(), "Message to " + this.recipients + " failed");
+            Log.e(TAG, "Message to " + this.recipients + " failed");
             e.printStackTrace();
             return false;
         } catch (Exception e) {
