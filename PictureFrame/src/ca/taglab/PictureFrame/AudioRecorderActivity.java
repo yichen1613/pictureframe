@@ -81,6 +81,7 @@ public class AudioRecorderActivity extends Activity {
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
+        mSendButton.setVisibility(View.VISIBLE);
     }
 
     class RecordButton extends Button {
@@ -182,19 +183,20 @@ public class AudioRecorderActivity extends Activity {
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         0));
-        mSendButton = new SendButton(this);
-        ll.addView(mSendButton,
-                new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        0));
-        setContentView(ll);
         mCancelButton = new CancelButton(this);
         ll.addView(mCancelButton,
                 new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         0));
+        mSendButton = new SendButton(this);
+        ll.addView(mSendButton,
+                new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        0));
+        mSendButton.setVisibility(View.GONE);
+        
         setContentView(ll);
     }
 
