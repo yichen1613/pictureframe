@@ -450,28 +450,26 @@ public class ScreenSlidePageFragment extends Fragment {
 
 
     private void messageSent(View v) {
-        MediaPlayer mPlayer = MediaPlayer.create(getActivity().getApplicationContext(), R.raw.success_low);
         switch(v.getId()) {
             case R.id.video:
                 mConfirmation.setImageResource(R.drawable.confirm_red);
-                mPlayer.start();
                 break;
 
             case R.id.photo:
                 mConfirmation.setImageResource(R.drawable.confirm_blue);
-                mPlayer.start();
                 break;
             
             case R.id.audio:
                 mConfirmation.setImageResource(R.drawable.confirm_green);
-                mPlayer.start();
                 break;
 
             case R.id.wave:
                 mConfirmation.setImageResource(R.drawable.confirm_orange);
-                mPlayer.start();
                 break;
         }
+
+        MediaPlayer mPlayer = MediaPlayer.create(getActivity().getApplicationContext(), R.raw.success_low);
+        mPlayer.start();
 
         mConfirmation.setAlpha(0f);
         mConfirmation.setVisibility(View.VISIBLE);
