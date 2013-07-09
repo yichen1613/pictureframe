@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 
@@ -35,20 +34,10 @@ public class LoginActivity extends Activity {
         e.putString("password", mPassword);
         e.commit();
         
-        /**
-        SharedPreferences prefs = getSharedPreferences("ca.taglab.PictureFrame", MODE_PRIVATE);
-        String mEmail2 = prefs.getString("email", "");
-        String mPassword2 = prefs.getString("password", "");
-        
-        Toast.makeText(getApplicationContext(), "Logging in... email: " + mEmail2 + ", password: " + mPassword2, Toast.LENGTH_LONG).show();
-        */
-        
-        Toast.makeText(this, "Logging in...", Toast.LENGTH_SHORT).show();
         finish();
     }
 
     public void cancel(View v) {
-        Toast.makeText(this, "Cancelling logging in...", Toast.LENGTH_SHORT).show();
         finish();
     }
     
