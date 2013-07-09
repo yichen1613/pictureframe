@@ -30,13 +30,13 @@ public class LoginActivity extends Activity {
         String mPassword = password.getText().toString().trim();
         
         // store email, password in SharedPreferences object
-        SharedPreferences.Editor e = this.getPreferences(Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor e = this.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE).edit();
         e.putString("email", mEmail);
         e.putString("password", mPassword);
         e.commit();
         
         /**
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("ca.taglab.PictureFrame", MODE_PRIVATE);
         String mEmail2 = prefs.getString("email", "");
         String mPassword2 = prefs.getString("password", "");
         

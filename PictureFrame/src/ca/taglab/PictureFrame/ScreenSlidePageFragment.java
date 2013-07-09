@@ -21,6 +21,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -36,6 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import ca.taglab.PictureFrame.database.UserTable;
 import ca.taglab.PictureFrame.email.SendEmailAsyncTask;
 
@@ -46,19 +48,29 @@ import ca.taglab.PictureFrame.email.SendEmailAsyncTask;
 public class ScreenSlidePageFragment extends Fragment {
 
     /**
-     * The image file path where the user's picture is located.
+     * The image file path where the recipient's picture is located.
      */
     private String mImgPath;
 
     /**
-     * The user's email.
+     * The recipient's email.
      */
     private String mEmail;
 
     /**
-     * The user's name.
+     * The recipient's name.
      */
     private String mName;
+
+    /**
+     * The sender's email.
+     */
+    private String mSenderEmail;
+
+    /**
+     * The sender's password.
+     */
+    private String mSenderPwd;
     
     private static final String TAG = "ScreenSlidePageFragment";
 
@@ -93,6 +105,16 @@ public class ScreenSlidePageFragment extends Fragment {
         mImgPath = getArguments().getString(UserTable.COL_IMG);
         mEmail = getArguments().getString(UserTable.COL_EMAIL);
         mName = getArguments().getString(UserTable.COL_NAME);
+        
+        SharedPreferences prefs = getActivity().getSharedPreferences("ca.taglab.PictureFrame", getActivity().MODE_PRIVATE);
+        mSenderEmail = prefs.getString("email", "");
+        mSenderPwd = prefs.getString("password", "");
+        
+        // Check that the user has logged in first
+        if (mSenderEmail.equals("") || mSenderPwd.equals("")) {
+            // TODO: Redirect user to LoginActivity
+            Toast.makeText(getActivity(), "Please log in first!", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -182,7 +204,7 @@ public class ScreenSlidePageFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    new SendEmailAsyncTask(mEmail, "PictureFrame: I'm thinking of you", "Wave sent via PictureFrame", null).execute();
+                    new SendEmailAsyncTask(mSenderEmail, mSenderPwd, mEmail, "PictureFrame: I'm thinking of you", "Wave sent via PictureFrame", null).execute();
                     //Toast.makeText(getActivity(), "Wave sent to: " + mEmail, Toast.LENGTH_SHORT).show();
                     hideOptions();
                     messageSent(v);
@@ -250,7 +272,7 @@ public class ScreenSlidePageFragment extends Fragment {
                     try {
                         String video_location = getLastVideoId();
                         String[] attachments = { video_location };
-                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have a video message for you", "", attachments).execute();
+                        new SendEmailAsyncTask(mSenderEmail, mSenderPwd, mEmail, "PictureFrame: I have a video message for you", "", attachments).execute();
                         messageSent(mVideo);
                     } catch (Exception e) {
                         // Video to mEmail failed
@@ -269,7 +291,7 @@ public class ScreenSlidePageFragment extends Fragment {
                     try {
                         String audio_location = data.getStringExtra("audio_location");
                         String[] attachments = { audio_location };
-                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have an audio message for you", "", attachments).execute();
+                        new SendEmailAsyncTask(mSenderEmail, mSenderPwd, mEmail, "PictureFrame: I have an audio message for you", "", attachments).execute();
                         messageSent(mAudio);
                     } catch(Exception e) {
                         // Audio to mEmail failed
@@ -287,7 +309,7 @@ public class ScreenSlidePageFragment extends Fragment {
                     try {
                         String audio_location = data.getStringExtra("audio_location");
                         mAttachments[1] = audio_location;
-                        new SendEmailAsyncTask(mEmail, "PictureFrame: I have a photo for you", "", mAttachments).execute();
+                        new SendEmailAsyncTask(mSenderEmail, mSenderPwd, mEmail, "PictureFrame: I have a photo for you", "", mAttachments).execute();
                         messageSent(mPhoto);
                     } catch(Exception e) {
                         // Photo and audio caption to mEmail failed
