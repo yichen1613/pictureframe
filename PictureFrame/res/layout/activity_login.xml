@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"    
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_weight="1"
+              android:layout_gravity="left"
+              android:layout_marginLeft="40dp"
+              android:layout_marginRight="40dp"
+              android:paddingLeft="10dp"
+              android:paddingRight="10dp">
+    <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:inputType="textWebEmailAddress"
+            android:textSize="35dp"
+            android:hint="Email"/>
+
+    <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:textSize="35dp"
+            android:hint="Password" />
+
+    <LinearLayout android:orientation="horizontal"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="70dp">
+        <Button
+                android:id="@+id/login"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginRight="40dp"
+                android:onClick="login"
+                android:textSize="35dp"
+                android:text="@string/login" />
+
+        <Button
+                android:id="@+id/cancel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginLeft="40dp"
+                android:onClick="cancel"
+                android:textSize="35dp"
+                android:text="@string/cancel" />
+    </LinearLayout>
+
+</LinearLayout>
