@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 
@@ -32,9 +35,18 @@ public class LoginActivity extends Activity {
         SharedPreferences.Editor e = this.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE).edit();
         e.putString("email", mEmail);
         e.putString("password", mPassword);
-        e.commit();
         
-        finish();
+        if (!mEmail.equals("") && !mPassword.equals("")) {
+            e.commit();
+            Toast.makeText(this, "Email: " + mEmail + ", Password: " + mPassword, Toast.LENGTH_LONG).show();
+            finish();
+        } else {
+            Toast toast = Toast.makeText(this, "Blank fields are not allowed", Toast.LENGTH_LONG);
+            LinearLayout toastLayout = (LinearLayout) toast.getView();
+            TextView toastTV = (TextView) toastLayout.getChildAt(0);
+            toastTV.setTextSize(30);
+            toast.show();
+        }
     }
 
     public void cancel(View v) {

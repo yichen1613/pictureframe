@@ -3,10 +3,10 @@ package ca.taglab.PictureFrame;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.*;
 import ca.taglab.PictureFrame.database.AddExistingPicture;
 import ca.taglab.PictureFrame.database.AddPicture;
 import ca.taglab.PictureFrame.database.DatabaseHelper;
@@ -50,6 +50,21 @@ public class MyActivity extends ListActivity {
                 android.R.layout.simple_list_item_1,
                 android.R.id.text1,
                 mSamples));
+
+        // Check that the user has logged in first
+        SharedPreferences prefs = getSharedPreferences("ca.taglab.PictureFrame", MODE_PRIVATE);
+        String mSenderEmail = prefs.getString("email", "");
+        String mSenderPwd = prefs.getString("password", "");
+
+        if (mSenderEmail.equals("") || mSenderPwd.equals("")) {
+            Toast toast = Toast.makeText(this, "Please log in first!", Toast.LENGTH_LONG);
+            LinearLayout toastLayout = (LinearLayout) toast.getView();
+            TextView toastTV = (TextView) toastLayout.getChildAt(0);
+            toastTV.setTextSize(30);
+            toast.show();
+            
+            startActivity(new Intent(this, LoginActivity.class));
+        }
 
     }
 
