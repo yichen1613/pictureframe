@@ -79,10 +79,6 @@ public class GmailSender extends javax.mail.Authenticator {
         messageBodyPart.setFileName(filename);
 
         _multipart.addBodyPart(messageBodyPart);
-
-        // BodyPart messageBodyPart2 = new MimeBodyPart();
-        // messageBodyPart2.setText(subject);
-        // _multipart.addBodyPart(messageBodyPart2);
     }
 
     public class ByteArrayDataSource implements DataSource {

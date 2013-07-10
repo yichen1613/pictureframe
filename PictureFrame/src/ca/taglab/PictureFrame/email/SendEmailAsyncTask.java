@@ -60,16 +60,24 @@ public class SendEmailAsyncTask extends AsyncTask<Void, Void, String> {
     }
 
     protected void onPostExecute(String result){
+        
         if (result.equalsIgnoreCase("Email sent successfully")) {
-            // TODO: Fix ScreenSlidePageFragment so that the success checkmark + sound is only displayed here
+            // Checkmark + success sound should only be displayed upon this result (fix ScreenSlidePageFragment)?
+            
         } else if (result.equalsIgnoreCase("AuthenticationFailedException")) {
             Toast toast = Toast.makeText(ctx, "Your email or password is invalid. Please log in again.", Toast.LENGTH_LONG);
             LinearLayout toastLayout = (LinearLayout) toast.getView();
             TextView toastTV = (TextView) toastLayout.getChildAt(0);
             toastTV.setTextSize(30);
             toast.show();
+            
         } else if (result.equalsIgnoreCase("MessagingException")) {
-            Toast.makeText(ctx, "Email to " + this.recipients + " failed", Toast.LENGTH_LONG).show();
+            Toast toast = Toast.makeText(ctx, "Network error: Email to " + this.recipients + " failed", Toast.LENGTH_LONG);
+            LinearLayout toastLayout = (LinearLayout) toast.getView();
+            TextView toastTV = (TextView) toastLayout.getChildAt(0);
+            toastTV.setTextSize(30);
+            toast.show();
+            
         } else {
             Toast.makeText(ctx, "A general error occurred", Toast.LENGTH_LONG).show();
         }
