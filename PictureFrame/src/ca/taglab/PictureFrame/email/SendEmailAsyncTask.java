@@ -23,7 +23,6 @@ public class SendEmailAsyncTask extends AsyncTask<Void, Void, String> {
     private String subject;
     private String body;
     private String[] attachments;
-    private GmailSender sender;
 
     public SendEmailAsyncTask(Context context, String recipients, String subject, String body, String[] attachments) {
         if (BuildConfig.DEBUG) Log.v(TAG, "SendEmailAsyncTask()");
@@ -37,15 +36,14 @@ public class SendEmailAsyncTask extends AsyncTask<Void, Void, String> {
         SharedPreferences prefs = ctx.getSharedPreferences("ca.taglab.PictureFrame", ctx.MODE_PRIVATE);
         this.senderEmail = prefs.getString("email", "");
         this.senderPwd = prefs.getString("password", "");
-        
-        Log.d(TAG, "Creating GmailSender with this.senderEmail: " + this.senderEmail + ", this.senderPwd: " + this.senderPwd);
-        this.sender = new GmailSender(this.senderEmail, this.senderPwd);
     }
 
     @Override
     protected String doInBackground(Void... params) {
         if (BuildConfig.DEBUG) Log.v(TAG, "doInBackground()");
         try {
+            Log.d(TAG, "Creating GmailSender with this.senderEmail: " + this.senderEmail + ", this.senderPwd: " + this.senderPwd);
+            GmailSender sender = new GmailSender(this.senderEmail, this.senderPwd);
             sender.sendMail(this.subject, this.body, this.senderEmail, this.recipients, this.attachments);
             return "Email sent successfully";
         } catch (AuthenticationFailedException e) {
