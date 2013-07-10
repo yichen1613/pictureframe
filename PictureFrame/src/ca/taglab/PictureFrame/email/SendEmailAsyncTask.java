@@ -1,12 +1,14 @@
 package ca.taglab.PictureFrame.email;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import ca.taglab.PictureFrame.BuildConfig;
+import ca.taglab.PictureFrame.LoginActivity;
 
 import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
@@ -70,6 +72,10 @@ public class SendEmailAsyncTask extends AsyncTask<Void, Void, String> {
             TextView toastTV = (TextView) toastLayout.getChildAt(0);
             toastTV.setTextSize(30);
             toast.show();
+
+            Intent intent = new Intent(ctx, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ctx.startActivity(intent);
             
         } else if (result.equalsIgnoreCase("MessagingException")) {
             Toast toast = Toast.makeText(ctx, "Network error: Email to " + this.recipients + " failed", Toast.LENGTH_LONG);

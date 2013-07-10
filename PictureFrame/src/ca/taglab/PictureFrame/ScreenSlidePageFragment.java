@@ -36,6 +36,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import ca.taglab.PictureFrame.database.UserTable;
@@ -112,8 +113,15 @@ public class ScreenSlidePageFragment extends Fragment {
         
         // Check that the user has logged in first
         if (mSenderEmail.equals("") || mSenderPwd.equals("")) {
-            // TODO: Redirect user to LoginActivity
-            Toast.makeText(getActivity(), "Please log in first!", Toast.LENGTH_LONG).show();
+            Toast toast = Toast.makeText(getActivity(), "Please log in first!", Toast.LENGTH_LONG);
+            LinearLayout toastLayout = (LinearLayout) toast.getView();
+            TextView toastTV = (TextView) toastLayout.getChildAt(0);
+            toastTV.setTextSize(30);
+            toast.show();
+            
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getActivity().startActivity(intent);
         }
     }
 
