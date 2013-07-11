@@ -44,6 +44,9 @@
         <activity android:name="ca.taglab.PictureFrame.LoginActivity"
                   android:label="@string/title_log_in"
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
+        <activity android:name="ca.taglab.PictureFrame.ReceiveMailActivity"
+                  android:label="@string/title_receive_mail"
+                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
         <provider android:name=".provider.UserContentProvider"
                   android:authorities="ca.taglab.PictureFrame.provider" >
         </provider>
