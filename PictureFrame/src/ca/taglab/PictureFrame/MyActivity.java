@@ -43,7 +43,8 @@ public class MyActivity extends ListActivity {
                 new Sample(R.string.title_log_in, LoginActivity.class),
                 new Sample(R.string.title_add_picture, AddPicture.class),
                 new Sample(R.string.title_add_existing_picture, AddExistingPicture.class),
-                new Sample(R.string.title_view_gallery, ScreenSlideActivity.class)
+                new Sample(R.string.title_view_gallery, ScreenSlideActivity.class),
+                new Sample(R.string.title_receive_mail, ReceiveMailActivity.class)
         };
 
         setListAdapter(new ArrayAdapter<Sample>(this,
