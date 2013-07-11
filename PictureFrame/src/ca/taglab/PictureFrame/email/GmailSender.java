@@ -1,7 +1,5 @@
 package ca.taglab.PictureFrame.email;
 
-import android.util.Log;
-
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;

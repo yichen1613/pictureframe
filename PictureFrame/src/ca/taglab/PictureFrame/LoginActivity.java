@@ -38,7 +38,6 @@ public class LoginActivity extends Activity {
         
         if (!mEmail.isEmpty() && !mPassword.isEmpty()) {
             e.commit();
-            Toast.makeText(this, "Email: " + mEmail + ", Password: " + mPassword, Toast.LENGTH_LONG).show();
             finish();
         } else {
             Toast toast = Toast.makeText(this, "Blank fields are not allowed", Toast.LENGTH_LONG);
