@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import ca.taglab.PictureFrame.BuildConfig;
 import ca.taglab.PictureFrame.LoginActivity;
+import ca.taglab.PictureFrame.database.ObscuredSharedPreferences;
 
 import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
@@ -35,7 +36,7 @@ public class SendEmailAsyncTask extends AsyncTask<Void, Void, String> {
         this.body = body;
         this.attachments = attachments;
 
-        SharedPreferences prefs = ctx.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE);
+        SharedPreferences prefs = new ObscuredSharedPreferences(ctx, ctx.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE));
         this.senderEmail = prefs.getString("email", "");
         this.senderPwd = prefs.getString("password", "");
     }

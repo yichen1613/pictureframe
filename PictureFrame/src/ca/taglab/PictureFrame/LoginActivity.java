@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import ca.taglab.PictureFrame.database.ObscuredSharedPreferences;
 
 public class LoginActivity extends Activity {
 
@@ -31,8 +33,8 @@ public class LoginActivity extends Activity {
         String mEmail = email.getText().toString().trim();
         String mPassword = password.getText().toString().trim();
         
-        // store email, password in SharedPreferences object
-        SharedPreferences.Editor e = this.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE).edit();
+        // store email, password in SharedPreferences object after encryption
+        SharedPreferences.Editor e = (new ObscuredSharedPreferences(this, this.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE))).edit();
         e.putString("email", mEmail);
         e.putString("password", mPassword);
         
