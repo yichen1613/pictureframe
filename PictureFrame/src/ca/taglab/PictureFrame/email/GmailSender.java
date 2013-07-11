@@ -1,5 +1,7 @@
 package ca.taglab.PictureFrame.email;
 
+import android.util.Log;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -41,7 +43,7 @@ public class GmailSender extends javax.mail.Authenticator {
         props.put("mail.smtp.socketFactory.fallback", "false");
         props.setProperty("mail.smtp.quitwait", "false");
 
-        session = Session.getDefaultInstance(props, this);
+        session = Session.getInstance(props, this); // get a new Session object
         _multipart = new MimeMultipart();
     }
 
@@ -69,6 +71,7 @@ public class GmailSender extends javax.mail.Authenticator {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipients));
         else
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipients));
+        
         Transport.send(message);
     }
 

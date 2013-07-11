@@ -36,7 +36,7 @@ public class LoginActivity extends Activity {
         e.putString("email", mEmail);
         e.putString("password", mPassword);
         
-        if (!mEmail.equals("") && !mPassword.equals("")) {
+        if (!mEmail.isEmpty() && !mPassword.isEmpty()) {
             e.commit();
             Toast.makeText(this, "Email: " + mEmail + ", Password: " + mPassword, Toast.LENGTH_LONG).show();
             finish();

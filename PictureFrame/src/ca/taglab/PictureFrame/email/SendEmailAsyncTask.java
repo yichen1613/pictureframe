@@ -1,6 +1,7 @@
 package ca.taglab.PictureFrame.email;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import ca.taglab.PictureFrame.BuildConfig;
+import ca.taglab.PictureFrame.LoginActivity;
 
 import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
@@ -33,7 +35,7 @@ public class SendEmailAsyncTask extends AsyncTask<Void, Void, String> {
         this.body = body;
         this.attachments = attachments;
 
-        SharedPreferences prefs = ctx.getSharedPreferences("ca.taglab.PictureFrame", ctx.MODE_PRIVATE);
+        SharedPreferences prefs = ctx.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE);
         this.senderEmail = prefs.getString("email", "");
         this.senderPwd = prefs.getString("password", "");
     }
@@ -42,7 +44,6 @@ public class SendEmailAsyncTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         if (BuildConfig.DEBUG) Log.v(TAG, "doInBackground()");
         try {
-            Log.d(TAG, "Creating GmailSender with this.senderEmail: " + this.senderEmail + ", this.senderPwd: " + this.senderPwd);
             GmailSender sender = new GmailSender(this.senderEmail, this.senderPwd);
             sender.sendMail(this.subject, this.body, this.senderEmail, this.recipients, this.attachments);
             return "Email sent successfully";
@@ -72,9 +73,9 @@ public class SendEmailAsyncTask extends AsyncTask<Void, Void, String> {
             toastTV.setTextSize(30);
             toast.show();
 
-//            Intent intent = new Intent(ctx, LoginActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            ctx.startActivity(intent);
+            Intent intent = new Intent(ctx, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            ctx.startActivity(intent);
             
         } else if (result.equalsIgnoreCase("MessagingException")) {
             Toast toast = Toast.makeText(ctx, "Network error: Email to " + this.recipients + " failed", Toast.LENGTH_LONG);

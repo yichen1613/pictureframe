@@ -56,7 +56,7 @@ public class MyActivity extends ListActivity {
         String mSenderEmail = prefs.getString("email", "");
         String mSenderPwd = prefs.getString("password", "");
 
-        if (mSenderEmail.equals("") || mSenderPwd.equals("")) {
+        if (mSenderEmail.isEmpty() || mSenderPwd.isEmpty()) {
             Toast toast = Toast.makeText(this, "Please log in first!", Toast.LENGTH_LONG);
             LinearLayout toastLayout = (LinearLayout) toast.getView();
             TextView toastTV = (TextView) toastLayout.getChildAt(0);
