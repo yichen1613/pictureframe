@@ -49,7 +49,7 @@ public class SendEmailAsyncTask extends AsyncTask<Void, Void, String> {
             sender.sendMail(this.subject, this.body, this.senderEmail, this.recipients, this.attachments);
             return "Email sent successfully";
         } catch (AuthenticationFailedException e) {
-            Log.e(TAG, "Bad account details");
+            Log.e(TAG, "Invalid credentials");
             e.printStackTrace();
             return "AuthenticationFailedException";
         } catch (MessagingException e) {
