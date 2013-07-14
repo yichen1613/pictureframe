@@ -23,11 +23,15 @@ public class GmailReader {
     
     private static final String TAG = "GmailReader";
     
-    public GmailReader() {
-        
+    private String email;
+    private String pwd;
+    
+    public GmailReader(String email, String pwd) {
+        this.email = email;
+        this.pwd = pwd;
     }
     
-    public void readMail() {
+    public synchronized void readMail() {
         
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "imaps");
@@ -36,7 +40,7 @@ public class GmailReader {
             Session session = Session.getDefaultInstance(props, null);
             //session.setDebug(true);
             Store store = session.getStore("imaps");
-            store.connect("imap.gmail.com", "blair.intouch@gmail.com", "familiesintouch");
+            store.connect("imap.gmail.com", this.email, this.pwd);
             Log.d(TAG, store.toString());
 
             Folder inbox = store.getFolder("Inbox");

@@ -21,36 +21,24 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
 
     Context ctx;
 
-    /**
-    private String senderEmail;
-    private String senderPwd;
-    private String recipients;
-    private String subject;
-    private String body;
-    private String[] attachments;
-     */
+    private String mEmail;
+    private String mPwd;
 
     public ReadEmailAsyncTask(Context context) {
         if (BuildConfig.DEBUG) Log.v(TAG, "ReadEmailAsyncTask()");
 
         this.ctx = context;
-        /**
-        this.recipients = recipients;
-        this.subject = subject;
-        this.body = body;
-        this.attachments = attachments;
 
         SharedPreferences prefs = new ObscuredSharedPreferences(ctx, ctx.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE));
-        this.senderEmail = prefs.getString("email", "");
-        this.senderPwd = prefs.getString("password", "");
-         */
+        this.mEmail = prefs.getString("email", "");
+        this.mPwd = prefs.getString("password", "");
     }
 
     @Override
     protected String doInBackground(Void... params) {
         if (BuildConfig.DEBUG) Log.v(TAG, "doInBackground()");
         try {
-            GmailReader reader = new GmailReader();
+            GmailReader reader = new GmailReader(this.mEmail, this.mPwd);
             reader.readMail();
             return "Emails read successfully";
         } catch (Exception e) {
@@ -65,7 +53,7 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
 
         if (result.equalsIgnoreCase("Emails read successfully")) {
             // Checkmark + success sound should only be displayed upon this result (fix ScreenSlidePageFragment)?
-            Toast.makeText(ctx, "Emails read successfully!", Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx, "Emails read successfully! Email: " + this.mEmail + ", password: " + this.mPwd, Toast.LENGTH_LONG).show();
 
         } /**else if (result.equalsIgnoreCase("AuthenticationFailedException")) {
             Toast toast = Toast.makeText(ctx, "Your email or password is invalid. Please log in again.", Toast.LENGTH_LONG);
