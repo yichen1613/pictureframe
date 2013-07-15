@@ -16,6 +16,7 @@ import javax.mail.AuthenticationFailedException;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.security.NoSuchProviderException;
+import java.util.ArrayList;
 
 public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
 
@@ -25,6 +26,7 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
 
     private String mEmail;
     private String mPwd;
+    private ArrayList<GmailReader.Msg> msgArrayList;
 
     public ReadEmailAsyncTask(Context context) {
         if (BuildConfig.DEBUG) Log.v(TAG, "ReadEmailAsyncTask()");
@@ -41,8 +43,8 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
         if (BuildConfig.DEBUG) Log.v(TAG, "doInBackground()");
         try {
             GmailReader reader = new GmailReader(this.mEmail, this.mPwd);
-            reader.readMail();
-            return "Emails read successfully";
+            this.msgArrayList = reader.readMail();
+            return "Emails retrieved successfully";
         } catch (AuthenticationFailedException e) {
             Log.e(TAG, "Invalid credentials");
             e.printStackTrace();
@@ -69,8 +71,22 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
 
     protected void onPostExecute(String result){
         
-        if (result.equalsIgnoreCase("Emails read successfully")) {
-            //Toast.makeText(ctx, "Emails read successfully! Email: " + this.mEmail + ", password: " + this.mPwd, Toast.LENGTH_LONG).show();
+        if (result.equalsIgnoreCase("Emails retrieved successfully")) {
+            Toast.makeText(ctx, "Emails retrieved successfully!", Toast.LENGTH_LONG).show();
+            for (GmailReader.Msg msg : this.msgArrayList) {
+                String msgContents = "==============Message " + (msgArrayList.indexOf(msg) + 1) + "=============="
+                        + "\nEmail Num: " + msg.mNum 
+                        + "\nDate: " + msg.mDate
+                        + "\nFrom: " + msg.mFrom
+                        + "\nSubject: " + msg.mSubject
+                        + "\nBody: " + msg.mBody;
+                
+                Toast toast = Toast.makeText(ctx, msgContents, Toast.LENGTH_LONG);
+                LinearLayout toastLayout = (LinearLayout) toast.getView();
+                TextView toastTV = (TextView) toastLayout.getChildAt(0);
+                toastTV.setTextSize(25);
+                toast.show();
+            }
 
         } else if (result.equalsIgnoreCase("AuthenticationFailedException")) {
             Toast toast = Toast.makeText(ctx, "Your email or password is invalid. Please log in again.", Toast.LENGTH_LONG);
