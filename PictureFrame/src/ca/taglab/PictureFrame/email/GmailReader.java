@@ -1,6 +1,7 @@
 package ca.taglab.PictureFrame.email;
 
 import android.util.Log;
+import com.sun.mail.imap.IMAPMessage;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -36,16 +37,13 @@ public class GmailReader {
         props.setProperty("mail.store.protocol", "imaps");
         
         Session session = Session.getDefaultInstance(props, null);
-        //session.setDebug(true);
+        Log.d(TAG, session.toString());
         Store store = session.getStore("imaps");
         store.connect("imap.gmail.com", this.email, this.pwd);
         Log.d(TAG, store.toString());
 
         Folder inbox = store.getFolder("Inbox");
-        if (!inbox.exists() || inbox == null) {
-            return null;
-        }
-        inbox.open(Folder.READ_ONLY);
+        inbox.open(Folder.READ_WRITE);
         
         int numTotalMsgs = inbox.getMessageCount(); 
         int numUnreadMsgs = inbox.getUnreadMessageCount();
@@ -62,6 +60,9 @@ public class GmailReader {
         for (Message message : messages) {
             // message.setFlag(Flags.Flag.ANSWERED, true);
             // message.setFlag(Flags.Flag.SEEN, true);
+            
+            // use PEEK variant of FETCH when fetching message content
+            ((IMAPMessage)message).setPeek(true);
             
             int msgNum = message.getMessageNumber();
             String msgDate = message.getReceivedDate().toString();
@@ -80,12 +81,17 @@ public class GmailReader {
             msgArrayList.add(msg);
             Log.d(TAG, "Number of msgs in msgArrayList: " + msgArrayList.size());
             
-            i++;
+            // mark message as read
+            inbox.setFlags(new Message[] {message}, new Flags(Flags.Flag.SEEN), true);
             
-            //inbox.close(false);
-            //store.close();
+            i++;
 
         }
+        
+        // close connection
+        inbox.close(false);
+        store.close();
+        
         return msgArrayList;
     }
     
