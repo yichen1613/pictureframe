@@ -6,6 +6,7 @@ import com.sun.mail.imap.IMAPMessage;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
+import javax.activation.DataHandler;
 import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.Flags;
@@ -68,16 +69,40 @@ public class GmailReader {
             String msgDate = message.getReceivedDate().toString();
             String msgFrom = message.getFrom()[0].toString();
             String msgSubject = message.getSubject();
-            String msgBody = message.getContent().toString();
 
             Log.d(TAG, "==============Message " + (i + 1) + "==============");
             Log.d(TAG, "Email Num: " + msgNum);
             Log.d(TAG, "Date: " + msgDate);
             Log.d(TAG, "From: " + msgFrom);
             Log.d(TAG, "Subject: " + msgSubject);
-            Log.d(TAG, "Body: " + msgBody);
 
-            Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, msgBody);
+            Object msgBody = message.getContent();
+            String msgBodyFinal = "";
+            if (msgBody instanceof String) {
+                // plain text email
+                Log.d(TAG, "PLAIN TEXT body: " + msgBody.toString());   
+                msgBodyFinal = msgBody.toString();
+            } else if (msgBody instanceof Multipart) {
+                Multipart mp = (Multipart) msgBody;
+                for (int j = 0; j < mp.getCount(); j++) {
+                    BodyPart bp = mp.getBodyPart(j);
+                    String disposition = bp.getDisposition();
+                    
+                    if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
+                        Log.d(TAG, "Email has attachment");
+                        DataHandler handler = bp.getDataHandler();
+                        Log.d(TAG, "Attachment filename: " + handler.getName());
+                    } else {
+                        Log.d(TAG, "MULTIPART body #" + j + ": " + bp.getContent().toString());
+                    }
+                    
+                    if (j == 0) {
+                        msgBodyFinal = bp.getContent().toString();   
+                    }
+                }
+            }
+
+            Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, msgBodyFinal);
             msgArrayList.add(msg);
             Log.d(TAG, "Number of msgs in msgArrayList: " + msgArrayList.size());
             
