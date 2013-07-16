@@ -13,6 +13,7 @@ import ca.taglab.PictureFrame.LoginActivity;
 import ca.taglab.PictureFrame.database.ObscuredSharedPreferences;
 
 import javax.mail.AuthenticationFailedException;
+import javax.mail.FolderClosedException;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.security.NoSuchProviderException;
@@ -44,11 +45,7 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
         try {
             GmailReader reader = new GmailReader(this.mEmail, this.mPwd);
             this.msgArrayList = reader.readMail();
-            if (this.msgArrayList != null) {
-                return "Emails retrieved successfully";
-            } else {
-                return "Inbox was not found";
-            }
+            return "Emails retrieved successfully";
         } catch (AuthenticationFailedException e) {
             Log.e(TAG, "Invalid credentials");
             e.printStackTrace();
@@ -57,6 +54,10 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
             Log.e(TAG, "Session attempted to instantiate a Provider that does not exist");
             e.printStackTrace();
             return "NoSuchProviderException";
+        } catch (FolderClosedException e) {
+            Log.e(TAG, "Lost folder connection to server");
+            e.printStackTrace();
+            return "FolderClosedException";
         } catch (MessagingException e) {
             Log.e(TAG, "Email retrieval from " + this.mEmail + " failed");
             e.printStackTrace();
@@ -91,9 +92,7 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
                 toastTV.setTextSize(25);
                 toast.show();
             }
-
-        } else if (result.equalsIgnoreCase("Inbox was not found")) {
-            Toast.makeText(ctx, "Folder error: Inbox was not found", Toast.LENGTH_LONG).show();
+            
         } else if (result.equalsIgnoreCase("AuthenticationFailedException")) {
             Toast toast = Toast.makeText(ctx, "Your email or password is invalid. Please log in again.", Toast.LENGTH_LONG);
             LinearLayout toastLayout = (LinearLayout) toast.getView();
@@ -107,6 +106,9 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
 
         } else if (result.equalsIgnoreCase("NoSuchProviderException"))  {
             Toast.makeText(ctx, "Provider error: Provider does not exist", Toast.LENGTH_LONG).show();
+        
+        } else if (result.equalsIgnoreCase("FolderClosedException")) {
+            Toast.makeText(ctx, "Network error: Lost connection to server", Toast.LENGTH_LONG).show();
         }
         
         else if (result.equalsIgnoreCase("MessagingException")) {
