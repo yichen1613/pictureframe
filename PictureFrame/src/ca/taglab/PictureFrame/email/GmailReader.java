@@ -42,7 +42,11 @@ public class GmailReader {
         Log.d(TAG, store.toString());
 
         Folder inbox = store.getFolder("Inbox");
+        if (!inbox.exists() || inbox == null) {
+            return null;
+        }
         inbox.open(Folder.READ_ONLY);
+        
         int numTotalMsgs = inbox.getMessageCount(); 
         int numUnreadMsgs = inbox.getUnreadMessageCount();
         Log.d(TAG, "Total Msgs: " + numTotalMsgs + " | Unread Msgs: " + numUnreadMsgs);

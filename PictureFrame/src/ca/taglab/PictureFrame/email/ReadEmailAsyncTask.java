@@ -44,7 +44,11 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
         try {
             GmailReader reader = new GmailReader(this.mEmail, this.mPwd);
             this.msgArrayList = reader.readMail();
-            return "Emails retrieved successfully";
+            if (this.msgArrayList != null) {
+                return "Emails retrieved successfully";
+            } else {
+                return "Inbox was not found";
+            }
         } catch (AuthenticationFailedException e) {
             Log.e(TAG, "Invalid credentials");
             e.printStackTrace();
@@ -88,6 +92,8 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
                 toast.show();
             }
 
+        } else if (result.equalsIgnoreCase("Inbox was not found")) {
+            Toast.makeText(ctx, "Folder error: Inbox was not found", Toast.LENGTH_LONG).show();
         } else if (result.equalsIgnoreCase("AuthenticationFailedException")) {
             Toast toast = Toast.makeText(ctx, "Your email or password is invalid. Please log in again.", Toast.LENGTH_LONG);
             LinearLayout toastLayout = (LinearLayout) toast.getView();
