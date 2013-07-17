@@ -79,27 +79,30 @@ public class GmailReader {
             Object msgBody = message.getContent();
             String msgBodyFinal = "";
             if (msgBody instanceof String) {
-                // plain text email
+                // plain text message
                 Log.d(TAG, "PLAIN TEXT body: " + msgBody.toString());   
                 msgBodyFinal = msgBody.toString();
             } else if (msgBody instanceof Multipart) {
+                // multipart message
                 Multipart mp = (Multipart) msgBody;
                 for (int j = 0; j < mp.getCount(); j++) {
                     BodyPart bp = mp.getBodyPart(j);
                     String disposition = bp.getDisposition();
                     
-                    if (disposition != null && (disposition.equalsIgnoreCase("ATTACHMENT"))) {
+                    if (disposition != null && (disposition.equalsIgnoreCase(BodyPart.ATTACHMENT))) {
                         Log.d(TAG, "Email has attachment");
                         DataHandler handler = bp.getDataHandler();
                         Log.d(TAG, "Attachment filename: " + handler.getName());
                     } else {
                         Log.d(TAG, "MULTIPART body #" + j + ": " + bp.getContent().toString());
-                    }
-                    
-                    if (j == 0) {
-                        msgBodyFinal = bp.getContent().toString();   
+                        if (j == 0) {  // actual message (no HTML tags, etc.)
+                            msgBodyFinal = bp.getContent().toString();
+                        }
                     }
                 }
+            } else {
+                // unrecognized message type
+                Log.d(TAG, "Unrecognized message body type");
             }
 
             Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, msgBodyFinal);
