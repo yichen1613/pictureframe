@@ -11,26 +11,35 @@
               android:paddingLeft="10dp"
               android:paddingRight="10dp">
 
-    <LinearLayout android:orientation="horizontal"
+    <LinearLayout android:orientation="vertical"
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
                   android:layout_marginTop="70dp">
         <Button
                 android:id="@+id/receive_btn"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginRight="40dp"
-                android:onClick="receiveMail"
+                android:onClick="retrieveMail"
                 android:textSize="35dp"
-                android:text="@string/title_receive_mail" />
+                android:text="@string/retrieve_mail" />
+
+        <Button
+                android:id="@+id/receive_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="15dp"
+                android:onClick="refreshMail"
+                android:textSize="35dp"
+                android:text="@string/refresh_mail" />
 
         <Button
                 android:id="@+id/cancel"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginLeft="40dp"
+                android:layout_marginTop="70dp"
                 android:onClick="cancel"
                 android:textSize="35dp"
                 android:text="@string/cancel" />

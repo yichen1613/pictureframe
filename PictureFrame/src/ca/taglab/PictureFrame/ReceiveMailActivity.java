@@ -15,8 +15,12 @@ public class ReceiveMailActivity extends Activity {
         
     }
     
-    public void receiveMail(View v) {
+    public void retrieveMail(View v) {
         new ReadEmailAsyncTask(this).execute();
+    }
+    
+    public void refreshMail(View v) {
+        // to be implemented - check for any unread emails
     }
     
     public void cancel(View v) {
