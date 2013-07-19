@@ -72,66 +72,8 @@ public class GmailReader {
             Log.d(TAG, "Subject: " + msgSubject);
 
             Object msgBody = message.getContent();
-            String msgBodyFinal = "";
+            String msgBodyFinal = processMessage(msgBody, "");
             
-            if (msgBody instanceof String) {
-                // plain text message
-                Log.d(TAG, "PLAIN TEXT body: " + msgBody.toString());   
-                msgBodyFinal = msgBody.toString();
-            } else if (msgBody instanceof Multipart) {
-                // multipart message
-                Multipart mp = (Multipart) msgBody;
-                for (int j = 0; j < mp.getCount(); j++) {
-                    Part bp = mp.getBodyPart(j);
-                    String disposition = bp.getDisposition();
-                    
-                    if (disposition != null) {
-                        if (disposition.equalsIgnoreCase(Part.ATTACHMENT) || disposition.equalsIgnoreCase(Part.INLINE)) {
-                            Log.d(TAG, "Disposition != null");
-                            String filename = bp.getFileName();
-                            Log.d(TAG, "******Email has attachment******");
-                            //DataHandler handler = bp.getDataHandler();
-                            //Log.d(TAG, "Attachment filename: " + handler.getName());
-                            Log.d(TAG, "Attachment filename: " + filename);
-                        }
-                    } else {
-                        // Handle cases where message parts are NOT flagged appropriately
-                        Log.d(TAG, "Disposition == null, so check isMimeType");
-                        // check if plain
-                        MimeBodyPart mbp = (MimeBodyPart) bp;
-                        if (mbp.isMimeType("text/plain")) {
-                            // Handle plain
-                            Log.d(TAG, "isMimeType #" + j + ": text/plain");
-                            Log.d(TAG, "MULTIPART body #" + j + ": " + bp.getContent().toString());
-                            msgBodyFinal = bp.getContent().toString();
-                        } else if (mbp.isMimeType("text/html")) {
-                            Log.d(TAG, "isMimeType #" + j + ": text/html");
-                        } else if (mbp.isMimeType("text/*")) {
-                            Log.d(TAG, "isMimeType #" + j + ": text/*");
-                        } else if (mbp.isMimeType("message/*")) {
-                            Log.d(TAG, "isMimeType #" + j + ": message/*");   
-                        } else if (mbp.isMimeType("image/*")) {
-                            Log.d(TAG, "isMimeType #" + j + ": image/*");
-                        } else if (mbp.isMimeType("video/*")) {
-                            Log.d(TAG, "isMimeType #" + j + ": video/*");
-                        } else if (mbp.isMimeType("audio/*")) {
-                            Log.d(TAG, "isMimeType #" + j + ": audio/*");
-                        
-                        } else if (mbp.isMimeType("application/*")) {
-                            Log.d(TAG, "isMimeType #" + j + ": application/*");
-                        } else if (mbp.isMimeType("model/*")) {
-                            Log.d(TAG, "isMimeType #" + j + ": model/*");
-                        } else if (mbp.isMimeType("multipart/*")) {
-                            Log.d(TAG, "isMimeType #" + j + ": multipart/*");
-                            processMessage(bp.getContent());
-                        }
-                        else {
-                            Log.d(TAG, "isMimeType #" + j + " DID NOT MATCH! getContentType(): " + mbp.getContentType());
-                        }
-                    }
-                }
-            }
-
             Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, msgBodyFinal);
             msgArrayList.add(msg);
             Log.d(TAG, "Number of msgs in msgArrayList: " + msgArrayList.size());
@@ -150,15 +92,16 @@ public class GmailReader {
         return msgArrayList;
     }
 
-    public void processMessage(Object msgBody) throws Exception {
-        String msgBodyFinal = "";
-        Log.d(TAG, "...PROCESSING MULTIPART...");
+    public String processMessage(Object msgBody, String prevMsgBody) throws Exception {
+        String msgBodyFinal = prevMsgBody;
+        Log.d(TAG, "...PROCESSING MESSAGE...");
         if (msgBody instanceof String) {
             // plain text message
             Log.d(TAG, "PLAIN TEXT body: " + msgBody.toString());
-            msgBodyFinal = msgBody.toString();
+            msgBodyFinal = msgBodyFinal.concat(msgBody.toString());
         } else if (msgBody instanceof Multipart) {
             // multipart message
+            Log.d(TAG, "...PROCESSING MULTIPART...");
             Multipart mp = (Multipart) msgBody;
             for (int j = 0; j < mp.getCount(); j++) {
                 Part bp = mp.getBodyPart(j);
@@ -182,7 +125,7 @@ public class GmailReader {
                         // Handle plain
                         Log.d(TAG, "isMimeType #" + j + ": text/plain");
                         Log.d(TAG, "MULTIPART body #" + j + ": " + bp.getContent().toString());
-                        msgBodyFinal = bp.getContent().toString();
+                        msgBodyFinal = msgBodyFinal.concat(bp.getContent().toString());
                     } else if (mbp.isMimeType("text/html")) {
                         Log.d(TAG, "isMimeType #" + j + ": text/html");
                     } else if (mbp.isMimeType("text/*")) {
@@ -202,7 +145,7 @@ public class GmailReader {
                         Log.d(TAG, "isMimeType #" + j + ": model/*");
                     } else if (mbp.isMimeType("multipart/*")) {
                         Log.d(TAG, "isMimeType #" + j + ": multipart/*");
-                        processMessage(bp.getContent());
+                        msgBodyFinal = processMessage(bp.getContent(), msgBodyFinal);
                     }
                     else {
                         Log.d(TAG, "isMimeType #" + j + " DID NOT MATCH! getContentType(): " + mbp.getContentType());
@@ -210,6 +153,7 @@ public class GmailReader {
                 }
             }
         }
+        return msgBodyFinal;
     }
     
     
