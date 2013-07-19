@@ -95,25 +95,28 @@ public class GmailReader {
     }
 
     public String processMessage(Object msgBody, String prevMsgBody) throws Exception {
+        
         String msgBodyFinal = prevMsgBody;
         Log.d(TAG, "...PROCESSING MESSAGE...");
+        
         if (msgBody instanceof String) {
             // plain text message
             Log.d(TAG, "PLAIN TEXT body: " + msgBody.toString());
             msgBodyFinal = msgBodyFinal.concat(msgBody.toString());
+            
         } else if (msgBody instanceof Multipart) {
             // multipart message
             Log.d(TAG, "...PROCESSING MULTIPART...");
             Multipart mp = (Multipart) msgBody;
+            
             for (int j = 0; j < mp.getCount(); j++) {
                 Part bp = mp.getBodyPart(j);
                 String disposition = bp.getDisposition();
 
                 if (disposition != null) {
                     if (disposition.equalsIgnoreCase(Part.ATTACHMENT) || disposition.equalsIgnoreCase(Part.INLINE)) {
-                        Log.d(TAG, "Disposition != null");
-                        String filename = bp.getFileName();
                         Log.d(TAG, "******Email has attachment******");
+                        String filename = bp.getFileName();
 
                         // Download/save the attachment in external storage
                         File folder = new File(Environment.getExternalStorageDirectory() + "/pictureframe");
@@ -126,17 +129,25 @@ public class GmailReader {
                         if (isFolderCreated) {
                             String filepath = folder.getAbsolutePath() + "/" + filename;
                             File file = new File(filepath);
+                            // Check if file with the same name already exists in the directory - if so, append a number
+                            for (int i = 0; file.exists(); i++) {
+                                int pos = filepath.lastIndexOf(".");
+                                if (pos > 0) {
+                                    String filepathWithoutExt = filepath.substring(0, pos);
+                                    String fileExtension = filepath.substring(pos);
+                                    String newFilepath = filepathWithoutExt + "_" + i + fileExtension;
+                                    Log.d(TAG, "Old Filepath: " + filepath + ", Filepath without ext:" + filepathWithoutExt + ", File Extension: " + fileExtension + ", New Filepath: " + newFilepath);
+                                    file = new File(newFilepath);
+                                }
+                            }
                             ((MimeBodyPart) bp).saveFile(file);
-                            Log.d(TAG, "Saved the attachment to: " + filepath);
+                            Log.d(TAG, "Saved the attachment to: " + file.getAbsolutePath());
                         } else {
                             Log.d(TAG, "Error: Folder was not found/created!");
                         }
-                        
                     }
                 } else {
                     // Handle cases where message parts are NOT flagged appropriately
-                    Log.d(TAG, "Disposition == null, so check isMimeType");
-                    // check if plain
                     MimeBodyPart mbp = (MimeBodyPart) bp;
                     if (mbp.isMimeType("text/plain")) {
                         // Handle plain
@@ -163,8 +174,7 @@ public class GmailReader {
                     } else if (mbp.isMimeType("multipart/*")) {
                         Log.d(TAG, "isMimeType #" + j + ": multipart/*");
                         msgBodyFinal = processMessage(bp.getContent(), msgBodyFinal);
-                    }
-                    else {
+                    } else {
                         Log.d(TAG, "isMimeType #" + j + " DID NOT MATCH! getContentType(): " + mbp.getContentType());
                     }
                 }
