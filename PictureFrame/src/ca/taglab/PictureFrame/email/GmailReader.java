@@ -122,11 +122,11 @@ public class GmailReader {
                         String filename = bp.getFileName();
 
                         // Download/save the attachment in external storage
-                        File folder = new File(Environment.getExternalStorageDirectory() + "/pictureframe");
+                        File folder = new File(Environment.getExternalStorageDirectory() + "/PictureFrame/Downloads");
                         boolean isFolderCreated = true;
                         if (!folder.exists()) {
                             Log.d(TAG, "Creating folder...");
-                            isFolderCreated = folder.mkdir();
+                            isFolderCreated = folder.mkdirs();
                         }
                         
                         if (isFolderCreated) {

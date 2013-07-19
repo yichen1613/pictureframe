@@ -170,7 +170,7 @@ public class AudioRecorderActivity extends Activity {
         boolean isFolderCreated = true;
         if (!folder.exists()) {
             Log.d(TAG, "Creating folder...");
-            isFolderCreated = folder.mkdir();
+            isFolderCreated = folder.mkdirs();
         }
 
         if (isFolderCreated) {
