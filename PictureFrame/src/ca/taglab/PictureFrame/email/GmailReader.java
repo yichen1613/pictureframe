@@ -1,8 +1,10 @@
 package ca.taglab.PictureFrame.email;
 
+import android.os.Environment;
 import android.util.Log;
 import com.sun.mail.imap.IMAPMessage;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Properties;
 import javax.mail.Flags;
@@ -112,9 +114,15 @@ public class GmailReader {
                         Log.d(TAG, "Disposition != null");
                         String filename = bp.getFileName();
                         Log.d(TAG, "******Email has attachment******");
-                        //DataHandler handler = bp.getDataHandler();
-                        //Log.d(TAG, "Attachment filename: " + handler.getName());
-                        Log.d(TAG, "Attachment filename: " + filename);
+
+                        // Download/save the attachment to external storage
+                        String folder = Environment.getExternalStorageDirectory().getAbsolutePath();
+                        String filepath = folder + "/" + filename;
+                        File file = new File(filepath);
+                        Log.d(TAG, "Folder: " + folder + ", File: " + filename + ", Filepath: " + filepath);
+                        ((MimeBodyPart) bp).saveFile(file);
+                        Log.d(TAG, "Saved the attachment to: " + filepath);
+                        
                     }
                 } else {
                     // Handle cases where message parts are NOT flagged appropriately
