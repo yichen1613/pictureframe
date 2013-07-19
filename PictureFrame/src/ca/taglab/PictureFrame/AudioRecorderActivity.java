@@ -13,6 +13,7 @@ import android.util.Log;
 import android.media.MediaRecorder;
 import android.media.MediaPlayer;
 
+import java.io.File;
 import java.io.IOException;
 
 
@@ -164,8 +165,21 @@ public class AudioRecorderActivity extends Activity {
     }
 
     public AudioRecorderActivity() {
-        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/audiorecorderactivity.3gp";
+        // Download/save the audio file in external storage
+        File folder = new File(Environment.getExternalStorageDirectory() + "/PictureFrame/AudioRecorder");
+        boolean isFolderCreated = true;
+        if (!folder.exists()) {
+            Log.d(TAG, "Creating folder...");
+            isFolderCreated = folder.mkdir();
+        }
+
+        if (isFolderCreated) {
+            this.mFileName = folder.getAbsolutePath() + "/" + String.valueOf(System.currentTimeMillis()) + ".3gp";
+            Log.d(TAG, "Filepath of audio recording: " + this.mFileName);
+        } else {
+            this.mFileName = Environment.getExternalStorageDirectory().getAbsolutePath() + "/audiorecording.3gp";
+            Log.d(TAG, "Error: Folder was not found/created!");
+        }
     }
 
     @Override
