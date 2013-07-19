@@ -115,13 +115,22 @@ public class GmailReader {
                         String filename = bp.getFileName();
                         Log.d(TAG, "******Email has attachment******");
 
-                        // Download/save the attachment to external storage
-                        String folder = Environment.getExternalStorageDirectory().getAbsolutePath();
-                        String filepath = folder + "/" + filename;
-                        File file = new File(filepath);
-                        Log.d(TAG, "Folder: " + folder + ", File: " + filename + ", Filepath: " + filepath);
-                        ((MimeBodyPart) bp).saveFile(file);
-                        Log.d(TAG, "Saved the attachment to: " + filepath);
+                        // Download/save the attachment in external storage
+                        File folder = new File(Environment.getExternalStorageDirectory() + "/pictureframe");
+                        boolean isFolderCreated = true;
+                        if (!folder.exists()) {
+                            Log.d(TAG, "Creating folder...");
+                            isFolderCreated = folder.mkdir();
+                        }
+                        
+                        if (isFolderCreated) {
+                            String filepath = folder.getAbsolutePath() + "/" + filename;
+                            File file = new File(filepath);
+                            ((MimeBodyPart) bp).saveFile(file);
+                            Log.d(TAG, "Saved the attachment to: " + filepath);
+                        } else {
+                            Log.d(TAG, "Error: Folder was not found/created!");
+                        }
                         
                     }
                 } else {
