@@ -66,6 +66,9 @@ public class GmailReader {
             String msgDate = message.getReceivedDate().toString();
             String msgFrom = message.getFrom()[0].toString();
             String msgSubject = message.getSubject();
+            if (msgSubject == null) {
+                msgSubject = "(no subject)";
+            }
 
             Log.d(TAG, "==============Message " + (i + 1) + "==============");
             Log.d(TAG, "Email Num: " + msgNum);
