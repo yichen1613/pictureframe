@@ -3,12 +3,8 @@ package ca.taglab.PictureFrame.email;
 import android.util.Log;
 import com.sun.mail.imap.IMAPMessage;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
-import javax.activation.DataHandler;
-import javax.mail.Address;
-import javax.mail.BodyPart;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
@@ -17,9 +13,6 @@ import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.search.FlagTerm;
 
 public class GmailReader {
     
@@ -130,7 +123,7 @@ public class GmailReader {
                             Log.d(TAG, "isMimeType #" + j + ": model/*");
                         } else if (mbp.isMimeType("multipart/*")) {
                             Log.d(TAG, "isMimeType #" + j + ": multipart/*");
-                            //processMessage(bp.getContent());
+                            processMessage(bp.getContent());
                         }
                         else {
                             Log.d(TAG, "isMimeType #" + j + " DID NOT MATCH! getContentType(): " + mbp.getContentType());
@@ -156,6 +149,69 @@ public class GmailReader {
         
         return msgArrayList;
     }
+
+    public void processMessage(Object msgBody) throws Exception {
+        String msgBodyFinal = "";
+        Log.d(TAG, "...PROCESSING MULTIPART...");
+        if (msgBody instanceof String) {
+            // plain text message
+            Log.d(TAG, "PLAIN TEXT body: " + msgBody.toString());
+            msgBodyFinal = msgBody.toString();
+        } else if (msgBody instanceof Multipart) {
+            // multipart message
+            Multipart mp = (Multipart) msgBody;
+            for (int j = 0; j < mp.getCount(); j++) {
+                Part bp = mp.getBodyPart(j);
+                String disposition = bp.getDisposition();
+
+                if (disposition != null) {
+                    if (disposition.equalsIgnoreCase(Part.ATTACHMENT) || disposition.equalsIgnoreCase(Part.INLINE)) {
+                        Log.d(TAG, "Disposition != null");
+                        String filename = bp.getFileName();
+                        Log.d(TAG, "******Email has attachment******");
+                        //DataHandler handler = bp.getDataHandler();
+                        //Log.d(TAG, "Attachment filename: " + handler.getName());
+                        Log.d(TAG, "Attachment filename: " + filename);
+                    }
+                } else {
+                    // Handle cases where message parts are NOT flagged appropriately
+                    Log.d(TAG, "Disposition == null, so check isMimeType");
+                    // check if plain
+                    MimeBodyPart mbp = (MimeBodyPart) bp;
+                    if (mbp.isMimeType("text/plain")) {
+                        // Handle plain
+                        Log.d(TAG, "isMimeType #" + j + ": text/plain");
+                        Log.d(TAG, "MULTIPART body #" + j + ": " + bp.getContent().toString());
+                        msgBodyFinal = bp.getContent().toString();
+                    } else if (mbp.isMimeType("text/html")) {
+                        Log.d(TAG, "isMimeType #" + j + ": text/html");
+                    } else if (mbp.isMimeType("text/*")) {
+                        Log.d(TAG, "isMimeType #" + j + ": text/*");
+                    } else if (mbp.isMimeType("message/*")) {
+                        Log.d(TAG, "isMimeType #" + j + ": message/*");
+                    } else if (mbp.isMimeType("image/*")) {
+                        Log.d(TAG, "isMimeType #" + j + ": image/*");
+                    } else if (mbp.isMimeType("video/*")) {
+                        Log.d(TAG, "isMimeType #" + j + ": video/*");
+                    } else if (mbp.isMimeType("audio/*")) {
+                        Log.d(TAG, "isMimeType #" + j + ": audio/*");
+
+                    } else if (mbp.isMimeType("application/*")) {
+                        Log.d(TAG, "isMimeType #" + j + ": application/*");
+                    } else if (mbp.isMimeType("model/*")) {
+                        Log.d(TAG, "isMimeType #" + j + ": model/*");
+                    } else if (mbp.isMimeType("multipart/*")) {
+                        Log.d(TAG, "isMimeType #" + j + ": multipart/*");
+                        processMessage(bp.getContent());
+                    }
+                    else {
+                        Log.d(TAG, "isMimeType #" + j + " DID NOT MATCH! getContentType(): " + mbp.getContentType());
+                    }
+                }
+            }
+        }
+    }
+    
     
     class Msg {
         int mNum;
