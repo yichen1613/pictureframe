@@ -47,7 +47,7 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
         try {
             GmailReader reader = new GmailReader(this.mEmail, this.mPwd, this.mFlags);
             this.msgArrayList = reader.readMail();
-            return "Checked for emails successfully";
+            return "Emails retrieved successfully";
         } catch (AuthenticationFailedException e) {
             Log.e(TAG, "Invalid credentials");
             e.printStackTrace();
