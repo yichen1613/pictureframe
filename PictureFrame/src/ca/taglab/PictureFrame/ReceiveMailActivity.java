@@ -5,8 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 import ca.taglab.PictureFrame.email.ReadEmailAsyncTask;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class ReceiveMailActivity extends Activity {
-    
+
+    private final static int REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,10 +25,19 @@ public class ReceiveMailActivity extends Activity {
     }
     
     public void refreshMail(View v) {
-        new ReadEmailAsyncTask(this, "UNREAD").execute();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            public void run() {
+                getUnreadEmails();
+            }
+        }, 0, REFRESH_INTERVAL);
     }
     
     public void cancel(View v) {
         finish();
+    }
+
+    public void getUnreadEmails() {
+        new ReadEmailAsyncTask(this, "UNREAD").execute();
     }
 }
