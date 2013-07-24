@@ -115,10 +115,12 @@ public class GmailReader {
             // plain text message
             String s = msgBody.toString();
             // hack to exclude threaded messages sent through Gmail
-            int pos = s.indexOf("On 2013-");
-            if (pos > 0) {
+            int pos;
+            if ((pos = s.indexOf("On 2013-")) > 0) {
                 s = s.substring(0, pos);
-            }
+            } else if ((pos = s.indexOf("2013/")) > 0) {
+                s = s.substring(0, pos);
+            } 
             Log.d(TAG, "PLAIN TEXT body: " + s);
             msgBodyFinal = msgBodyFinal.concat(s);
             
@@ -172,8 +174,10 @@ public class GmailReader {
                         Log.d(TAG, "isMimeType #" + j + ": text/plain");
                         String s = bp.getContent().toString();
                         // hack to exclude threaded messages sent through Gmail
-                        int pos = s.indexOf("On 2013-");
-                        if (pos > 0) {
+                        int pos;
+                        if ((pos = s.indexOf("On 2013-")) > 0) {
+                            s = s.substring(0, pos);
+                        } else if ((pos = s.indexOf("2013/")) > 0) {
                             s = s.substring(0, pos);
                         }
                         Log.d(TAG, "MULTIPART body #" + j + ": " + s);
