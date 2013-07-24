@@ -53,7 +53,7 @@
     <string name="cancel">Cancel</string>
     <string name="login">Login</string>
     <string name="retrieve_mail">Retrieve all mail</string>
-    <string name="refresh_mail">Check for new mail</string>
+    <string name="refresh_mail">Check for unread mail</string>
 
     <!-- Message History strings -->
     <string name="message_history_1">Hi Grandma! I\'m sending you a photo we took at Ben\'s convocation today - it was a very proud moment for all of us.</string>

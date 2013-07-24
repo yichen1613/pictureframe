@@ -27,12 +27,14 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
 
     private String mEmail;
     private String mPwd;
+    private String mFlags;
     private ArrayList<GmailReader.Msg> msgArrayList;
 
-    public ReadEmailAsyncTask(Context context) {
+    public ReadEmailAsyncTask(Context context, String flags) {
         if (BuildConfig.DEBUG) Log.v(TAG, "ReadEmailAsyncTask()");
 
         this.ctx = context;
+        this.mFlags = flags;
 
         SharedPreferences prefs = new ObscuredSharedPreferences(ctx, ctx.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE));
         this.mEmail = prefs.getString("email", "");
@@ -43,9 +45,9 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         if (BuildConfig.DEBUG) Log.v(TAG, "doInBackground()");
         try {
-            GmailReader reader = new GmailReader(this.mEmail, this.mPwd);
+            GmailReader reader = new GmailReader(this.mEmail, this.mPwd, this.mFlags);
             this.msgArrayList = reader.readMail();
-            return "Emails retrieved successfully";
+            return "Checked for emails successfully";
         } catch (AuthenticationFailedException e) {
             Log.e(TAG, "Invalid credentials");
             e.printStackTrace();

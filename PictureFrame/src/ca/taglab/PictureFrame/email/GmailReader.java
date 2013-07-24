@@ -15,6 +15,7 @@ import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.internet.MimeBodyPart;
+import javax.mail.search.FlagTerm;
 
 public class GmailReader {
     
@@ -22,10 +23,12 @@ public class GmailReader {
     
     private String email;
     private String pwd;
+    private String flags;
 
-    public GmailReader(String email, String pwd) {
+    public GmailReader(String email, String pwd, String flags) {
         this.email = email;
         this.pwd = pwd;
+        this.flags = flags;
     }
     
     public synchronized ArrayList<Msg> readMail() throws Exception {
@@ -47,18 +50,24 @@ public class GmailReader {
         int numUnreadMsgs = inbox.getUnreadMessageCount();
         Log.d(TAG, "Total Msgs: " + numTotalMsgs + " | Unread Msgs: " + numUnreadMsgs);
         
-        //Flags seen = new Flags(Flags.Flag.SEEN);
-        //FlagTerm ft = new FlagTerm(seen, false); // this is an unseen FlagTerm
-        //Message messages[] = inbox.search(ft);
-        
-        Message messages[] = inbox.getMessages();
+        Message messages[] = null;
+        if (flags.equals("ALL")) {
+            // get all messages
+            Log.d(TAG, "Retrieving ALL messages...");
+            messages = inbox.getMessages();
+        } else if (flags.equals("UNREAD")) {
+            // get only unread messages
+            Log.d(TAG, "Retrieving UNREAD messages");
+            Flags seen = new Flags(Flags.Flag.SEEN);
+            FlagTerm ft = new FlagTerm(seen, false); // unseen FlagTerm
+            messages = inbox.search(ft);
+        } else {
+            // do nothing
+        }
         Log.d(TAG, "Number of messages in the array: " + messages.length);
         
         int i = 0;
-        for (Message message : messages) {
-            // message.setFlag(Flags.Flag.ANSWERED, true);
-            // message.setFlag(Flags.Flag.SEEN, true);
-            
+        for (Message message : messages) {            
             // use PEEK variant of FETCH when fetching message content
             ((IMAPMessage)message).setPeek(true);
             
@@ -211,6 +220,7 @@ public class GmailReader {
         }
         return s;
     }
+    
     
     class Msg {
         int mNum;

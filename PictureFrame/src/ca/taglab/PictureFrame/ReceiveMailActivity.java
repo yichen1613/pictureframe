@@ -16,11 +16,11 @@ public class ReceiveMailActivity extends Activity {
     }
     
     public void retrieveMail(View v) {
-        new ReadEmailAsyncTask(this).execute();
+        new ReadEmailAsyncTask(this, "ALL").execute();
     }
     
     public void refreshMail(View v) {
-        // to be implemented - check for any unread emails
+        new ReadEmailAsyncTask(this, "UNREAD").execute();
     }
     
     public void cancel(View v) {
