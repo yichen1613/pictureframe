@@ -75,6 +75,15 @@ public class GmailReader {
             Log.d(TAG, "Date: " + msgDate);
             Log.d(TAG, "From: " + msgFrom);
             Log.d(TAG, "Subject: " + msgSubject);
+            
+            /**
+            // Get header information
+            Enumeration headers = message.getAllHeaders();
+            while (headers.hasMoreElements()) {
+                Header h = (Header) headers.nextElement();
+                Log.d(TAG, h.getName() + ": " + h.getValue());
+            }
+             */
 
             Object msgBody = message.getContent();
             String msgBodyFinal = processMessage(msgBody, "");
@@ -104,8 +113,14 @@ public class GmailReader {
         
         if (msgBody instanceof String) {
             // plain text message
-            Log.d(TAG, "PLAIN TEXT body: " + msgBody.toString());
-            msgBodyFinal = msgBodyFinal.concat(msgBody.toString());
+            String s = msgBody.toString();
+            // hack to exclude threaded messages sent through Gmail
+            int pos = s.indexOf("On 2013-");
+            if (pos > 0) {
+                s = s.substring(0, pos);
+            }
+            Log.d(TAG, "PLAIN TEXT body: " + s);
+            msgBodyFinal = msgBodyFinal.concat(s);
             
         } else if (msgBody instanceof Multipart) {
             // multipart message
@@ -155,8 +170,14 @@ public class GmailReader {
                     if (mbp.isMimeType("text/plain")) {
                         // Handle plain
                         Log.d(TAG, "isMimeType #" + j + ": text/plain");
-                        Log.d(TAG, "MULTIPART body #" + j + ": " + bp.getContent().toString());
-                        msgBodyFinal = msgBodyFinal.concat(bp.getContent().toString());
+                        String s = bp.getContent().toString();
+                        // hack to exclude threaded messages sent through Gmail
+                        int pos = s.indexOf("On 2013-");
+                        if (pos > 0) {
+                            s = s.substring(0, pos);
+                        }
+                        Log.d(TAG, "MULTIPART body #" + j + ": " + s);
+                        msgBodyFinal = msgBodyFinal.concat(s);
                     } else if (mbp.isMimeType("text/html")) {
                         Log.d(TAG, "isMimeType #" + j + ": text/html");
                     } else if (mbp.isMimeType("text/*")) {
