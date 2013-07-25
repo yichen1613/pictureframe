@@ -11,9 +11,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import ca.taglab.PictureFrame.database.ObscuredSharedPreferences;
+import ca.taglab.PictureFrame.email.ReadEmailAsyncTask;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class LoginActivity extends Activity {
 
+    private final static int REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
+    private final static String TAG = "LoginActivity";
+    
     private EditText email;
     private EditText password;
 
@@ -40,6 +47,16 @@ public class LoginActivity extends Activity {
         
         if (!mEmail.isEmpty() && !mPassword.isEmpty()) {
             e.commit();
+            
+            Toast.makeText(this, "Retrieving unread emails...", Toast.LENGTH_LONG);
+            Log.d(TAG, "Retrieving unread emails...");
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                public void run() {
+                    getUnreadEmails();
+                }
+            }, 0, REFRESH_INTERVAL);
+            
             finish();
         } else {
             Toast toast = Toast.makeText(this, "Blank fields are not allowed", Toast.LENGTH_LONG);
@@ -52,6 +69,10 @@ public class LoginActivity extends Activity {
 
     public void cancel(View v) {
         finish();
+    }
+
+    public void getUnreadEmails() {
+        new ReadEmailAsyncTask(this, "UNREAD").execute();
     }
     
 }
