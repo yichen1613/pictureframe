@@ -14,6 +14,15 @@ public class MessageTable {
     public static final String COL_BODY = "body";
     public static final String COL_TYPE = "type";
 
+    public static final String[] PROJECTION = {
+            COL_ID,
+            COL_TO_ID,
+            COL_FROM_ID,
+            COL_DATETIME,
+            COL_BODY,
+            COL_TYPE
+    };
+    
     private static final String CREATE_MESSAGE_TABLE =
             "CREATE TABLE " + TABLE_NAME + " ("
             + COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
