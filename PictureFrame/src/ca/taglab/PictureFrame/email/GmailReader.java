@@ -88,6 +88,12 @@ public class GmailReader {
             Log.d(TAG, "Email Num: " + msgNum);
             Log.d(TAG, "Date: " + msgDate);
             Log.d(TAG, "From: " + msgFrom);
+            int from_uid = queryForUserId(msgFrom);
+            // TODO: If the "from" email matches a user in the UserTable, continue processing the message and insert it in the MessageTable. Otherwise, skip it.
+            if (from_uid != 0) {
+                // found matching user - continue processing the message
+                Log.d(TAG, "From userID: " + from_uid);
+            }
             Log.d(TAG, "Subject: " + msgSubject);
             
             /**
@@ -234,16 +240,17 @@ public class GmailReader {
      */
     public int queryForUserId(String email) {
         int uid = 0;
-        String mSelectionClause = UserTable.COL_EMAIL + " = " + email;
-        Cursor mCursor = ctx.getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, null, null, UserTable.COL_ID);
-        if (mCursor == null || mCursor.getCount() > 1) {
-            // there is a problem
-        } else {
-            // only one row was returned in the cursor
-            // Determine the column index of COL_ID, and get the value from the column
+        String mSelectionClause = UserTable.COL_EMAIL + "=\"" + email + "\"";
+        Cursor mCursor = ctx.getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, mSelectionClause, null, UserTable.COL_ID);
+        
+        if (mCursor != null && mCursor.moveToFirst() && mCursor.getCount() == 1) {
             int index = mCursor.getColumnIndex(UserTable.COL_ID);
             uid = mCursor.getInt(index);
+        } else {
+            Log.d(TAG, "queryForUserId(): No user matching the given email was found");
         }
+        
+        mCursor.close();
         return uid;
     }
 
