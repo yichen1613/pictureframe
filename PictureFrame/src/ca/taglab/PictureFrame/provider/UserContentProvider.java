@@ -23,7 +23,7 @@ public class UserContentProvider extends ContentProvider {
     public static final String AUTHORITY = "ca.taglab.PictureFrame.provider";
 
     public static final Uri USER_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/users");
-    public static final Uri MESSAGE_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/messages");
+    public static final Uri MESSAGE_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/users/#/messages/#");
 
     public static final String USER_CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/users";
     public static final String USER_CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/users";

@@ -45,7 +45,7 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         if (BuildConfig.DEBUG) Log.v(TAG, "doInBackground()");
         try {
-            GmailReader reader = new GmailReader(this.mEmail, this.mPwd, this.mFlags);
+            GmailReader reader = new GmailReader(this.ctx, this.mEmail, this.mPwd, this.mFlags);
             this.msgArrayList = reader.readMail();
             return "Emails retrieved successfully";
         } catch (AuthenticationFailedException e) {
