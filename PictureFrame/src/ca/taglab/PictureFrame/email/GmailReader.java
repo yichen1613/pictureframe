@@ -83,7 +83,7 @@ public class GmailReader {
             if (msgSubject == null) {
                 msgSubject = "(no subject)";
             }
-
+            
             Log.d(TAG, "==============Message " + (i + 1) + "==============");
             Log.d(TAG, "Email Num: " + msgNum);
             Log.d(TAG, "Date: " + msgDate);
@@ -93,6 +93,10 @@ public class GmailReader {
             if (from_uid != 0) {
                 // found matching user - continue processing the message
                 Log.d(TAG, "From userID: " + from_uid);
+            }
+            int to_uid = queryForUserId(this.email);
+            if (to_uid != 0) {
+                Log.d(TAG, "To userID: " + to_uid);
             }
             Log.d(TAG, "Subject: " + msgSubject);
             
@@ -107,6 +111,15 @@ public class GmailReader {
 
             Object msgBody = message.getContent();
             String msgBodyFinal = processMessage(msgBody, "");
+
+            /** TODO: Insert entry to MessageTable, with the following params:
+            MessageTable.COL_TYPE = text/image/audio/video
+            MessageTable.COL_DATETIME = msgDate
+            MessageTable.COL_SUBJECT = msgSubject
+            MessageTable.COL_BODY = msgBodyFinal (if plaintext) OR filepath to saved attachment
+            MessageTable.COL_TO_ID = to_uid
+            MessageTable.COL_FROM_ID = from_uid
+             */
             
             Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, msgBodyFinal);
             msgArrayList.add(msg);
