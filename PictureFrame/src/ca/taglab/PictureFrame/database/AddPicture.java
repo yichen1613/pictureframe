@@ -91,7 +91,7 @@ public class AddPicture extends Activity {
         ContentValues values = new ContentValues();
 
         values.put(UserTable.COL_NAME, name.getText().toString().trim());
-        values.put(UserTable.COL_EMAIL, email.getText().toString().trim());
+        values.put(UserTable.COL_EMAIL, email.getText().toString().toLowerCase().trim());
         values.put(UserTable.COL_IMG, imagePath);
         values.put(UserTable.COL_PASSWORD, "1234");
 
