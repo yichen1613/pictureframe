@@ -84,8 +84,9 @@ public class UserContentProvider extends ContentProvider {
      */
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        
-        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+
+        Cursor cursor;
+        String table, group = null, having = null;
         
         switch (uriMatcher.match(uri)) {
             
@@ -94,6 +95,7 @@ public class UserContentProvider extends ContentProvider {
             //////////////////////////////////////////////////////
             
             case USERS:
+                table = UserTable.TABLE_NAME;
                 break;
             
             case USER_ID:
@@ -101,9 +103,8 @@ public class UserContentProvider extends ContentProvider {
 			 * Query a specific user from the User table.
 			 * Path: //users/#
 			 */
-                queryBuilder.setTables(UserTable.TABLE_NAME);
-                String uid = uri.getLastPathSegment();
-                queryBuilder.appendWhere(UserTable.COL_ID + "=" + uid);
+                table = UserTable.TABLE_NAME;
+                selection = ADD_CONSTRAINT(selection, UserTable.COL_ID, uri.getLastPathSegment());
                 break;
 
             
@@ -116,11 +117,9 @@ public class UserContentProvider extends ContentProvider {
 			 * Query the messages sent from from_id to to_id in the Message table.
 			 * Path: //users/#/messages/#
 			 */
-                queryBuilder.setTables(MessageTable.TABLE_NAME);
-                String to_id = uri.getPathSegments().get(1);
-                String from_id = uri.getPathSegments().get(3);
-                queryBuilder.appendWhere(MessageTable.COL_TO_ID + "=" + to_id);
-                queryBuilder.appendWhere(MessageTable.COL_FROM_ID + "=" + from_id);
+                table = MessageTable.TABLE_NAME;
+                selection = ADD_CONSTRAINT(selection, MessageTable.COL_TO_ID, uri.getPathSegments().get(1));
+                selection = ADD_CONSTRAINT(selection, MessageTable.COL_FROM_ID, uri.getPathSegments().get(3));
                 break;
             
             
@@ -129,8 +128,7 @@ public class UserContentProvider extends ContentProvider {
         }
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = queryBuilder.query(db, projection, selection, selectionArgs, null, null, sortOrder);
-        // make sure that potential listeners are getting notified
+        cursor = db.query(table, projection, selection, selectionArgs, group, having, sortOrder);
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
         
