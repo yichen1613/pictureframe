@@ -7,13 +7,8 @@ import com.sun.mail.imap.IMAPMessage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Properties;
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.Part;
-import javax.mail.Session;
-import javax.mail.Store;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.search.FlagTerm;
 
@@ -70,11 +65,13 @@ public class GmailReader {
         for (Message message : messages) {            
             // use PEEK variant of FETCH when fetching message content
             ((IMAPMessage)message).setPeek(true);
-            
+
             int msgNum = message.getMessageNumber();
-            String msgDate = message.getReceivedDate().toString();
-            String msgFrom = message.getFrom()[0].toString();
-            String msgSubject = message.getSubject();
+            String msgDate = message.getReceivedDate().toString().trim();
+            //String msgFrom = message.getFrom()[0].toString(); // returns "John Doe <john.doe@gmail.com>"
+            Address[] from_array = message.getFrom();
+            String msgFrom = (from_array == null ? null : ((InternetAddress) from_array[0]).getAddress()).toLowerCase().trim(); // returns "john.doe@gmail.com"
+            String msgSubject = message.getSubject().trim();
             if (msgSubject == null) {
                 msgSubject = "(no subject)";
             }
