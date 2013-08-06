@@ -1,7 +1,13 @@
 package ca.taglab.PictureFrame.email;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Environment;
 import android.util.Log;
+import ca.taglab.PictureFrame.database.MessageTable;
+import ca.taglab.PictureFrame.database.UserTable;
+import ca.taglab.PictureFrame.provider.UserContentProvider;
 import com.sun.mail.imap.IMAPMessage;
 
 import java.io.File;
@@ -16,11 +22,13 @@ public class GmailReader {
     
     private static final String TAG = "GmailReader";
     
+    private Context ctx;
     private String email;
     private String pwd;
     private String flags;
 
-    public GmailReader(String email, String pwd, String flags) {
+    public GmailReader(Context ctx, String email, String pwd, String flags) {
+        this.ctx = ctx;
         this.email = email;
         this.pwd = pwd;
         this.flags = flags;
@@ -205,6 +213,41 @@ public class GmailReader {
         return msgBodyFinal;
     }
 
+    
+    /**
+     * Insert message into database
+     */
+    public void insertMessageIntoDb(String type, String datetime, String subject, String body, int to_id, int from_id) {
+        ContentValues values = new ContentValues();
+        values.put(MessageTable.COL_TYPE, type);
+        values.put(MessageTable.COL_DATETIME, datetime);
+        values.put(MessageTable.COL_SUBJECT, subject);
+        values.put(MessageTable.COL_BODY, body);
+        values.put(MessageTable.COL_TO_ID, to_id);
+        values.put(MessageTable.COL_FROM_ID, from_id);
+        ctx.getContentResolver().insert(UserContentProvider.MESSAGE_CONTENT_URI, values);
+    }
+
+    
+    /**
+     * Query for user ID matching the given email address
+     */
+    public int queryForUserId(String email) {
+        int uid = 0;
+        String mSelectionClause = UserTable.COL_EMAIL + " = " + email;
+        Cursor mCursor = ctx.getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, null, null, UserTable.COL_ID);
+        if (mCursor == null || mCursor.getCount() > 1) {
+            // there is a problem
+        } else {
+            // only one row was returned in the cursor
+            // Determine the column index of COL_ID, and get the value from the column
+            int index = mCursor.getColumnIndex(UserTable.COL_ID);
+            uid = mCursor.getInt(index);
+        }
+        return uid;
+    }
+
+    
     /**
      * Hack to exclude threaded messages sent from Gmail
      */
