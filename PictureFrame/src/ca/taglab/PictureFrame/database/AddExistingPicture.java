@@ -38,7 +38,7 @@ public class AddExistingPicture extends Activity {
         email = (EditText) findViewById(R.id.email);
 
         Cursor cursor = getContentResolver().query(
-                UserContentProvider.CONTENT_URI,
+                UserContentProvider.USER_CONTENT_URI,
                 UserTable.PROJECTION,
                 null,
                 null,
@@ -98,7 +98,7 @@ public class AddExistingPicture extends Activity {
         values.put(UserTable.COL_IMG, imagePath);
         values.put(UserTable.COL_PASSWORD, "1234");
 
-        getContentResolver().insert(UserContentProvider.CONTENT_URI, values);
+        getContentResolver().insert(UserContentProvider.USER_CONTENT_URI, values);
 
         finish();
     }
