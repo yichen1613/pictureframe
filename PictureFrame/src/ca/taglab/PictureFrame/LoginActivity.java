@@ -1,6 +1,7 @@
 package ca.taglab.PictureFrame;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import ca.taglab.PictureFrame.database.ObscuredSharedPreferences;
+import ca.taglab.PictureFrame.database.UserTable;
 import ca.taglab.PictureFrame.email.ReadEmailAsyncTask;
+import ca.taglab.PictureFrame.provider.UserContentProvider;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,7 +40,7 @@ public class LoginActivity extends Activity {
 
     public void login(View v) {
         
-        String mEmail = email.getText().toString().trim();
+        String mEmail = email.getText().toString().toLowerCase().trim();
         String mPassword = password.getText().toString().trim();
         
         // store email, password in SharedPreferences object after encryption
@@ -47,6 +50,16 @@ public class LoginActivity extends Activity {
         
         if (!mEmail.isEmpty() && !mPassword.isEmpty()) {
             e.commit();
+            
+            // add user to UserTable
+            ContentValues values = new ContentValues();
+            values.put(UserTable.COL_NAME, "User");
+            values.put(UserTable.COL_EMAIL, mEmail);
+            values.put(UserTable.COL_IMG, "none");
+            values.put(UserTable.COL_PASSWORD, "1234");
+            getContentResolver().insert(UserContentProvider.USER_CONTENT_URI, values);
+
+            finish();
             
             Toast.makeText(this, "Retrieving unread emails...", Toast.LENGTH_LONG);
             Log.d(TAG, "Retrieving unread emails...");

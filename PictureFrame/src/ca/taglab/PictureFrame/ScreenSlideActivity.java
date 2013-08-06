@@ -57,7 +57,8 @@ public class ScreenSlideActivity extends FragmentActivity {
         getActionBar().hide();
 
         Cursor cursor;
-        cursor = getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, null, null, UserTable.COL_NAME);
+        String mSelectionClause = UserTable.COL_IMG + "!=\"none\"";
+        cursor = getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, mSelectionClause, null, UserTable.COL_NAME);
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
