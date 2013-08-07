@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 import ca.taglab.PictureFrame.database.MessageTable;
 import ca.taglab.PictureFrame.database.UserTable;
 import ca.taglab.PictureFrame.provider.UserContentProvider;
@@ -139,6 +140,7 @@ public class GmailReader {
         return msgArrayList;
     }
 
+    
     public String processMessage(Object msgBody, String prevMsgBody) throws Exception {
         
         String msgBodyFinal = prevMsgBody;
@@ -188,7 +190,22 @@ public class GmailReader {
                                 }
                             }
                             ((MimeBodyPart) bp).saveFile(file);
-                            Log.d(TAG, "Saved the attachment to: " + file.getAbsolutePath());
+                            
+                            String mimeType = getMimeType(file.getAbsolutePath());
+                            if (mimeType != null) {
+                                if (mimeType.startsWith("image/")) {
+                                    // set type to image
+                                    Log.d(TAG, "Saved the image/* attachment to: "+ file.getAbsolutePath());
+                                } else if (mimeType.startsWith("audio/")) {
+                                    // set type to audio
+                                    Log.d(TAG, "Saved the audio/* attachment to: "+ file.getAbsolutePath());
+                                } else if (mimeType.startsWith("video/")) {
+                                    // set type to video   
+                                    Log.d(TAG, "Saved the video/* attachment to: "+ file.getAbsolutePath());
+                                } else {
+                                    Log.d(TAG, "Saved the *unhandled MIME type* attachment to: "+ file.getAbsolutePath());
+                                }
+                            }
                         } else {
                             Log.d(TAG, "Error: Folder was not found/created!");
                         }
@@ -198,17 +215,17 @@ public class GmailReader {
                     MimeBodyPart mbp = (MimeBodyPart) bp;
                     if (mbp.isMimeType("text/plain")) {
                         // Handle plain
-                        Log.d(TAG, "isMimeType #" + j + ": text/plain");
+                        Log.d(TAG, "isMimeType" + j + ": text/plain");
                         String s = bp.getContent().toString();
                         s = trimThreadedMessages(s);
                         Log.d(TAG, "MULTIPART body #" + j + ": " + s);
                         msgBodyFinal = msgBodyFinal.concat(s);
+                        
+                    // These cases either should be ignored (text/html), or do not seem to occur (text/*, image/*, video/*, audio/*)
                     } else if (mbp.isMimeType("text/html")) {
                         Log.d(TAG, "isMimeType #" + j + ": text/html");
                     } else if (mbp.isMimeType("text/*")) {
                         Log.d(TAG, "isMimeType #" + j + ": text/*");
-                    } else if (mbp.isMimeType("message/*")) {
-                        Log.d(TAG, "isMimeType #" + j + ": message/*");
                     } else if (mbp.isMimeType("image/*")) {
                         Log.d(TAG, "isMimeType #" + j + ": image/*");
                     } else if (mbp.isMimeType("video/*")) {
@@ -216,12 +233,9 @@ public class GmailReader {
                     } else if (mbp.isMimeType("audio/*")) {
                         Log.d(TAG, "isMimeType #" + j + ": audio/*");
 
-                    } else if (mbp.isMimeType("application/*")) {
-                        Log.d(TAG, "isMimeType #" + j + ": application/*");
-                    } else if (mbp.isMimeType("model/*")) {
-                        Log.d(TAG, "isMimeType #" + j + ": model/*");
                     } else if (mbp.isMimeType("multipart/*")) {
                         Log.d(TAG, "isMimeType #" + j + ": multipart/*");
+                        // Recursively process the message
                         msgBodyFinal = processMessage(bp.getContent(), msgBodyFinal);
                     } else {
                         Log.d(TAG, "isMimeType #" + j + " DID NOT MATCH! getContentType(): " + mbp.getContentType());
@@ -265,6 +279,19 @@ public class GmailReader {
         
         mCursor.close();
         return uid;
+    }
+
+    /**
+     * Get the MIME type of a file
+     */
+    public static String getMimeType(String path) {
+        String mimeType = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(path);
+        if (extension != null) {
+            MimeTypeMap mime = MimeTypeMap.getSingleton();
+            mimeType = mime.getMimeTypeFromExtension(extension);
+        }
+        return mimeType;
     }
 
     
