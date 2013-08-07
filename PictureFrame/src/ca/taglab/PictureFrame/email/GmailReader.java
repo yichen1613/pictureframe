@@ -36,9 +36,9 @@ public class GmailReader {
     }
     
     public synchronized ArrayList<Integer> readMail() throws Exception {
-        //ArrayList<Msg> msgArrayList = new ArrayList<Msg>();
-        // For notification purposes:
-        // ArrayList containing integers that correspond to COL_IDs in MessageTable. Each message is a new/unread message that was just inserted into the db and marked as read.
+        
+        // For new-message notifications, use an ArrayList of ints that correspond to COL_IDs in MessageTable 
+        // Each message is a new/unread message that was just inserted into the db and marked as read
         ArrayList<Integer> msgIdArrayList = new ArrayList<Integer>();
         
         Properties props = System.getProperties();
@@ -99,11 +99,9 @@ public class GmailReader {
 
                 // If the "to" and "from" emails match users in the UserTable, continue processing the message and insert it in the MessageTable. Otherwise, skip the message.
                 if (to_uid != 0 && from_uid != 0) {
-                    // found matching user - continue processing the message
                     Log.d(TAG, "From userID: " + from_uid + " | To userID: " + to_uid);
 
                     Object msgBody = message.getContent();
-                    //String msgBodyFinal = processMessage(msgBody, "");
                     ArrayList<MsgBody> msgBodyArrayList = processMessage(msgBody, new ArrayList<MsgBody>());
 
                     // loop through each MsgBody element, and insert each one as an entry into MessageTable
@@ -113,16 +111,13 @@ public class GmailReader {
                         Log.d(TAG, "Content: " + mb.mContent);
                         insertMessageIntoDb(mb.mType, msgDate, msgSubject, mb.mContent, to_uid, from_uid);
                         
-                        // If UNREAD flag given, this means we want to notify the user for every message we insert into the db and mark as read.
+                        // If UNREAD flag given, notify the user for every message we insert into the db and mark as read.
                         if (flags.equals("UNREAD")) {
                             // add the message's row ID into the msgIdArrayList
                             int rowId = getLastInsertId();
                             Log.d(TAG, "Adding row ID " + rowId + " of last newly inserted message to msgIdArrayList");
                             msgIdArrayList.add(rowId);
                         }
-
-                        //Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, mb.mContent, mb.mType);
-                        //msgArrayList.add(msg);
                     }
                 }
 
@@ -134,8 +129,6 @@ public class GmailReader {
                  Log.d(TAG, h.getName() + ": " + h.getValue());
                  }
                  */
-
-                //Log.d(TAG, "Number of msgs in msgArrayList: " + msgArrayList.size());
                 
                 // mark message as read
                 inbox.setFlags(new Message[] {message}, new Flags(Flags.Flag.SEEN), true);
@@ -146,7 +139,6 @@ public class GmailReader {
         inbox.close(false);
         store.close();
         
-        //return msgArrayList;
         return msgIdArrayList;
     }
 
@@ -345,25 +337,6 @@ public class GmailReader {
             s = s.substring(0, pos);
         }
         return s;
-    }
-    
-    
-    class Msg {
-        int mNum;
-        String mDate;
-        String mFrom;
-        String mSubject;
-        String mBody;
-        String mType;
-        
-        public Msg(int num, String date, String from, String subject, String body, String type) {
-            this.mNum = num;
-            this.mDate = date;
-            this.mFrom = from;
-            this.mSubject = subject;
-            this.mBody = body;
-            this.mType = type;
-        }
     }
     
     

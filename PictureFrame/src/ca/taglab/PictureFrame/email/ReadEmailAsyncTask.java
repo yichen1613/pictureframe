@@ -82,7 +82,8 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
             Toast.makeText(ctx, "Emails retrieved successfully!", Toast.LENGTH_LONG).show();
             
             if (this.mFlags.equals("UNREAD")) {
-                Toast.makeText(ctx, "Number of new emails: " + this.msgIdArrayList.size(), Toast.LENGTH_LONG).show();
+                // TODO: Change the number of new messages to only count messages with DIFFERENT dates?
+                Toast.makeText(ctx, "Number of new messages (parts): " + this.msgIdArrayList.size(), Toast.LENGTH_LONG).show();
                 for (Integer msgId : this.msgIdArrayList) {
                     Log.d(TAG, "COL_ID value in MessageTable: " + msgId);
                     // TODO: add notification of new messages ("New message from ____")
