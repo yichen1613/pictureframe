@@ -28,7 +28,7 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
     private String mEmail;
     private String mPwd;
     private String mFlags;
-    private ArrayList<GmailReader.Msg> msgArrayList;
+    private ArrayList<Integer> msgIdArrayList;
 
     public ReadEmailAsyncTask(Context context, String flags) {
         if (BuildConfig.DEBUG) Log.v(TAG, "ReadEmailAsyncTask()");
@@ -46,7 +46,7 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
         if (BuildConfig.DEBUG) Log.v(TAG, "doInBackground()");
         try {
             GmailReader reader = new GmailReader(this.ctx, this.mEmail, this.mPwd, this.mFlags);
-            this.msgArrayList = reader.readMail();
+            this.msgIdArrayList = reader.readMail();
             return "Emails retrieved successfully";
         } catch (AuthenticationFailedException e) {
             Log.e(TAG, "Invalid credentials");
@@ -80,7 +80,14 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
         
         if (result.equalsIgnoreCase("Emails retrieved successfully")) {
             Toast.makeText(ctx, "Emails retrieved successfully!", Toast.LENGTH_LONG).show();
-            // TODO: Add toast displaying number of unread messages (if any)
+            
+            if (this.mFlags.equals("UNREAD")) {
+                Toast.makeText(ctx, "Number of new emails: " + this.msgIdArrayList.size(), Toast.LENGTH_LONG).show();
+                for (Integer msgId : this.msgIdArrayList) {
+                    Log.d(TAG, "COL_ID value in MessageTable: " + msgId);
+                    // TODO: add notification of new messages ("New message from ____")
+                }
+            }
             
         } else if (result.equalsIgnoreCase("AuthenticationFailedException")) {
             Toast toast = Toast.makeText(ctx, "Your email or password is invalid. Please log in again.", Toast.LENGTH_LONG);

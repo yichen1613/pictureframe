@@ -35,8 +35,11 @@ public class GmailReader {
         this.flags = flags;
     }
     
-    public synchronized ArrayList<Msg> readMail() throws Exception {
-        ArrayList<Msg> msgArrayList = new ArrayList<Msg>();
+    public synchronized ArrayList<Integer> readMail() throws Exception {
+        //ArrayList<Msg> msgArrayList = new ArrayList<Msg>();
+        // For notification purposes:
+        // ArrayList containing integers that correspond to COL_IDs in MessageTable. Each message is a new/unread message that was just inserted into the db and marked as read.
+        ArrayList<Integer> msgIdArrayList = new ArrayList<Integer>();
         
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "imaps");
@@ -109,6 +112,14 @@ public class GmailReader {
                         Log.d(TAG, "Type: " + mb.mType);
                         Log.d(TAG, "Content: " + mb.mContent);
                         insertMessageIntoDb(mb.mType, msgDate, msgSubject, mb.mContent, to_uid, from_uid);
+                        
+                        // If UNREAD flag given, this means we want to notify the user for every message we insert into the db and mark as read.
+                        if (flags.equals("UNREAD")) {
+                            // add the message's row ID into the msgIdArrayList
+                            int rowId = getLastInsertId();
+                            Log.d(TAG, "Adding row ID " + rowId + " of last newly inserted message to msgIdArrayList");
+                            msgIdArrayList.add(rowId);
+                        }
 
                         //Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, mb.mContent, mb.mType);
                         //msgArrayList.add(msg);
@@ -124,8 +135,8 @@ public class GmailReader {
                  }
                  */
 
-                Log.d(TAG, "Number of msgs in msgArrayList: " + msgArrayList.size());
-
+                //Log.d(TAG, "Number of msgs in msgArrayList: " + msgArrayList.size());
+                
                 // mark message as read
                 inbox.setFlags(new Message[] {message}, new Flags(Flags.Flag.SEEN), true);
             }
@@ -135,7 +146,8 @@ public class GmailReader {
         inbox.close(false);
         store.close();
         
-        return msgArrayList;
+        //return msgArrayList;
+        return msgIdArrayList;
     }
 
     
@@ -295,6 +307,7 @@ public class GmailReader {
         return uid;
     }
 
+    
     /**
      * Get the MIME type of a file
      */
@@ -308,6 +321,18 @@ public class GmailReader {
         return mimeType;
     }
 
+
+    /**
+     * Get row ID of the last inserted entry in the MessageTable
+     */
+    public int getLastInsertId() {
+        int id = 0;
+        Cursor mCursor = ctx.getContentResolver().query(UserContentProvider.MESSAGE_CONTENT_URI, MessageTable.PROJECTION, null, null, MessageTable.COL_ID);
+        if (mCursor != null && mCursor.moveToLast()) {
+            id = mCursor.getInt(mCursor.getColumnIndex(MessageTable.COL_ID));
+        }
+        return id;
+    }
     
     /**
      * Hack to exclude threaded messages sent from Gmail
