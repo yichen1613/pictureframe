@@ -111,19 +111,20 @@ public class GmailReader {
              */
 
             Object msgBody = message.getContent();
-            String msgBodyFinal = processMessage(msgBody, "");
+            //String msgBodyFinal = processMessage(msgBody, "");
+            ArrayList<MsgBody> msgBodyArrayList = processMessage(msgBody, new ArrayList<MsgBody>());
 
-            /** TODO: Insert entry to MessageTable, with the following params:
-            MessageTable.COL_TYPE = text/image/audio/video
-            MessageTable.COL_DATETIME = msgDate
-            MessageTable.COL_SUBJECT = msgSubject
-            MessageTable.COL_BODY = msgBodyFinal (if plaintext) OR filepath to saved attachment
-            MessageTable.COL_TO_ID = to_uid
-            MessageTable.COL_FROM_ID = from_uid
-             */
+            // loop through each MsgBody element, and insert each one as an entry into MessageTable
+            for (MsgBody mb : msgBodyArrayList) {
+                Log.d(TAG, "++++++++MsgBody " + (msgBodyArrayList.indexOf(mb) + 1) + "++++++++");
+                Log.d(TAG, "Type: " + mb.mType);
+                Log.d(TAG, "Content: " + mb.mContent);
+                //insertMessageIntoDb(mb.mType, msgDate, msgSubject, mb.mContent, to_uid, from_uid);
+
+                Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, mb.mContent, mb.mType);
+                msgArrayList.add(msg);
+            }
             
-            Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, msgBodyFinal);
-            msgArrayList.add(msg);
             Log.d(TAG, "Number of msgs in msgArrayList: " + msgArrayList.size());
             
             // mark message as read
@@ -141,9 +142,10 @@ public class GmailReader {
     }
 
     
-    public String processMessage(Object msgBody, String prevMsgBody) throws Exception {
-        
-        String msgBodyFinal = prevMsgBody;
+    // return ArrayList of msgBody. Each item in ArrayList has a "type" (text/image/video/audio), should be added as a new msg in db.
+    public ArrayList<MsgBody> processMessage(Object msgBody, ArrayList<MsgBody> mArrayList) throws Exception {
+
+        ArrayList<MsgBody> msgBodyArrayList = mArrayList;
         Log.d(TAG, "...PROCESSING MESSAGE...");
         
         if (msgBody instanceof String) {
@@ -151,7 +153,11 @@ public class GmailReader {
             String s = msgBody.toString();
             s = trimThreadedMessages(s);
             Log.d(TAG, "PLAIN TEXT body: " + s);
-            msgBodyFinal = msgBodyFinal.concat(s);
+
+            if (!s.isEmpty()) {
+                MsgBody mb = this.new MsgBody("text", s);
+                msgBodyArrayList.add(mb);
+            }
             
         } else if (msgBody instanceof Multipart) {
             // multipart message
@@ -191,19 +197,24 @@ public class GmailReader {
                             }
                             ((MimeBodyPart) bp).saveFile(file);
                             
-                            String mimeType = getMimeType(file.getAbsolutePath());
+                            String path = file.getAbsolutePath();
+                            String mimeType = getMimeType(path);
                             if (mimeType != null) {
                                 if (mimeType.startsWith("image/")) {
-                                    // set type to image
-                                    Log.d(TAG, "Saved the image/* attachment to: "+ file.getAbsolutePath());
+                                    MsgBody mb = this.new MsgBody("image", path);
+                                    msgBodyArrayList.add(mb);
+                                    Log.d(TAG, "Saved the image/* attachment to: "+ path);
                                 } else if (mimeType.startsWith("audio/")) {
-                                    // set type to audio
-                                    Log.d(TAG, "Saved the audio/* attachment to: "+ file.getAbsolutePath());
+                                    MsgBody mb = this.new MsgBody("audio", path);
+                                    msgBodyArrayList.add(mb);
+                                    Log.d(TAG, "Saved the audio/* attachment to: "+ path);
                                 } else if (mimeType.startsWith("video/")) {
-                                    // set type to video   
-                                    Log.d(TAG, "Saved the video/* attachment to: "+ file.getAbsolutePath());
+                                    MsgBody mb = this.new MsgBody("video", path);
+                                    msgBodyArrayList.add(mb);
+                                    Log.d(TAG, "Saved the video/* attachment to: "+ path);
                                 } else {
-                                    Log.d(TAG, "Saved the *unhandled MIME type* attachment to: "+ file.getAbsolutePath());
+                                    // Don't add to ArrayList or insert into MessageTable 
+                                    Log.d(TAG, "Saved the *unhandled MIME type* attachment to: "+ path);
                                 }
                             }
                         } else {
@@ -219,7 +230,11 @@ public class GmailReader {
                         String s = bp.getContent().toString();
                         s = trimThreadedMessages(s);
                         Log.d(TAG, "MULTIPART body #" + j + ": " + s);
-                        msgBodyFinal = msgBodyFinal.concat(s);
+                        
+                        if (!s.isEmpty()) {
+                            MsgBody mb = this.new MsgBody("text", s);
+                            msgBodyArrayList.add(mb);
+                        }
                         
                     // These cases either should be ignored (text/html), or do not seem to occur (text/*, image/*, video/*, audio/*)
                     } else if (mbp.isMimeType("text/html")) {
@@ -236,14 +251,14 @@ public class GmailReader {
                     } else if (mbp.isMimeType("multipart/*")) {
                         Log.d(TAG, "isMimeType #" + j + ": multipart/*");
                         // Recursively process the message
-                        msgBodyFinal = processMessage(bp.getContent(), msgBodyFinal);
+                        msgBodyArrayList = processMessage(bp.getContent(), msgBodyArrayList);
                     } else {
                         Log.d(TAG, "isMimeType #" + j + " DID NOT MATCH! getContentType(): " + mbp.getContentType());
                     }
                 }
             }
         }
-        return msgBodyFinal;
+        return msgBodyArrayList;
     }
 
     
@@ -315,13 +330,26 @@ public class GmailReader {
         String mFrom;
         String mSubject;
         String mBody;
+        String mType;
         
-        public Msg(int num, String date, String from, String subject, String body) {
+        public Msg(int num, String date, String from, String subject, String body, String type) {
             this.mNum = num;
             this.mDate = date;
             this.mFrom = from;
             this.mSubject = subject;
             this.mBody = body;
+            this.mType = type;
+        }
+    }
+    
+    
+    class MsgBody {
+        String mType;
+        String mContent;
+        
+        public MsgBody(String type, String content) {
+            this.mType = type;
+            this.mContent = content;
         }
     }
 
