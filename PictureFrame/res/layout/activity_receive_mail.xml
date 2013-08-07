@@ -39,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="50dp"
                 android:onClick="readMail"
                 android:textSize="35dp"
                 android:text="@string/read_mail" />
@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="100dp"
                 android:onClick="cancel"
                 android:textSize="35dp"
                 android:text="@string/cancel" />

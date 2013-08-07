@@ -53,7 +53,7 @@
     <string name="cancel">Cancel</string>
     <string name="login">Login</string>
     <string name="retrieve_mail">Retrieve all mail</string>
-    <string name="refresh_mail">Check for unread mail</string>
+    <string name="refresh_mail">Retrieve unread mail</string>
     <string name="read_mail">Read all mail in database</string>
 
     <!-- Message History strings -->
