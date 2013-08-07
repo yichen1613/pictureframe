@@ -68,68 +68,67 @@ public class GmailReader {
         } else {
             // do nothing
         }
-        Log.d(TAG, "Number of messages in the array: " + messages.length);
         
-        int i = 0;
-        for (Message message : messages) {            
-            // use PEEK variant of FETCH when fetching message content
-            ((IMAPMessage)message).setPeek(true);
+        if (messages != null) {
+            Log.d(TAG, "Number of messages in the array: " + messages.length);
 
-            int msgNum = message.getMessageNumber();
-            String msgDate = message.getReceivedDate().toString().trim();
-            //String msgFrom = message.getFrom()[0].toString(); // returns "John Doe <john.doe@gmail.com>"
-            Address[] from_array = message.getFrom();
-            String msgFrom = (from_array == null ? null : ((InternetAddress) from_array[0]).getAddress()).toLowerCase().trim(); // returns "john.doe@gmail.com"
-            String msgSubject = message.getSubject().trim();
-            if (msgSubject == null) {
-                msgSubject = "(no subject)";
-            }
-            
-            Log.d(TAG, "==============Message " + (i + 1) + "==============");
-            Log.d(TAG, "Email Num: " + msgNum);
-            Log.d(TAG, "Date: " + msgDate);
-            Log.d(TAG, "From: " + msgFrom);
-            Log.d(TAG, "Subject: " + msgSubject);
-            int from_uid = queryForUserId(msgFrom);
-            int to_uid = queryForUserId(this.email);
-            
-            // If the "to" and "from" emails match users in the UserTable, continue processing the message and insert it in the MessageTable. Otherwise, skip the message.
-            if (to_uid != 0 && from_uid != 0) {
-                // found matching user - continue processing the message
-                Log.d(TAG, "From userID: " + from_uid + " | To userID: " + to_uid);
-                
-                Object msgBody = message.getContent();
-                //String msgBodyFinal = processMessage(msgBody, "");
-                ArrayList<MsgBody> msgBodyArrayList = processMessage(msgBody, new ArrayList<MsgBody>());
+            for (Message message : messages) {
+                // use PEEK variant of FETCH when fetching message content
+                ((IMAPMessage)message).setPeek(true);
 
-                // loop through each MsgBody element, and insert each one as an entry into MessageTable
-                for (MsgBody mb : msgBodyArrayList) {
-                    Log.d(TAG, "++++++++MsgBody " + (msgBodyArrayList.indexOf(mb) + 1) + "++++++++");
-                    Log.d(TAG, "Type: " + mb.mType);
-                    Log.d(TAG, "Content: " + mb.mContent);
-                    //insertMessageIntoDb(mb.mType, msgDate, msgSubject, mb.mContent, to_uid, from_uid);
-
-                    Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, mb.mContent, mb.mType);
-                    msgArrayList.add(msg);
+                int msgNum = message.getMessageNumber();
+                String msgDate = message.getReceivedDate().toString().trim();
+                //String msgFrom = message.getFrom()[0].toString(); // returns "John Doe <john.doe@gmail.com>"
+                Address[] from_array = message.getFrom();
+                String msgFrom = (from_array == null ? null : ((InternetAddress) from_array[0]).getAddress()).toLowerCase().trim(); // returns "john.doe@gmail.com"
+                String msgSubject = message.getSubject().trim();
+                if (msgSubject == null) {
+                    msgSubject = "(no subject)";
                 }
-            }
-            
-            /**
-            // Get header information
-            Enumeration headers = message.getAllHeaders();
-            while (headers.hasMoreElements()) {
-                Header h = (Header) headers.nextElement();
-                Log.d(TAG, h.getName() + ": " + h.getValue());
-            }
-             */
-            
-            Log.d(TAG, "Number of msgs in msgArrayList: " + msgArrayList.size());
-            
-            // mark message as read
-            inbox.setFlags(new Message[] {message}, new Flags(Flags.Flag.SEEN), true);
-            
-            i++;
 
+                Log.d(TAG, "==============Message " + (msgNum) + "==============");
+                Log.d(TAG, "Email Num: " + msgNum);
+                Log.d(TAG, "Date: " + msgDate);
+                Log.d(TAG, "From: " + msgFrom);
+                Log.d(TAG, "Subject: " + msgSubject);
+                int from_uid = queryForUserId(msgFrom);
+                int to_uid = queryForUserId(this.email);
+
+                // If the "to" and "from" emails match users in the UserTable, continue processing the message and insert it in the MessageTable. Otherwise, skip the message.
+                if (to_uid != 0 && from_uid != 0) {
+                    // found matching user - continue processing the message
+                    Log.d(TAG, "From userID: " + from_uid + " | To userID: " + to_uid);
+
+                    Object msgBody = message.getContent();
+                    //String msgBodyFinal = processMessage(msgBody, "");
+                    ArrayList<MsgBody> msgBodyArrayList = processMessage(msgBody, new ArrayList<MsgBody>());
+
+                    // loop through each MsgBody element, and insert each one as an entry into MessageTable
+                    for (MsgBody mb : msgBodyArrayList) {
+                        Log.d(TAG, "++++++++MsgBody " + (msgBodyArrayList.indexOf(mb) + 1) + "++++++++");
+                        Log.d(TAG, "Type: " + mb.mType);
+                        Log.d(TAG, "Content: " + mb.mContent);
+                        //insertMessageIntoDb(mb.mType, msgDate, msgSubject, mb.mContent, to_uid, from_uid);
+
+                        //Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, mb.mContent, mb.mType);
+                        //msgArrayList.add(msg);
+                    }
+                }
+
+                /**
+                 // Get header information
+                 Enumeration headers = message.getAllHeaders();
+                 while (headers.hasMoreElements()) {
+                 Header h = (Header) headers.nextElement();
+                 Log.d(TAG, h.getName() + ": " + h.getValue());
+                 }
+                 */
+
+                Log.d(TAG, "Number of msgs in msgArrayList: " + msgArrayList.size());
+
+                // mark message as read
+                inbox.setFlags(new Message[] {message}, new Flags(Flags.Flag.SEEN), true);
+            }
         }
         
         // close connection
