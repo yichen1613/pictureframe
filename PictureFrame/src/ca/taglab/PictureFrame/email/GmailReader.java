@@ -108,7 +108,7 @@ public class GmailReader {
                         Log.d(TAG, "++++++++MsgBody " + (msgBodyArrayList.indexOf(mb) + 1) + "++++++++");
                         Log.d(TAG, "Type: " + mb.mType);
                         Log.d(TAG, "Content: " + mb.mContent);
-                        //insertMessageIntoDb(mb.mType, msgDate, msgSubject, mb.mContent, to_uid, from_uid);
+                        insertMessageIntoDb(mb.mType, msgDate, msgSubject, mb.mContent, to_uid, from_uid);
 
                         //Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, mb.mContent, mb.mType);
                         //msgArrayList.add(msg);

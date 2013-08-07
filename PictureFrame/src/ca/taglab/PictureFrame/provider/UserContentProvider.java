@@ -23,7 +23,7 @@ public class UserContentProvider extends ContentProvider {
     public static final String AUTHORITY = "ca.taglab.PictureFrame.provider";
 
     public static final Uri USER_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/users");
-    public static final Uri MESSAGE_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/users/#/messages/#");
+    public static final Uri MESSAGE_CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/messages");
 
     public static final String USER_CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/users";
     public static final String USER_CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/users";
@@ -35,7 +35,7 @@ public class UserContentProvider extends ContentProvider {
         uriMatcher.addURI(AUTHORITY, "users", USERS);
         uriMatcher.addURI(AUTHORITY, "users/#", USER_ID);
         
-        uriMatcher.addURI(AUTHORITY, "users/#/messages/#", MESSAGES);
+        uriMatcher.addURI(AUTHORITY, "messages", MESSAGES);
     }
 
     /**
@@ -113,15 +113,8 @@ public class UserContentProvider extends ContentProvider {
             //////////////////////////////////////////////////////
             
             case MESSAGES:
-            /*
-			 * Query the messages sent from from_id to to_id in the Message table.
-			 * Path: //users/#/messages/#
-			 */
                 table = MessageTable.TABLE_NAME;
-                selection = ADD_CONSTRAINT(selection, MessageTable.COL_TO_ID, uri.getPathSegments().get(1));
-                selection = ADD_CONSTRAINT(selection, MessageTable.COL_FROM_ID, uri.getPathSegments().get(3));
                 break;
-            
             
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
