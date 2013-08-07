@@ -25,7 +25,7 @@
                 android:text="@string/retrieve_mail" />
 
         <Button
-                android:id="@+id/receive_btn"
+                android:id="@+id/refresh_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -33,6 +33,16 @@
                 android:onClick="refreshMail"
                 android:textSize="35dp"
                 android:text="@string/refresh_mail" />
+
+        <Button
+                android:id="@+id/read_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="15dp"
+                android:onClick="readMail"
+                android:textSize="35dp"
+                android:text="@string/read_mail" />
 
         <Button
                 android:id="@+id/cancel"

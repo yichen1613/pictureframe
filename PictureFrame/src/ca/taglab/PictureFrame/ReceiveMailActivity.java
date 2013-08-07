@@ -33,6 +33,10 @@ public class ReceiveMailActivity extends Activity {
         }, 0, REFRESH_INTERVAL);
     }
     
+    public void readMail(View v) {
+        // to be implemented
+    }
+    
     public void cancel(View v) {
         finish();
     }
