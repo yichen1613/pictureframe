@@ -86,6 +86,7 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
                         + "\nDate: " + msg.mDate
                         + "\nFrom: " + msg.mFrom
                         + "\nSubject: " + msg.mSubject
+                        + "\nType: " + msg.mType
                         + "\nBody: \n\n" + msg.mBody;
                 
                 Toast toast = Toast.makeText(ctx, msgContents, Toast.LENGTH_LONG);
