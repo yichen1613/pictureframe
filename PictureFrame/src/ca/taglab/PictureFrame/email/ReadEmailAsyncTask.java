@@ -80,21 +80,7 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
         
         if (result.equalsIgnoreCase("Emails retrieved successfully")) {
             Toast.makeText(ctx, "Emails retrieved successfully!", Toast.LENGTH_LONG).show();
-            for (GmailReader.Msg msg : this.msgArrayList) {
-                String msgContents = "==============Message " + (msgArrayList.indexOf(msg) + 1) + "=============="
-                        + "\nEmail Num: " + msg.mNum 
-                        + "\nDate: " + msg.mDate
-                        + "\nFrom: " + msg.mFrom
-                        + "\nSubject: " + msg.mSubject
-                        + "\nType: " + msg.mType
-                        + "\nBody: \n\n" + msg.mBody;
-                
-                Toast toast = Toast.makeText(ctx, msgContents, Toast.LENGTH_LONG);
-                LinearLayout toastLayout = (LinearLayout) toast.getView();
-                TextView toastTV = (TextView) toastLayout.getChildAt(0);
-                toastTV.setTextSize(22);
-                toast.show();
-            }
+            // TODO: Add toast displaying number of unread messages (if any)
             
         } else if (result.equalsIgnoreCase("AuthenticationFailedException")) {
             Toast toast = Toast.makeText(ctx, "Your email or password is invalid. Please log in again.", Toast.LENGTH_LONG);

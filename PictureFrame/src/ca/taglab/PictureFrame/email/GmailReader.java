@@ -200,19 +200,21 @@ public class GmailReader {
                                 if (mimeType.startsWith("image/")) {
                                     MsgBody mb = this.new MsgBody("image", path);
                                     msgBodyArrayList.add(mb);
-                                    Log.d(TAG, "Saved the image/* attachment to: "+ path);
+                                    Log.d(TAG, "Saved the image/* attachment to: " + path);
                                 } else if (mimeType.startsWith("audio/")) {
                                     MsgBody mb = this.new MsgBody("audio", path);
                                     msgBodyArrayList.add(mb);
-                                    Log.d(TAG, "Saved the audio/* attachment to: "+ path);
+                                    Log.d(TAG, "Saved the audio/* attachment to: " + path);
                                 } else if (mimeType.startsWith("video/")) {
                                     MsgBody mb = this.new MsgBody("video", path);
                                     msgBodyArrayList.add(mb);
-                                    Log.d(TAG, "Saved the video/* attachment to: "+ path);
+                                    Log.d(TAG, "Saved the video/* attachment to: " + path);
                                 } else {
                                     // Don't add to ArrayList or insert into MessageTable 
-                                    Log.d(TAG, "Saved the *unhandled MIME type* attachment to: "+ path);
+                                    Log.d(TAG, "Saved the *unhandled MIME type* attachment to: " + path);
                                 }
+                            } else {
+                                Log.d(TAG, "Saved the *null MIME type* attachment to: " + path);
                             }
                         } else {
                             Log.d(TAG, "Error: Folder was not found/created!");
