@@ -89,17 +89,30 @@ public class GmailReader {
             Log.d(TAG, "Email Num: " + msgNum);
             Log.d(TAG, "Date: " + msgDate);
             Log.d(TAG, "From: " + msgFrom);
-            int from_uid = queryForUserId(msgFrom);
-            // TODO: If the "from" email matches a user in the UserTable, continue processing the message and insert it in the MessageTable. Otherwise, skip it.
-            if (from_uid != 0) {
-                // found matching user - continue processing the message
-                Log.d(TAG, "From userID: " + from_uid);
-            }
-            int to_uid = queryForUserId(this.email);
-            if (to_uid != 0) {
-                Log.d(TAG, "To userID: " + to_uid);
-            }
             Log.d(TAG, "Subject: " + msgSubject);
+            int from_uid = queryForUserId(msgFrom);
+            int to_uid = queryForUserId(this.email);
+            
+            // If the "to" and "from" emails match users in the UserTable, continue processing the message and insert it in the MessageTable. Otherwise, skip the message.
+            if (to_uid != 0 && from_uid != 0) {
+                // found matching user - continue processing the message
+                Log.d(TAG, "From userID: " + from_uid + " | To userID: " + to_uid);
+                
+                Object msgBody = message.getContent();
+                //String msgBodyFinal = processMessage(msgBody, "");
+                ArrayList<MsgBody> msgBodyArrayList = processMessage(msgBody, new ArrayList<MsgBody>());
+
+                // loop through each MsgBody element, and insert each one as an entry into MessageTable
+                for (MsgBody mb : msgBodyArrayList) {
+                    Log.d(TAG, "++++++++MsgBody " + (msgBodyArrayList.indexOf(mb) + 1) + "++++++++");
+                    Log.d(TAG, "Type: " + mb.mType);
+                    Log.d(TAG, "Content: " + mb.mContent);
+                    //insertMessageIntoDb(mb.mType, msgDate, msgSubject, mb.mContent, to_uid, from_uid);
+
+                    Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, mb.mContent, mb.mType);
+                    msgArrayList.add(msg);
+                }
+            }
             
             /**
             // Get header information
@@ -109,21 +122,6 @@ public class GmailReader {
                 Log.d(TAG, h.getName() + ": " + h.getValue());
             }
              */
-
-            Object msgBody = message.getContent();
-            //String msgBodyFinal = processMessage(msgBody, "");
-            ArrayList<MsgBody> msgBodyArrayList = processMessage(msgBody, new ArrayList<MsgBody>());
-
-            // loop through each MsgBody element, and insert each one as an entry into MessageTable
-            for (MsgBody mb : msgBodyArrayList) {
-                Log.d(TAG, "++++++++MsgBody " + (msgBodyArrayList.indexOf(mb) + 1) + "++++++++");
-                Log.d(TAG, "Type: " + mb.mType);
-                Log.d(TAG, "Content: " + mb.mContent);
-                //insertMessageIntoDb(mb.mType, msgDate, msgSubject, mb.mContent, to_uid, from_uid);
-
-                Msg msg = this.new Msg(msgNum, msgDate, msgFrom, msgSubject, mb.mContent, mb.mType);
-                msgArrayList.add(msg);
-            }
             
             Log.d(TAG, "Number of msgs in msgArrayList: " + msgArrayList.size());
             
