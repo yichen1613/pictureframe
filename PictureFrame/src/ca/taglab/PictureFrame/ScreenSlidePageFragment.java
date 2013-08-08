@@ -230,10 +230,18 @@ public class ScreenSlidePageFragment extends Fragment {
                     // Image captured and saved
                     try {
                         String photo_location = getLastImageId();
+                        
+                        /**
+                         * Code for adding audio caption
                         mAttachments = new String[2];
                         mAttachments[0] = photo_location;
                         Intent intent = new Intent(getActivity(), AudioRecorderActivity.class);
                         startActivityForResult(intent, CAPTURE_AUDIO_CAPTION);
+                         */
+                         
+                        String[] attachments = { photo_location };
+                        new SendEmailAsyncTask(getActivity(), mEmail, "PictureFrame: I have a photo for you", "", attachments).execute();
+                        messageSent(mPhoto);
                     } catch (Exception e) {
                         // Photo to mEmail failed
                         Log.e("SendEmailAsyncTask", e.getMessage(), e);
