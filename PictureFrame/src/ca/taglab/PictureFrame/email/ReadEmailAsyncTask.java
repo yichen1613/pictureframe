@@ -3,6 +3,7 @@ package ca.taglab.PictureFrame.email;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.LinearLayout;
@@ -10,7 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import ca.taglab.PictureFrame.BuildConfig;
 import ca.taglab.PictureFrame.LoginActivity;
+import ca.taglab.PictureFrame.database.MessageTable;
 import ca.taglab.PictureFrame.database.ObscuredSharedPreferences;
+import ca.taglab.PictureFrame.provider.UserContentProvider;
 
 import javax.mail.AuthenticationFailedException;
 import javax.mail.FolderClosedException;
@@ -88,6 +91,25 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
                     Log.d(TAG, "COL_ID value in MessageTable: " + msgId);
                     // TODO: add notification of new messages ("New message from ____")
                 }
+                
+                
+                // NEW COL_READ STUFF
+                // do query on MessageTable for COL_READ = 0 rows. These are unread messages that need to be notified to user!
+                String mSelectionClause = MessageTable.COL_READ + "=0";
+                Cursor mCursor = ctx.getContentResolver().query(UserContentProvider.MESSAGE_CONTENT_URI, MessageTable.PROJECTION, mSelectionClause, null, MessageTable.COL_ID);
+
+                int msg_id = 0;
+                if (mCursor != null) {
+                    Log.d(TAG, "Number of unread messages: " + mCursor.getCount());
+                    
+                    while (mCursor.moveToNext()) {
+                        msg_id = mCursor.getInt(mCursor.getColumnIndex(MessageTable.COL_ID));
+                        Log.d(TAG, "Unread msg ID: " + msg_id);
+                    }
+                } else {
+                    Log.d(TAG, "No unread messages were found");
+                }
+                mCursor.close();
             }
             
         } else if (result.equalsIgnoreCase("AuthenticationFailedException")) {

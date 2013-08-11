@@ -109,15 +109,22 @@ public class GmailReader {
                         Log.d(TAG, "++++++++MsgBody " + (msgBodyArrayList.indexOf(mb) + 1) + "++++++++");
                         Log.d(TAG, "Type: " + mb.mType);
                         Log.d(TAG, "Content: " + mb.mContent);
-                        insertMessageIntoDb(mb.mType, msgDate, msgSubject, mb.mContent, to_uid, from_uid);
                         
-                        // If UNREAD flag given, notify the user for every message we insert into the db and mark as read.
+                        int read_flag = 0; // 0 means unread, 1 means read
+                        if (flags.equals("ALL")) {
+                            read_flag = 1;
+                        } 
+                        insertMessageIntoDb(mb.mType, msgDate, msgSubject, mb.mContent, to_uid, from_uid, read_flag);
+                        
+                        // If UNREAD flag given, notify the user for every message we insert into the db and mark as read in Gmail.
+                        //TODO: Delete this after the COL_READ stuff is working (and getLastInsertId)
                         if (flags.equals("UNREAD")) {
                             // add the message's row ID into the msgIdArrayList
                             int rowId = getLastInsertId();
                             Log.d(TAG, "Adding row ID " + rowId + " of last newly inserted message to msgIdArrayList");
                             msgIdArrayList.add(rowId);
                         }
+
                     }
                 }
 
@@ -268,7 +275,7 @@ public class GmailReader {
     /**
      * Insert message into database
      */
-    public void insertMessageIntoDb(String type, String datetime, String subject, String body, int to_id, int from_id) {
+    public void insertMessageIntoDb(String type, String datetime, String subject, String body, int to_id, int from_id, int read_flag) {
         ContentValues values = new ContentValues();
         values.put(MessageTable.COL_TYPE, type);
         values.put(MessageTable.COL_DATETIME, datetime);
@@ -276,6 +283,7 @@ public class GmailReader {
         values.put(MessageTable.COL_BODY, body);
         values.put(MessageTable.COL_TO_ID, to_id);
         values.put(MessageTable.COL_FROM_ID, from_id);
+        values.put(MessageTable.COL_READ, read_flag);
         ctx.getContentResolver().insert(UserContentProvider.MESSAGE_CONTENT_URI, values);
     }
 
