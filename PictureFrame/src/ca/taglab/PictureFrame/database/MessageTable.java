@@ -13,6 +13,7 @@ public class MessageTable {
     public static final String COL_SUBJECT = "subject";
     public static final String COL_BODY = "body";
     public static final String COL_TYPE = "type";
+    public static final String COL_READ = "read";
 
     public static final String[] PROJECTION = {
             COL_ID,
@@ -20,7 +21,8 @@ public class MessageTable {
             COL_FROM_ID,
             COL_DATETIME,
             COL_BODY,
-            COL_TYPE
+            COL_TYPE,
+            COL_READ
     };
     
     private static final String CREATE_MESSAGE_TABLE =
@@ -31,7 +33,8 @@ public class MessageTable {
             + COL_SUBJECT + " TEXT, "
             + COL_BODY + " TEXT, "
             + COL_TO_ID + " INTEGER, "
-            + COL_FROM_ID + " INTEGER NOT NULL"
+            + COL_FROM_ID + " INTEGER NOT NULL, "
+            + COL_READ + " INTEGER NOT NULL"
             + ");";
 
     public static void onCreate(SQLiteDatabase db) {
