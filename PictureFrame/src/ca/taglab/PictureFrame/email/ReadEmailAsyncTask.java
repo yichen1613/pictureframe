@@ -20,7 +20,6 @@ import javax.mail.FolderClosedException;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.security.NoSuchProviderException;
-import java.util.ArrayList;
 
 public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
 
@@ -31,7 +30,6 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
     private String mEmail;
     private String mPwd;
     private String mFlags;
-    private ArrayList<Integer> msgIdArrayList;
 
     public ReadEmailAsyncTask(Context context, String flags) {
         if (BuildConfig.DEBUG) Log.v(TAG, "ReadEmailAsyncTask()");
@@ -49,7 +47,7 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
         if (BuildConfig.DEBUG) Log.v(TAG, "doInBackground()");
         try {
             GmailReader reader = new GmailReader(this.ctx, this.mEmail, this.mPwd, this.mFlags);
-            this.msgIdArrayList = reader.readMail();
+            reader.readMail();
             return "Emails retrieved successfully";
         } catch (AuthenticationFailedException e) {
             Log.e(TAG, "Invalid credentials");
@@ -85,22 +83,13 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
             Toast.makeText(ctx, "Emails retrieved successfully!", Toast.LENGTH_LONG).show();
             
             if (this.mFlags.equals("UNREAD")) {
-                // TODO: Change the number of new messages to only count messages with DIFFERENT dates?
-                Toast.makeText(ctx, "Number of new messages (parts): " + this.msgIdArrayList.size(), Toast.LENGTH_LONG).show();
-                for (Integer msgId : this.msgIdArrayList) {
-                    Log.d(TAG, "COL_ID value in MessageTable: " + msgId);
-                    // TODO: add notification of new messages ("New message from ____")
-                }
-                
-                
-                // NEW COL_READ STUFF
-                // do query on MessageTable for COL_READ = 0 rows. These are unread messages that need to be notified to user!
+                // Do query on MessageTable for COL_READ = 0 rows. These are unread messages that need to be notified to user!
                 String mSelectionClause = MessageTable.COL_READ + "=0";
                 Cursor mCursor = ctx.getContentResolver().query(UserContentProvider.MESSAGE_CONTENT_URI, MessageTable.PROJECTION, mSelectionClause, null, MessageTable.COL_ID);
 
-                int msg_id = 0;
+                int msg_id;
                 if (mCursor != null) {
-                    Log.d(TAG, "Number of unread messages: " + mCursor.getCount());
+                    Log.d(TAG, "Number of unread messages (parts): " + mCursor.getCount());
                     
                     while (mCursor.moveToNext()) {
                         msg_id = mCursor.getInt(mCursor.getColumnIndex(MessageTable.COL_ID));

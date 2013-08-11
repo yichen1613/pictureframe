@@ -35,11 +35,7 @@ public class GmailReader {
         this.flags = flags;
     }
     
-    public synchronized ArrayList<Integer> readMail() throws Exception {
-        
-        // For new-message notifications, use an ArrayList of ints that correspond to COL_IDs in MessageTable 
-        // Each message is a new/unread message that was just inserted into the db and marked as read
-        ArrayList<Integer> msgIdArrayList = new ArrayList<Integer>();
+    public synchronized void readMail() throws Exception {
         
         Properties props = System.getProperties();
         props.setProperty("mail.store.protocol", "imaps");
@@ -115,16 +111,6 @@ public class GmailReader {
                             read_flag = 1;
                         } 
                         insertMessageIntoDb(mb.mType, msgDate, msgSubject, mb.mContent, to_uid, from_uid, read_flag);
-                        
-                        // If UNREAD flag given, notify the user for every message we insert into the db and mark as read in Gmail.
-                        //TODO: Delete this after the COL_READ stuff is working (and getLastInsertId)
-                        if (flags.equals("UNREAD")) {
-                            // add the message's row ID into the msgIdArrayList
-                            int rowId = getLastInsertId();
-                            Log.d(TAG, "Adding row ID " + rowId + " of last newly inserted message to msgIdArrayList");
-                            msgIdArrayList.add(rowId);
-                        }
-
                     }
                 }
 
@@ -145,8 +131,6 @@ public class GmailReader {
         // close connection
         inbox.close(false);
         store.close();
-        
-        return msgIdArrayList;
     }
 
     
@@ -302,7 +286,7 @@ public class GmailReader {
         } else {
             Log.d(TAG, "queryForUserId(): No user matching the given email was found");
         }
-        
+
         mCursor.close();
         return uid;
     }
@@ -320,19 +304,7 @@ public class GmailReader {
         }
         return mimeType;
     }
-
-
-    /**
-     * Get row ID of the last inserted entry in the MessageTable
-     */
-    public int getLastInsertId() {
-        int id = 0;
-        Cursor mCursor = ctx.getContentResolver().query(UserContentProvider.MESSAGE_CONTENT_URI, MessageTable.PROJECTION, null, null, MessageTable.COL_ID);
-        if (mCursor != null && mCursor.moveToLast()) {
-            id = mCursor.getInt(mCursor.getColumnIndex(MessageTable.COL_ID));
-        }
-        return id;
-    }
+    
     
     /**
      * Hack to exclude threaded messages sent from Gmail
