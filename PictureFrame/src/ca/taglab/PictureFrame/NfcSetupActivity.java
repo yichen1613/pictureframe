@@ -21,7 +21,6 @@ import java.io.UnsupportedEncodingException;
 
 public class NfcSetupActivity extends Activity {
 
-    private final static int REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
     private final static String TAG = "NfcSetupActivity";
 
     private EditText email;
