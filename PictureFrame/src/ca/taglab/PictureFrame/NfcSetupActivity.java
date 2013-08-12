@@ -1,10 +1,11 @@
 package ca.taglab.PictureFrame;
 
 import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.app.PendingIntent;
+import android.content.*;
 import android.database.Cursor;
+import android.nfc.*;
+import android.nfc.tech.Ndef;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,8 @@ import ca.taglab.PictureFrame.provider.UserContentProvider;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,6 +33,12 @@ public class NfcSetupActivity extends Activity {
     private EditText email;
     private EditText password;
 
+    NfcAdapter adapter;
+    PendingIntent pendingIntent;
+    IntentFilter writeTagFilters[];
+    boolean writeMode;
+    Tag tag;
+    
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +48,14 @@ public class NfcSetupActivity extends Activity {
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
 
+        Log.d(TAG, "Creating IntentFilter...");
+        // Create an IntentFilter. Alternatively, register our app directly with IntentFilter in the manifest (but wouldn't be able to launch our Activity regularly - Android would start up Activity when it detects a tag)
+        // Android calls onNewIntent after detecting and deciding which app should process the tag
+        adapter = NfcAdapter.getDefaultAdapter(this);
+        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+        tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
+        writeTagFilters = new IntentFilter[] { tagDetected };
     }
 
     public void login(View v) {
@@ -47,7 +64,27 @@ public class NfcSetupActivity extends Activity {
         
         String mEmail = email.getText().toString().toLowerCase().trim();
         String mPassword = password.getText().toString().trim();
+        String mCredentials = mEmail.concat(",").concat(mPassword);
 
+        Log.d(TAG, "Writing: " + mCredentials + " to NFC tag...");
+        
+        // Try writing the credentials to the tag
+        try {
+            if (tag == null) {
+                Toast.makeText(this, "Tag not detected", Toast.LENGTH_LONG).show();
+            } else {
+                writeRecord(mCredentials, tag);
+                Toast.makeText(this, "Credentials successfully written to tag!", Toast.LENGTH_LONG).show();
+            }
+        } catch (IOException e) {
+            Toast.makeText(this, "Error during writing (tag may be too far from device)", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        } catch (FormatException e) {
+            Toast.makeText(this, "Error during writing (tag may be too far from device)", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+        
+        /**
         // store email, password in SharedPreferences object after encryption
         SharedPreferences.Editor e = (new ObscuredSharedPreferences(this, this.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE))).edit();
         e.putString("email", mEmail);
@@ -94,6 +131,7 @@ public class NfcSetupActivity extends Activity {
             toastTV.setTextSize(30);
             toast.show();
         }
+         */
     }
 
     public void cancel(View v) {
@@ -136,5 +174,87 @@ public class NfcSetupActivity extends Activity {
         }
         return isValid;
     }
+    
+    
+    
+    // NFC stuff
 
+    /**
+     * 
+     */
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
+            tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            Toast.makeText(this, "Tag detected!" + tag.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
+    
+    /**
+     * Create NDEF record
+     */
+    private NdefRecord createRecord(String text) throws UnsupportedEncodingException {
+        String lang       = "en";
+        byte[] textBytes  = text.getBytes();
+        byte[] langBytes  = lang.getBytes("US-ASCII");
+        int    langLength = langBytes.length;
+        int    textLength = textBytes.length;
+        byte[] payload    = new byte[1 + langLength + textLength];
+
+        // set status byte (see NDEF spec for actual bits)
+        payload[0] = (byte) langLength;
+
+        // copy langbytes and textbytes into payload
+        System.arraycopy(langBytes, 0, payload, 1,              langLength);
+        System.arraycopy(textBytes, 0, payload, 1 + langLength, textLength);
+
+        NdefRecord record = new NdefRecord(NdefRecord.TNF_WELL_KNOWN, NdefRecord.RTD_TEXT, new byte[0], payload);
+
+        return record;
+    }
+
+    
+    /**
+     * Write NDEF record as an NDEF Message
+     */
+    private void writeRecord(String text, Tag tag) throws IOException, FormatException {
+
+        NdefRecord[] records = { createRecord(text) };
+        NdefMessage message = new NdefMessage(records);
+        
+        // Get an instance of Ndef for the tag
+        Ndef ndef = Ndef.get(tag);
+        
+        // Enable I/O
+        ndef.connect();
+        
+        // Write the message
+        ndef.writeNdefMessage(message);
+        
+        // Close the connection
+        ndef.close();
+    }
+
+    
+    @Override
+    public void onPause(){
+        super.onPause();
+        WriteModeOff();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        WriteModeOn();
+    }
+
+    private void WriteModeOn(){
+        writeMode = true;
+        adapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters, null);
+    }
+
+    private void WriteModeOff(){
+        writeMode = false;
+        adapter.disableForegroundDispatch(this);
+    }
 }
