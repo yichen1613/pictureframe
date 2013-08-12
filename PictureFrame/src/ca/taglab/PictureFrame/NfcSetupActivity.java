@@ -50,13 +50,11 @@ public class NfcSetupActivity extends Activity {
         password = (EditText) findViewById(R.id.password);
     }
 
-    public void login(View v) {
-
-        // TODO: Change Login button text to "Write tag"
+    public void writeTag(View v) {
         
         String mEmail = email.getText().toString().toLowerCase().trim();
         String mPassword = password.getText().toString().trim();
-        this.mCredentials = mEmail.concat(":::").concat(mPassword);
+        this.mCredentials = mEmail.concat("::").concat(mPassword);
         
         // When an NFC tag comes into range, call the activity that handles writing data to the tag
         adapter = NfcAdapter.getDefaultAdapter(this);

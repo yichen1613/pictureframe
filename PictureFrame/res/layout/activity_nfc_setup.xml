@@ -32,14 +32,14 @@
                   android:layout_height="wrap_content"
                   android:layout_marginTop="70dp">
         <Button
-                android:id="@+id/login"
+                android:id="@+id/write_tag"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginRight="40dp"
-                android:onClick="login"
+                android:onClick="writeTag"
                 android:textSize="35dp"
-                android:text="@string/login" />
+                android:text="@string/write_tag" />
 
         <Button
                 android:id="@+id/cancel"

@@ -56,6 +56,7 @@
     <string name="retrieve_mail">Retrieve all mail</string>
     <string name="refresh_mail">Retrieve unread mail</string>
     <string name="read_mail">Read all mail in database</string>
+    <string name="write_tag">Write Tag</string>
 
     <!-- Message History strings -->
     <string name="message_history_1">Hi Grandma! I\'m sending you a photo we took at Ben\'s convocation today - it was a very proud moment for all of us.</string>
