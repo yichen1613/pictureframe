@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.*;
-import android.database.Cursor;
 import android.nfc.*;
 import android.nfc.tech.Ndef;
 import android.os.Bundle;
@@ -14,17 +13,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import ca.taglab.PictureFrame.database.ObscuredSharedPreferences;
-import ca.taglab.PictureFrame.database.UserTable;
-import ca.taglab.PictureFrame.email.ReadEmailAsyncTask;
-import ca.taglab.PictureFrame.provider.UserContentProvider;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class NfcSetupActivity extends Activity {
 
@@ -56,69 +49,39 @@ public class NfcSetupActivity extends Activity {
         
         String mEmail = email.getText().toString().toLowerCase().trim();
         String mPassword = password.getText().toString().trim();
-        this.mCredentials = mEmail.concat("::").concat(mPassword);
-        
-        // When an NFC tag comes into range, call the activity that handles writing data to the tag
-        adapter = NfcAdapter.getDefaultAdapter(this);
-        
-        // create pending intent as FLAG_ACTIVITY_SINGLE_TOP so that as NFC tags are tapped, multiple instances of the same app are NOT created
-        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        // find a tag
-        IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
-        writeTagFilters = new IntentFilter[] { tagDetected };
-
-
-        // TODO: Replace AlertDialog with a prompt image that covers the current screen (so user cannot type or click "Write Tag" button again)
-        // Prompt user to place tag against device
-        alertDialog = new AlertDialog.Builder(NfcSetupActivity.this).create();
-        alertDialog.setTitle("Temporary Dialog"); // set Dialog Title
-        alertDialog.setMessage("Please place NFC tag against the device"); // set Dialog Message        
-        // alertDialog.setIcon(R.drawable.tick); // set Icon to Dialog
-        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                //adapter.disableForegroundDispatch(getParent());
-            }
-        });
-        alertDialog.show(); // show AlertDialog
-        
-        // set up listener for the intent we are filtering for, s.t. when it detects an intent matching the intent filter, it calls onNewIntent()
-        adapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters, null);
-        
-        
-        /**
-        // store email, password in SharedPreferences object after encryption
-        SharedPreferences.Editor e = (new ObscuredSharedPreferences(this, this.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE))).edit();
-        e.putString("email", mEmail);
-        e.putString("password", mPassword);
 
         if (!mEmail.isEmpty() && !mPassword.isEmpty()) {
             if (isValidEmail(mEmail)) {
-                e.commit();
+                
+                this.mCredentials = mEmail.concat("::").concat(mPassword);
 
-                int uid = queryForUserId(mEmail);
-                if (uid == 0) {
-                    // User does not exist in UserTable, so insert the user
-                    ContentValues values = new ContentValues();
-                    values.put(UserTable.COL_NAME, "User");
-                    values.put(UserTable.COL_EMAIL, mEmail);
-                    values.put(UserTable.COL_IMG, "none");
-                    values.put(UserTable.COL_PASSWORD, "1234");
-                    getContentResolver().insert(UserContentProvider.USER_CONTENT_URI, values);
-                } else {
-                    // do nothing (since nothing needs to be updated)
-                }
+                // When an NFC tag comes into range, call the activity that handles writing data to the tag
+                adapter = NfcAdapter.getDefaultAdapter(this);
 
-                Toast.makeText(this, "Retrieving unread emails...", Toast.LENGTH_LONG);
-                Log.d(TAG, "Retrieving unread emails...");
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    public void run() {
-                        getUnreadEmails();
+                // create pending intent as FLAG_ACTIVITY_SINGLE_TOP so that as NFC tags are tapped, multiple instances of the same app are NOT created
+                pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+                // find a tag
+                IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+                tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
+                writeTagFilters = new IntentFilter[] { tagDetected };
+
+
+                // TODO: Replace AlertDialog with a prompt image that covers the current screen (so user cannot type or click "Write Tag" button again)
+                // Prompt user to place tag against device
+                alertDialog = new AlertDialog.Builder(NfcSetupActivity.this).create();
+                alertDialog.setTitle("Temporary Dialog"); // set Dialog Title
+                alertDialog.setMessage("Please place NFC tag against the device"); // set Dialog Message        
+                // alertDialog.setIcon(R.drawable.tick); // set Icon to Dialog
+                alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        //adapter.disableForegroundDispatch(getParent());
                     }
-                }, 0, REFRESH_INTERVAL);
+                });
+                alertDialog.show(); // show AlertDialog
 
-                finish();
+                // set up listener for the intent we are filtering for, s.t. when it detects an intent matching the intent filter, it calls onNewIntent()
+                adapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters, null);
+                
             } else {
                 Toast toast = Toast.makeText(this, "Invalid email address", Toast.LENGTH_LONG);
                 LinearLayout toastLayout = (LinearLayout) toast.getView();
@@ -133,7 +96,6 @@ public class NfcSetupActivity extends Activity {
             toastTV.setTextSize(30);
             toast.show();
         }
-         */
     }
 
     public void cancel(View v) {
@@ -143,29 +105,7 @@ public class NfcSetupActivity extends Activity {
         finish();
     }
 
-    public void getUnreadEmails() {
-        new ReadEmailAsyncTask(this, "UNREAD").execute();
-    }
-
-    /**
-     * Return the user ID matching the given email address. Otherwise, return 0 if matching user does not exist.
-     */
-    public int queryForUserId(String email) {
-        int uid = 0;
-        String mSelectionClause = UserTable.COL_EMAIL + "=\"" + email + "\"";
-        Cursor mCursor = getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, mSelectionClause, null, UserTable.COL_ID);
-
-        if (mCursor != null && mCursor.moveToFirst() && mCursor.getCount() == 1) {
-            int index = mCursor.getColumnIndex(UserTable.COL_ID);
-            uid = mCursor.getInt(index);
-        } else {
-            Log.d(TAG, "queryForUserId(): No user matching the given email was found");
-        }
-
-        mCursor.close();
-        return uid;
-    }
-
+    
     /**
      * Check if the email address is valid
      */
@@ -179,11 +119,11 @@ public class NfcSetupActivity extends Activity {
         }
         return isValid;
     }
-    
-    
-    
-    // NFC stuff
 
+
+    /**
+     * Called when intent matches IntentFilter
+     */
     @Override
     protected void onNewIntent(Intent intent) {
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
@@ -195,15 +135,18 @@ public class NfcSetupActivity extends Activity {
             finish();
         }
     }
-    
+
+    /**
+     * Write credentials to the tag
+     */
     public void writeToTag() {
-        // Try writing the credentials to the tag
         Log.d(TAG, "Writing: " + mCredentials + " to NFC tag...");
         try {
             if (tag == null) {
                 Toast.makeText(this, "Tag not detected", Toast.LENGTH_LONG).show();
             } else {
                 writeRecord(mCredentials, tag);
+                //TODO: Replace Toast with success image + sound
                 Toast.makeText(this, "Credentials successfully written to tag!", Toast.LENGTH_LONG).show();
             }
         } catch (IOException e) {
