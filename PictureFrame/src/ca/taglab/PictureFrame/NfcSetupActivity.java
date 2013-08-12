@@ -1,6 +1,7 @@
 package ca.taglab.PictureFrame;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.*;
 import android.database.Cursor;
@@ -37,7 +38,8 @@ public class NfcSetupActivity extends Activity {
     PendingIntent pendingIntent;
     IntentFilter writeTagFilters[];
     Tag tag;
-    
+
+    AlertDialog alertDialog;
     private String mCredentials;
     
     @Override
@@ -66,10 +68,19 @@ public class NfcSetupActivity extends Activity {
         tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
         writeTagFilters = new IntentFilter[] { tagDetected };
 
-        
-        // TODO: Replace the text prompt with an image that covers the current screen (so user cannot type or click "Login" button again)
+
+        // TODO: Replace AlertDialog with a prompt image that covers the current screen (so user cannot type or click "Write Tag" button again)
         // Prompt user to place tag against device
-        Toast.makeText(this, "Please place NFC tag against the device", Toast.LENGTH_LONG).show();
+        alertDialog = new AlertDialog.Builder(NfcSetupActivity.this).create();
+        alertDialog.setTitle("Temporary Dialog"); // set Dialog Title
+        alertDialog.setMessage("Please place NFC tag against the device"); // set Dialog Message        
+        // alertDialog.setIcon(R.drawable.tick); // set Icon to Dialog
+        alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                //adapter.disableForegroundDispatch(getParent());
+            }
+        });
+        alertDialog.show(); // show AlertDialog
         
         // set up listener for the intent we are filtering for, s.t. when it detects an intent matching the intent filter, it calls onNewIntent()
         adapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters, null);
@@ -180,6 +191,8 @@ public class NfcSetupActivity extends Activity {
             Toast.makeText(this, "Tag detected! " + tag.toString(), Toast.LENGTH_LONG).show();
 
             writeToTag();
+            alertDialog.dismiss();
+            finish();
         }
     }
     
