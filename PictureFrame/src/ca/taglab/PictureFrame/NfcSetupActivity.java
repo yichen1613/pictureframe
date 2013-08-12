@@ -36,8 +36,9 @@ public class NfcSetupActivity extends Activity {
     NfcAdapter adapter;
     PendingIntent pendingIntent;
     IntentFilter writeTagFilters[];
-    boolean writeMode;
     Tag tag;
+    
+    private String mCredentials;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,42 +48,34 @@ public class NfcSetupActivity extends Activity {
 
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
-
-        Log.d(TAG, "Creating IntentFilter...");
-        // Create an IntentFilter. Alternatively, register our app directly with IntentFilter in the manifest (but wouldn't be able to launch our Activity regularly - Android would start up Activity when it detects a tag)
-        // Android calls onNewIntent after detecting and deciding which app should process the tag
-        adapter = NfcAdapter.getDefaultAdapter(this);
-        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
-        IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
-        writeTagFilters = new IntentFilter[] { tagDetected };
     }
 
     public void login(View v) {
 
-        // TODO: Change Login button: 1) Prompt user ("Place NFC tag against ___", image/animation of tapping motion), 2) Write the Strings to NFC tag ("Writing tag...", "Success!")
+        // TODO: Change Login button text to "Write tag"
         
         String mEmail = email.getText().toString().toLowerCase().trim();
         String mPassword = password.getText().toString().trim();
-        String mCredentials = mEmail.concat(",").concat(mPassword);
-
-        Log.d(TAG, "Writing: " + mCredentials + " to NFC tag...");
+        this.mCredentials = mEmail.concat(":::").concat(mPassword);
         
-        // Try writing the credentials to the tag
-        try {
-            if (tag == null) {
-                Toast.makeText(this, "Tag not detected", Toast.LENGTH_LONG).show();
-            } else {
-                writeRecord(mCredentials, tag);
-                Toast.makeText(this, "Credentials successfully written to tag!", Toast.LENGTH_LONG).show();
-            }
-        } catch (IOException e) {
-            Toast.makeText(this, "Error during writing (tag may be too far from device)", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        } catch (FormatException e) {
-            Toast.makeText(this, "Error during writing (tag may be too far from device)", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
+        // When an NFC tag comes into range, call the activity that handles writing data to the tag
+        adapter = NfcAdapter.getDefaultAdapter(this);
+        
+        // create pending intent as FLAG_ACTIVITY_SINGLE_TOP so that as NFC tags are tapped, multiple instances of the same app are NOT created
+        pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        // find a tag
+        IntentFilter tagDetected = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+        tagDetected.addCategory(Intent.CATEGORY_DEFAULT);
+        writeTagFilters = new IntentFilter[] { tagDetected };
+
+        
+        // TODO: Replace the text prompt with an image that covers the current screen (so user cannot type or click "Login" button again)
+        // Prompt user to place tag against device
+        Toast.makeText(this, "Please place NFC tag against the device", Toast.LENGTH_LONG).show();
+        
+        // set up listener for the intent we are filtering for, s.t. when it detects an intent matching the intent filter, it calls onNewIntent()
+        adapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters, null);
+        
         
         /**
         // store email, password in SharedPreferences object after encryption
@@ -135,6 +128,9 @@ public class NfcSetupActivity extends Activity {
     }
 
     public void cancel(View v) {
+        if (adapter != null) {
+            adapter.disableForegroundDispatch(this);
+        }
         finish();
     }
 
@@ -179,14 +175,35 @@ public class NfcSetupActivity extends Activity {
     
     // NFC stuff
 
-    /**
-     * 
-     */
     @Override
     protected void onNewIntent(Intent intent) {
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            Toast.makeText(this, "Tag detected!" + tag.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Tag detected! " + tag.toString(), Toast.LENGTH_LONG).show();
+
+            writeToTag();
+        }
+    }
+    
+    public void writeToTag() {
+        // Try writing the credentials to the tag
+        Log.d(TAG, "Writing: " + mCredentials + " to NFC tag...");
+        try {
+            if (tag == null) {
+                Toast.makeText(this, "Tag not detected", Toast.LENGTH_LONG).show();
+            } else {
+                writeRecord(mCredentials, tag);
+                Toast.makeText(this, "Credentials successfully written to tag!", Toast.LENGTH_LONG).show();
+            }
+        } catch (IOException e) {
+            Toast.makeText(this, "Error during writing (tag may be too far from device)", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        } catch (FormatException e) {
+            Toast.makeText(this, "Error during writing (tag may be too far from device)", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        } catch (Exception e) {
+            Toast.makeText(this, "Error during writing (tag may be too far from device)", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
     
@@ -239,22 +256,9 @@ public class NfcSetupActivity extends Activity {
     @Override
     public void onPause(){
         super.onPause();
-        WriteModeOff();
+        if (adapter != null) {
+            adapter.disableForegroundDispatch(this);
+        }
     }
 
-    @Override
-    public void onResume(){
-        super.onResume();
-        WriteModeOn();
-    }
-
-    private void WriteModeOn(){
-        writeMode = true;
-        adapter.enableForegroundDispatch(this, pendingIntent, writeTagFilters, null);
-    }
-
-    private void WriteModeOff(){
-        writeMode = false;
-        adapter.disableForegroundDispatch(this);
-    }
 }
