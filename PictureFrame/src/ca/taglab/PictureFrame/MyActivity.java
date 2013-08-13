@@ -45,7 +45,8 @@ public class MyActivity extends ListActivity {
                 new Sample(R.string.title_add_existing_picture, AddExistingPicture.class),
                 new Sample(R.string.title_view_gallery, ScreenSlideActivity.class),
                 new Sample(R.string.title_receive_mail, ReceiveMailActivity.class),
-                new Sample(R.string.title_nfc_setup, NfcSetupActivity.class)
+                new Sample(R.string.title_nfc_setup, NfcSetupActivity.class),
+                new Sample(R.string.title_nfc_login, NfcLoginActivity.class)
         };
 
         setListAdapter(new ArrayAdapter<Sample>(this,

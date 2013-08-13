@@ -54,6 +54,9 @@
         <activity android:name="ca.taglab.PictureFrame.NfcSetupActivity"
                   android:label="@string/title_nfc_setup"
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
+        <activity android:name="ca.taglab.PictureFrame.NfcLoginActivity"
+                  android:label="@string/title_nfc_login"
+                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
         <provider android:name=".provider.UserContentProvider"
                   android:authorities="ca.taglab.PictureFrame.provider" >
         </provider>

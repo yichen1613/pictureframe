@@ -26,6 +26,7 @@
     <string name="title_audio_recorder">Record audio</string>
     <string name="title_receive_mail">Receive mail</string>
     <string name="title_nfc_setup">NFC tag setup</string>
+    <string name="title_nfc_login">NFC login</string>
 
     <!-- Actions -->
     <string name="action_toggle">Toggle indicator</string>
