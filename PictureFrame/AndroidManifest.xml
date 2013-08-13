@@ -43,7 +43,8 @@
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
         <activity android:name="ca.taglab.PictureFrame.AudioRecorderActivity"
                   android:label="@string/title_audio_recorder"
-                  android:parentActivityName="ca.taglab.PictureFrame.ScreenSlideActivity" />
+                  android:parentActivityName="ca.taglab.PictureFrame.ScreenSlideActivity"
+                  android:screenOrientation="landscape" />
         <activity android:name="ca.taglab.PictureFrame.LoginActivity"
                   android:label="@string/title_log_in"
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />

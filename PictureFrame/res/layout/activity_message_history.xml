@@ -24,7 +24,7 @@
                 android:layout_width="110dp"
                 android:layout_height="110dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/cancel"
+                android:src="@drawable/cancel_audio"
                 android:contentDescription="@string/app_name" />
 
         <TextView

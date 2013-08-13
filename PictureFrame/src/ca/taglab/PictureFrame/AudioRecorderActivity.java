@@ -21,20 +21,29 @@ public class AudioRecorderActivity extends Activity {
     private static final String TAG = "AudioRecorderActivity";
     private static String mFileName = null;
 
-    private RecordButton mRecordButton = null;
-    private MediaRecorder mRecorder = null;
+    private Button mRecord;
+    private Button mPlay;
+    private Button mCancel;
+    private Button mSend;
 
-    private PlayButton mPlayButton = null;
-    private MediaPlayer mPlayer = null;
+    private MediaRecorder mRecorder;
+    private MediaPlayer mPlayer;
+
+    //private RecordButton mRecordButton = null;
+    //private MediaRecorder mRecorder = null;
+
+    //private PlayButton mPlayButton = null;
+    //private MediaPlayer mPlayer = null;
     
-    private SendButton mSendButton = null;
-    private CancelButton mCancelButton = null;
+    //private SendButton mSendButton = null;
+    //private CancelButton mCancelButton = null;
 
     private void onRecord(boolean start) {
         if (start) {
             startRecording();
         } else {
             stopRecording();
+            mPlay.setVisibility(View.VISIBLE);
         }
     }
 
@@ -84,7 +93,7 @@ public class AudioRecorderActivity extends Activity {
         mRecorder.reset();
         mRecorder.release();
         mRecorder = null;
-        mSendButton.setVisibility(View.VISIBLE);
+        mSend.setVisibility(View.VISIBLE);
     }
 
     class RecordButton extends Button {
@@ -182,10 +191,70 @@ public class AudioRecorderActivity extends Activity {
         }
     }
 
+    boolean mStartRecording;
+    boolean mStartPlaying;
+
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+        setContentView(R.layout.audio_rec);
 
+        getActionBar().hide();
+
+        mStartRecording = true;
+        mRecord = (Button) findViewById(R.id.record);
+        mRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onRecord(mStartRecording);
+                if (mStartRecording) {
+                    mRecord.setBackgroundResource(R.drawable.stop);
+                } else {
+                    mRecord.setBackgroundResource(R.drawable.record);
+                }
+                mStartRecording = !mStartRecording;
+            }
+        });
+
+        mStartPlaying = true;
+        mPlay = (Button) findViewById(R.id.play);
+        mPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPlay(mStartPlaying);
+                if (mStartPlaying) {
+                    mPlay.setBackgroundResource(R.drawable.stop);
+                } else {
+                    mPlay.setBackgroundResource(R.drawable.play);
+                }
+                mStartPlaying = !mStartPlaying;
+            }
+        });
+        mPlay.setVisibility(View.INVISIBLE);
+
+        mSend = (Button) findViewById(R.id.send);
+        mSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent data = new Intent();
+                data.putExtra("audio_location", mFileName);
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        });
+        mSend.setVisibility(View.INVISIBLE);
+
+        mCancel = (Button) findViewById(R.id.cancel);
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+        });
+
+
+        /*
         LinearLayout ll = new LinearLayout(this);
         mRecordButton = new RecordButton(this);
         ll.addView(mRecordButton,
@@ -213,7 +282,7 @@ public class AudioRecorderActivity extends Activity {
                         0));
         mSendButton.setVisibility(View.GONE);
         
-        setContentView(ll);
+        setContentView(ll);  */
     }
 
     @Override
