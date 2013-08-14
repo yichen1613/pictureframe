@@ -27,7 +27,7 @@
                 android:layout_weight="1"
                 android:visibility="gone"
                 android:background="@drawable/green"
-                android:src="@drawable/camera_resized" />
+                android:src="@drawable/camera_resized_2" />
         
         <ImageView
             android:id="@+id/contact_existing"
@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:visibility="gone"
             android:background="@drawable/red"
-            android:src="@drawable/folder" />
+            android:src="@drawable/folder_2" />
 
     </LinearLayout>
 
