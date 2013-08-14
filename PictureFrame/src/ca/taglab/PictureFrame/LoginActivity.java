@@ -97,13 +97,6 @@ public class LoginActivity extends Activity {
         }
     }
 
-    /**
-    public void cancel(View v) {
-        setResult(RESULT_CANCELED);
-        finish();
-    }
-     */
-
     public void getUnreadEmails() {
         new ReadEmailAsyncTask(this, "UNREAD").execute();
     }
