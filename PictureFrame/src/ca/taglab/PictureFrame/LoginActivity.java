@@ -68,6 +68,7 @@ public class LoginActivity extends Activity {
                     // do nothing (since nothing needs to be updated)
                 }
 
+                /** TODO: Disable for focus group demo
                 Toast.makeText(this, "Retrieving unread emails...", Toast.LENGTH_LONG);
                 Log.d(TAG, "Retrieving unread emails...");
                 Timer timer = new Timer();
@@ -76,7 +77,9 @@ public class LoginActivity extends Activity {
                         getUnreadEmails();
                     }
                 }, 0, REFRESH_INTERVAL);
+                 */
 
+                setResult(RESULT_OK);
                 finish();
             } else {
                 Toast toast = Toast.makeText(this, "Invalid email address", Toast.LENGTH_LONG);
@@ -94,9 +97,12 @@ public class LoginActivity extends Activity {
         }
     }
 
+    /**
     public void cancel(View v) {
+        setResult(RESULT_CANCELED);
         finish();
     }
+     */
 
     public void getUnreadEmails() {
         new ReadEmailAsyncTask(this, "UNREAD").execute();

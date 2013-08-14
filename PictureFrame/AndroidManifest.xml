@@ -30,24 +30,24 @@
         </activity>
         <activity android:name="ca.taglab.PictureFrame.ScreenSlideActivity"
                   android:label="@string/title_view_gallery"
-                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity"
+                  android:parentActivityName="ca.taglab.PictureFrame.UserMainActivity"
                   android:uiOptions="splitActionBarWhenNarrow">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                       android:value="ca.taglab.PictureFrame.MyActivity" />
+                       android:value="ca.taglab.PictureFrame.UserMainActivity" />
         </activity>
         <activity android:name=".database.AddPicture"
                   android:label="@string/title_add_picture"
-                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
+                  android:parentActivityName="ca.taglab.PictureFrame.UserMainActivity" />
         <activity android:name=".database.AddExistingPicture"
                   android:label="@string/title_add_existing_picture"
-                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
+                  android:parentActivityName="ca.taglab.PictureFrame.UserMainActivity" />
         <activity android:name="ca.taglab.PictureFrame.AudioRecorderActivity"
                   android:label="@string/title_audio_recorder"
                   android:parentActivityName="ca.taglab.PictureFrame.ScreenSlideActivity"
                   android:screenOrientation="landscape" />
         <activity android:name="ca.taglab.PictureFrame.LoginActivity"
                   android:label="@string/title_log_in"
-                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
+                  android:parentActivityName="ca.taglab.PictureFrame.UserMainActivity" />
         <activity android:name="ca.taglab.PictureFrame.ReceiveMailActivity"
                   android:label="@string/title_receive_mail"
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
@@ -56,6 +56,9 @@
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
         <activity android:name="ca.taglab.PictureFrame.NfcLoginActivity"
                   android:label="@string/title_nfc_login"
+                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
+        <activity android:name="ca.taglab.PictureFrame.UserMainActivity"
+                  android:label="@string/title_user_main"
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
         <provider android:name=".provider.UserContentProvider"
                   android:authorities="ca.taglab.PictureFrame.provider" >

@@ -27,6 +27,7 @@
     <string name="title_receive_mail">Receive mail</string>
     <string name="title_nfc_setup">NFC tag setup</string>
     <string name="title_nfc_login">NFC login</string>
+    <string name="title_user_main">User-friendly main menu</string>
 
     <!-- Actions -->
     <string name="action_toggle">Toggle indicator</string>

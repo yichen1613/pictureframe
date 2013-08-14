@@ -14,7 +14,8 @@ import ca.taglab.PictureFrame.database.DatabaseHelper;
 public class MyActivity extends ListActivity {
     private static Sample[] mSamples;
     DatabaseHelper db;
-
+    
+    private static final int START_USER_MAIN_SCREEN = 100;
 
     private class Sample {
         private CharSequence title;
@@ -40,6 +41,7 @@ public class MyActivity extends ListActivity {
         setContentView(R.layout.main);
 
         mSamples = new Sample[] {
+                new Sample(R.string.title_user_main, UserMainActivity.class),
                 new Sample(R.string.title_log_in, LoginActivity.class),
                 new Sample(R.string.title_add_picture, AddPicture.class),
                 new Sample(R.string.title_add_existing_picture, AddExistingPicture.class),
@@ -66,7 +68,7 @@ public class MyActivity extends ListActivity {
             toastTV.setTextSize(30);
             toast.show();
             
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivityForResult(new Intent(this, LoginActivity.class), START_USER_MAIN_SCREEN);
         }
 
     }
@@ -75,5 +77,13 @@ public class MyActivity extends ListActivity {
     protected void onListItemClick(ListView listView, View view, int position, long id) {
         // Launch the activity associated with this list position
         startActivity(new Intent(MyActivity.this, mSamples[position].activityClass));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode) {
+            case START_USER_MAIN_SCREEN:
+                startActivity(new Intent(this, UserMainActivity.class));
+        }
     }
 }
