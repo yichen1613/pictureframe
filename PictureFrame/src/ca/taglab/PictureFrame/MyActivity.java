@@ -56,6 +56,12 @@ public class MyActivity extends ListActivity {
                 android.R.id.text1,
                 mSamples));
 
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        
         // Check that the user has logged in first
         SharedPreferences prefs = getSharedPreferences("ca.taglab.PictureFrame", MODE_PRIVATE);
         String mSenderEmail = prefs.getString("email", "");
@@ -67,10 +73,9 @@ public class MyActivity extends ListActivity {
             TextView toastTV = (TextView) toastLayout.getChildAt(0);
             toastTV.setTextSize(30);
             toast.show();
-            
+
             startActivityForResult(new Intent(this, LoginActivity.class), START_USER_MAIN_SCREEN);
         }
-
     }
 
     @Override

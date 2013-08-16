@@ -68,7 +68,6 @@ public class LoginActivity extends Activity {
                     // do nothing (since nothing needs to be updated)
                 }
 
-                /** TODO: Disable for focus group demo
                 Toast.makeText(this, "Retrieving unread emails...", Toast.LENGTH_LONG);
                 Log.d(TAG, "Retrieving unread emails...");
                 Timer timer = new Timer();
@@ -77,7 +76,6 @@ public class LoginActivity extends Activity {
                         getUnreadEmails();
                     }
                 }, 0, REFRESH_INTERVAL);
-                 */
 
                 setResult(RESULT_OK);
                 finish();
@@ -95,6 +93,11 @@ public class LoginActivity extends Activity {
             toastTV.setTextSize(30);
             toast.show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        // do nothing on back press
     }
 
     public void getUnreadEmails() {
