@@ -12,10 +12,12 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.*;
 import ca.taglab.PictureFrame.R;
 import ca.taglab.PictureFrame.provider.UserContentProvider;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 public class AddExistingPicture extends Activity {
 
@@ -91,20 +93,54 @@ public class AddExistingPicture extends Activity {
     }
 
     public void save(View v) {
-        ContentValues values = new ContentValues();
+        String mName = name.getText().toString().trim();
+        String mEmail = email.getText().toString().toLowerCase().trim();
 
-        values.put(UserTable.COL_NAME, name.getText().toString().trim());
-        values.put(UserTable.COL_EMAIL, email.getText().toString().toLowerCase().trim());
-        values.put(UserTable.COL_IMG, imagePath);
-        values.put(UserTable.COL_PASSWORD, "1234");
-
-        getContentResolver().insert(UserContentProvider.USER_CONTENT_URI, values);
-
-        finish();
+        if (!mName.isEmpty() && !mEmail.isEmpty()) {
+            if (isValidEmail(mEmail)) {
+        
+                ContentValues values = new ContentValues();
+        
+                values.put(UserTable.COL_NAME, mName);
+                values.put(UserTable.COL_EMAIL, mEmail);
+                values.put(UserTable.COL_IMG, imagePath);
+                values.put(UserTable.COL_PASSWORD, "1234");
+        
+                getContentResolver().insert(UserContentProvider.USER_CONTENT_URI, values);
+        
+                finish();
+            } else {
+                Toast toast = Toast.makeText(this, "Invalid email address", Toast.LENGTH_LONG);
+                LinearLayout toastLayout = (LinearLayout) toast.getView();
+                TextView toastTV = (TextView) toastLayout.getChildAt(0);
+                toastTV.setTextSize(30);
+                toast.show();
+            }
+        } else {
+            Toast toast = Toast.makeText(this, "Blank fields are not allowed", Toast.LENGTH_LONG);
+            LinearLayout toastLayout = (LinearLayout) toast.getView();
+            TextView toastTV = (TextView) toastLayout.getChildAt(0);
+            toastTV.setTextSize(30);
+            toast.show();
+        }
     }
 
     public void cancel(View v) {
         finish();
+    }
+
+    /**
+     * Check if the email address is valid
+     */
+    public static boolean isValidEmail(String email) {
+        boolean isValid = true;
+        try {
+            InternetAddress emailAddress = new InternetAddress(email);
+            emailAddress.validate();
+        } catch (AddressException ex) {
+            isValid = false;
+        }
+        return isValid;
     }
 
 }
