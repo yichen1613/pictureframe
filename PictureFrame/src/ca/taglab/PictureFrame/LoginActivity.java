@@ -95,10 +95,12 @@ public class LoginActivity extends Activity {
         }
     }
 
+    /**
     @Override
     public void onBackPressed() {
         // do nothing on back press
     }
+    */
 
     public void getUnreadEmails() {
         new ReadEmailAsyncTask(this, "UNREAD").execute();
