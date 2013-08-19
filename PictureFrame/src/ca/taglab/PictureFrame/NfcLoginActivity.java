@@ -156,13 +156,19 @@ public class NfcLoginActivity extends Activity {
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
-                mTextView.setText("The tag's contents are: " + result);
-                
+                if (result.contains("::")) {
+                    // valid email + password
+                    String[] credentials = result.split("::");
+                    String email = credentials[0];
+                    String pwd = credentials[1];
+                    mTextView.setText("Email: " + email + " | Password: " + pwd);
+                } else {
+                    mTextView.setText("The tag contains invalid credentials: " + result);   
+                }
             }
         }
     }
-
-    //make sure the restrictions mentioned for onNewIntent apply to your activity and if possible check that the tag actually contains NDEF records.
+    
     
     // When user taps with tag on any screen of the app, launch this activity, and retrieve/handle/process the tag's data:
     // Load to SharedPreferences object
