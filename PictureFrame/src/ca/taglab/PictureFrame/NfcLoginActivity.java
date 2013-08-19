@@ -166,11 +166,10 @@ public class NfcLoginActivity extends Activity {
         protected void onPostExecute(String result) {
             if (result != null) {
                 if (result.contains("::")) {
-                    // valid email + password
                     String[] credentials = result.split("::");
                     String mEmail = credentials[0];
                     String mPassword = credentials[1];
-                    mTextView.setText("Email: " + mEmail + " | Password: " + mPassword);
+                    mTextView.setText("Tag contains valid credentials");
 
                     // Load to SharedPreferences object
                     SharedPreferences.Editor e = (new ObscuredSharedPreferences(ctx, ctx.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE))).edit();
@@ -193,7 +192,7 @@ public class NfcLoginActivity extends Activity {
                     }
 
                     // Display confirmation of login/success
-                    Toast.makeText(ctx, "Logged in successfully!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ctx, "Logged in successfully as: " + mEmail, Toast.LENGTH_LONG).show();
                     
                     // Start retrieving unread emails
                     Toast.makeText(ctx, "Retrieving unread emails...", Toast.LENGTH_LONG).show();
@@ -207,6 +206,7 @@ public class NfcLoginActivity extends Activity {
                     
                     // Redirect user to PFrame
                     startActivity(new Intent(NfcLoginActivity.this, UserMainActivity.class));
+                    finish();
                 } else {
                     mTextView.setText("The tag contains invalid credentials: " + result);   
                 }
