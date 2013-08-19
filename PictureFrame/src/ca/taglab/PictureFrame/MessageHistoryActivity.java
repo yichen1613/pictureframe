@@ -31,6 +31,11 @@ public class MessageHistoryActivity extends ListActivity {
     }
 
     private final MessageItem[] MESSAGES = new MessageItem[] {
+            new MessageItem("text", R.string.message_history_6),
+            new MessageItem("picture", R.drawable.message_history_6),
+            new MessageItem("text", R.string.message_history_5),
+            new MessageItem("video_temp", R.raw.message_history_8),
+
             new MessageItem("text", R.string.message_history_1),
             new MessageItem("picture", R.drawable.message_history_1),
             new MessageItem("text", R.string.message_history_2),
@@ -74,7 +79,7 @@ public class MessageHistoryActivity extends ListActivity {
         } else if (selectedValue.msgType.equals("picture")) {
             Log.v("MessageHistoryActivity", "Picture selected: " + getApplicationContext().getText(selectedValue.resId));
 
-        } else if (selectedValue.msgType.equals("video")) {
+        } else if (selectedValue.msgType.equals("video") || selectedValue.msgType.equals("video_temp")) {
             Log.v("MessageHistoryActivity", "Video selected: " + getApplicationContext().getText(selectedValue.resId));
 
             final VideoView vd = (VideoView) findViewById(R.id.VideoView);
