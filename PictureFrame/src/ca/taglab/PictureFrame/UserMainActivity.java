@@ -24,7 +24,7 @@ public class UserMainActivity extends Activity {
 
         getActionBar().hide();
 
-        mContact = findViewById(R.id.picture);
+        mContact = findViewById(R.id.add_contact);
         mContactImage = findViewById(R.id.contact);
         mContact.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +52,7 @@ public class UserMainActivity extends Activity {
         });
         
         
-        findViewById(R.id.add_contact).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.picture).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UserMainActivity.this, ScreenSlideActivity.class));
@@ -62,7 +62,7 @@ public class UserMainActivity extends Activity {
          
 
         /**
-        findViewById(R.id.picture).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.add_contact).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UserMainActivity.this, AddPicture.class));

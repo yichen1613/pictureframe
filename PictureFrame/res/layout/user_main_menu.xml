@@ -6,7 +6,7 @@
               android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/picture"
+        android:id="@+id/add_contact"
         android:layout_width="0dip"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -42,7 +42,7 @@
 
 
     <LinearLayout
-            android:id="@+id/add_contact"
+            android:id="@+id/picture"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:orientation="vertical"
