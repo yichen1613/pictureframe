@@ -2,8 +2,8 @@ package ca.taglab.PictureFrame;
 
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.*;
+import android.database.Cursor;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -14,17 +14,25 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+import ca.taglab.PictureFrame.database.ObscuredSharedPreferences;
+import ca.taglab.PictureFrame.database.UserTable;
+import ca.taglab.PictureFrame.email.ReadEmailAsyncTask;
+import ca.taglab.PictureFrame.provider.UserContentProvider;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class NfcLoginActivity extends Activity {
 
     public static final String TAG = "NfcLoginActivity";
     public static final String MIME_TEXT_PLAIN = "text/plain";
+    private final static int REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
     
     private TextView mTextView;
     private NfcAdapter mNfcAdapter;
+    private Context ctx;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +40,7 @@ public class NfcLoginActivity extends Activity {
         setContentView(R.layout.activity_nfc_login);
         getActionBar().hide();
         
+        ctx = this;
         mTextView = (TextView) findViewById(R.id.text);
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         if (mNfcAdapter == null) {
@@ -159,21 +168,73 @@ public class NfcLoginActivity extends Activity {
                 if (result.contains("::")) {
                     // valid email + password
                     String[] credentials = result.split("::");
-                    String email = credentials[0];
-                    String pwd = credentials[1];
-                    mTextView.setText("Email: " + email + " | Password: " + pwd);
+                    String mEmail = credentials[0];
+                    String mPassword = credentials[1];
+                    mTextView.setText("Email: " + mEmail + " | Password: " + mPassword);
+
+                    // Load to SharedPreferences object
+                    SharedPreferences.Editor e = (new ObscuredSharedPreferences(ctx, ctx.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE))).edit();
+                    e.putString("email", mEmail);
+                    e.putString("password", mPassword);
+                    e.commit();
+                    
+                    // Insert user into db if not already in it
+                    int uid = queryForUserId(mEmail);
+                    if (uid == 0) {
+                        // User does not exist in UserTable, so insert the user
+                        ContentValues values = new ContentValues();
+                        values.put(UserTable.COL_NAME, "User");
+                        values.put(UserTable.COL_EMAIL, mEmail);
+                        values.put(UserTable.COL_IMG, "none");
+                        values.put(UserTable.COL_PASSWORD, "1234");
+                        getContentResolver().insert(UserContentProvider.USER_CONTENT_URI, values);
+                    } else {
+                        // do nothing (since nothing needs to be updated)
+                    }
+
+                    // Display confirmation of login/success
+                    Toast.makeText(ctx, "Logged in successfully!", Toast.LENGTH_LONG).show();
+                    
+                    // Start retrieving unread emails
+                    Toast.makeText(ctx, "Retrieving unread emails...", Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "Retrieving unread emails...");
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        public void run() {
+                            getUnreadEmails();
+                        }
+                    }, 0, REFRESH_INTERVAL);
+                    
+                    // Redirect user to PFrame
+                    startActivity(new Intent(NfcLoginActivity.this, UserMainActivity.class));
                 } else {
                     mTextView.setText("The tag contains invalid credentials: " + result);   
                 }
             }
         }
+
+        public void getUnreadEmails() {
+            new ReadEmailAsyncTask(ctx, "UNREAD").execute();
+        }
+
+        /**
+         * Return the user ID matching the given email address. Otherwise, return 0 if matching user does not exist.
+         */
+        public int queryForUserId(String email) {
+            int uid = 0;
+            String mSelectionClause = UserTable.COL_EMAIL + "=\"" + email + "\"";
+            Cursor mCursor = getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, mSelectionClause, null, UserTable.COL_ID);
+
+            if (mCursor != null && mCursor.moveToFirst() && mCursor.getCount() == 1) {
+                int index = mCursor.getColumnIndex(UserTable.COL_ID);
+                uid = mCursor.getInt(index);
+            } else {
+                Log.d(TAG, "queryForUserId(): No user matching the given email was found");
+            }
+
+            mCursor.close();
+            return uid;
+        }
     }
     
-    
-    // When user taps with tag on any screen of the app, launch this activity, and retrieve/handle/process the tag's data:
-    // Load to SharedPreferences object
-    // Insert user into db if not already in it
-    // Start retrieving unread emails
-    // Display confirmation of login/success
-    // Redirect user to PFrame
 }
