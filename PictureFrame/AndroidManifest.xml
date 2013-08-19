@@ -56,7 +56,13 @@
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
         <activity android:name="ca.taglab.PictureFrame.NfcLoginActivity"
                   android:label="@string/title_nfc_login"
-                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
+                  android:parentActivityName="ca.taglab.PictureFrame.MyActivity">
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
         <activity android:name="ca.taglab.PictureFrame.UserMainActivity"
                   android:label="@string/title_user_main"
                   android:parentActivityName="ca.taglab.PictureFrame.MyActivity" />
