@@ -134,11 +134,28 @@ public class AddExistingPicture extends Activity {
      */
     public static boolean isValidEmail(String email) {
         boolean isValid = true;
-        try {
-            InternetAddress emailAddress = new InternetAddress(email);
-            emailAddress.validate();
-        } catch (AddressException ex) {
-            isValid = false;
+
+        // if string has "," check validity of each email address
+        if (email.contains(",")) {
+            String[] emails = email.split(",");
+            String currEmail;
+            for (int i = 0; i < emails.length; i++) {
+                currEmail = emails[i];
+                try {
+                    InternetAddress emailAddress = new InternetAddress(currEmail);
+                    emailAddress.validate();
+                } catch (AddressException ex) {
+                    isValid = false;
+                    break;
+                }
+            }
+        } else {
+            try {
+                InternetAddress emailAddress = new InternetAddress(email);
+                emailAddress.validate();
+            } catch (AddressException ex) {
+                isValid = false;
+            }
         }
         return isValid;
     }
