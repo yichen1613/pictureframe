@@ -16,13 +16,17 @@
 
 package ca.taglab.PictureFrame;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import ca.taglab.PictureFrame.adapter.CursorPagerAdapter;
+import ca.taglab.PictureFrame.database.ObscuredSharedPreferences;
 import ca.taglab.PictureFrame.database.UserTable;
 import ca.taglab.PictureFrame.provider.UserContentProvider;
 
@@ -39,6 +43,8 @@ import ca.taglab.PictureFrame.provider.UserContentProvider;
  */
 public class ScreenSlideActivity extends FragmentActivity {
 
+    private static final String TAG = "ScreenSlideActivity";
+    
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
@@ -56,8 +62,13 @@ public class ScreenSlideActivity extends FragmentActivity {
         setContentView(R.layout.activity_screen_slide);
         getActionBar().hide();
 
+        SharedPreferences prefs = new ObscuredSharedPreferences(this, this.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE));
+        String ownerEmail = prefs.getString("email", "");
+        int ownerId = queryForUserId(ownerEmail);
+        Log.d(TAG, "Owner id is: " + ownerId + ", Owner email is: " + ownerEmail);
+        
         Cursor cursor;
-        String mSelectionClause = UserTable.COL_IMG + "!=\"none\"";
+        String mSelectionClause = UserTable.COL_IMG + "!=\"none\"" + " AND " + UserTable.COL_OWNER_ID + "=" + ownerId;
         cursor = getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, mSelectionClause, null, UserTable.COL_NAME);
 
         // Instantiate a ViewPager and a PagerAdapter.
@@ -81,4 +92,22 @@ public class ScreenSlideActivity extends FragmentActivity {
         });
     }
 
+    /**
+     * Return the user ID matching the given email address. Otherwise, return -1 if matching user does not exist.
+     */
+    public int queryForUserId(String email) {
+        int uid = -1;
+        String mSelectionClause = UserTable.COL_EMAIL + "=\"" + email + "\"";
+        Cursor mCursor = getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, mSelectionClause, null, UserTable.COL_ID);
+
+        if (mCursor != null && mCursor.moveToFirst() && mCursor.getCount() == 1) {
+            int index = mCursor.getColumnIndex(UserTable.COL_ID);
+            uid = mCursor.getInt(index);
+        } else {
+            Log.d(TAG, "queryForUserId(): No user matching the given email was found");
+        }
+
+        mCursor.close();
+        return uid;
+    }
 }

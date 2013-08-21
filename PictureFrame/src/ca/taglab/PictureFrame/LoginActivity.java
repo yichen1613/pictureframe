@@ -56,13 +56,19 @@ public class LoginActivity extends Activity {
                 e.commit();
 
                 int uid = queryForUserId(mEmail);
-                if (uid == 0) {
+                if (uid == -1) {
                     // User does not exist in UserTable, so insert the user
+
+                    // Find the last row ID in the UserTable - the user we're inserting will be +1
+                    int last_uid = getLastInsertedId();
+                    
                     ContentValues values = new ContentValues();
                     values.put(UserTable.COL_NAME, "User");
                     values.put(UserTable.COL_EMAIL, mEmail);
                     values.put(UserTable.COL_IMG, "none");
                     values.put(UserTable.COL_PASSWORD, "1234");
+                    values.put(UserTable.COL_OWNER_ID, last_uid + 1);
+                    Log.d(TAG, "Inserted owner ID is: " + (last_uid + 1));
                     getContentResolver().insert(UserContentProvider.USER_CONTENT_URI, values);
                 } else {
                     // do nothing (since nothing needs to be updated)
@@ -107,10 +113,10 @@ public class LoginActivity extends Activity {
     }
 
     /**
-     * Return the user ID matching the given email address. Otherwise, return 0 if matching user does not exist.
+     * Return the user ID matching the given email address. Otherwise, return -1 if matching user does not exist.
      */
     public int queryForUserId(String email) {
-        int uid = 0;
+        int uid = -1;
         String mSelectionClause = UserTable.COL_EMAIL + "=\"" + email + "\"";
         Cursor mCursor = getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, mSelectionClause, null, UserTable.COL_ID);
 
@@ -123,6 +129,18 @@ public class LoginActivity extends Activity {
 
         mCursor.close();
         return uid;
+    }
+
+    /**
+     * Get row ID of the last inserted entry in the UserTable.
+     */
+    public int getLastInsertedId() {
+        int id = 0;
+        Cursor mCursor = getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, null, null, UserTable.COL_ID);
+        if (mCursor != null && mCursor.moveToLast()) {
+            id = mCursor.getInt(mCursor.getColumnIndex(UserTable.COL_ID));
+        }
+        return id;
     }
 
     /**

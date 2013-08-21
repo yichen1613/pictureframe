@@ -2,7 +2,9 @@ package ca.taglab.PictureFrame.database;
 
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -100,11 +102,17 @@ public class AddExistingPicture extends Activity {
             if (isValidEmail(mEmail)) {
         
                 ContentValues values = new ContentValues();
-        
+
+                SharedPreferences prefs = new ObscuredSharedPreferences(this, this.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE));
+                String ownerEmail = prefs.getString("email", "");
+                int ownerId = queryForUserId(ownerEmail);
+                
                 values.put(UserTable.COL_NAME, mName);
                 values.put(UserTable.COL_EMAIL, mEmail);
                 values.put(UserTable.COL_IMG, imagePath);
                 values.put(UserTable.COL_PASSWORD, "1234");
+                values.put(UserTable.COL_OWNER_ID, ownerId);
+                Log.d(TAG, "Owner id is: " + ownerId + ", Owner email is: " + ownerEmail);
         
                 getContentResolver().insert(UserContentProvider.USER_CONTENT_URI, values);
         
@@ -160,4 +168,23 @@ public class AddExistingPicture extends Activity {
         return isValid;
     }
 
+    /**
+     * Return the user ID matching the given email address. Otherwise, return -1 if matching user does not exist.
+     */
+    public int queryForUserId(String email) {
+        int uid = -1;
+        String mSelectionClause = UserTable.COL_EMAIL + "=\"" + email + "\"";
+        Cursor mCursor = getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, mSelectionClause, null, UserTable.COL_ID);
+
+        if (mCursor != null && mCursor.moveToFirst() && mCursor.getCount() == 1) {
+            int index = mCursor.getColumnIndex(UserTable.COL_ID);
+            uid = mCursor.getInt(index);
+        } else {
+            Log.d(TAG, "queryForUserId(): No user matching the given email was found");
+        }
+
+        mCursor.close();
+        return uid;
+    }
+    
 }

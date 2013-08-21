@@ -12,12 +12,14 @@ public class UserTable {
     public static final String COL_PASSWORD = "password";
     public static final String COL_EMAIL = "email";
     public static final String COL_IMG = "img";
+    public static final String COL_OWNER_ID = "owner_id";
 
     public static final String[] PROJECTION = {
             COL_ID,
             COL_NAME,
             COL_EMAIL,
-            COL_IMG
+            COL_IMG,
+            COL_OWNER_ID
     };
 
     // SQL statement for database creation
@@ -27,7 +29,8 @@ public class UserTable {
             + COL_NAME + " TEXT NOT NULL, "
             + COL_PASSWORD + " TEXT, "
             + COL_EMAIL + " TEXT NOT NULL, "
-            + COL_IMG + " TEXT NOT NULL"
+            + COL_IMG + " TEXT NOT NULL, "
+            + COL_OWNER_ID + " INTEGER NOT NULL"
             + ");";
 
     public static void onCreate(SQLiteDatabase db) {
