@@ -127,7 +127,7 @@ public class NfcSetupActivity extends Activity {
     protected void onNewIntent(Intent intent) {
         if (NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
             tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            Toast.makeText(this, "Tag detected! " + tag.toString(), Toast.LENGTH_LONG).show();
+            Log.d(TAG, "Tag detected! " + tag.toString());
 
             writeToTag();
             alertDialog.dismiss();
@@ -146,7 +146,7 @@ public class NfcSetupActivity extends Activity {
             } else {
                 writeRecord(mCredentials, tag);
                 //TODO: Replace Toast with success image + sound
-                Toast.makeText(this, "Credentials successfully written to tag!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Login credentials successfully written to the tag!", Toast.LENGTH_LONG).show();
             }
         } catch (IOException e) {
             Toast.makeText(this, "Error during writing (tag may be too far from device)", Toast.LENGTH_LONG).show();
