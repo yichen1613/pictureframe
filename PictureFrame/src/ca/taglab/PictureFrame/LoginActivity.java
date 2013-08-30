@@ -39,6 +39,11 @@ public class LoginActivity extends Activity {
         email = (EditText) findViewById(R.id.email);
         password = (EditText) findViewById(R.id.password);
 
+        Toast toast = Toast.makeText(this, "Please log in via keyboard or NFC", Toast.LENGTH_LONG);
+        LinearLayout toastLayout = (LinearLayout) toast.getView();
+        TextView toastTV = (TextView) toastLayout.getChildAt(0);
+        toastTV.setTextSize(30);
+        toast.show();
     }
 
     public void login(View v) {
@@ -101,12 +106,11 @@ public class LoginActivity extends Activity {
         }
     }
 
-    /**
+    
     @Override
     public void onBackPressed() {
         // do nothing on back press
     }
-    */
 
     public void getUnreadEmails() {
         new ReadEmailAsyncTask(this, "UNREAD").execute();

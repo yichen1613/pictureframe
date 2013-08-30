@@ -171,47 +171,63 @@ public class NfcLoginActivity extends Activity {
                     String mPassword = credentials[1];
                     mTextView.setText("Tag contains valid credentials");
 
-                    // Load to SharedPreferences object
-                    SharedPreferences.Editor e = (new ObscuredSharedPreferences(ctx, ctx.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE))).edit();
-                    e.putString("email", mEmail);
-                    e.putString("password", mPassword);
-                    e.commit();
-                    
-                    // Insert user into db if not already in it
-                    int uid = queryForUserId(mEmail);
-                    if (uid == -1) {
-                        // User does not exist in UserTable, so insert the user
-                        // Find the last row ID in the UserTable - the user we're inserting will be +1
-                        int last_uid = getLastInsertedId();
+                    // Check SharedPreferences object - if user is currently logged in, log them out. Else, log them in.
+                    SharedPreferences prefs = new ObscuredSharedPreferences(ctx, ctx.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE));
+                    String loggedInEmail = prefs.getString("email", "");
+                    if (loggedInEmail.equals(mEmail)) {
+                        SharedPreferences.Editor e = (new ObscuredSharedPreferences(ctx, ctx.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE))).edit();
+                        e.putString("email", "");
+                        e.putString("password", "");
+                        e.commit();
                         
-                        ContentValues values = new ContentValues();
-                        values.put(UserTable.COL_NAME, "User");
-                        values.put(UserTable.COL_EMAIL, mEmail);
-                        values.put(UserTable.COL_IMG, "none");
-                        values.put(UserTable.COL_PASSWORD, "1234");
-                        values.put(UserTable.COL_OWNER_ID, last_uid + 1);
-                        Log.d(TAG, "Inserted owner ID is: " + (last_uid + 1));
-                        getContentResolver().insert(UserContentProvider.USER_CONTENT_URI, values);
+                        // redirect user to Login screen
+                        Toast.makeText(ctx, "Logged out successfully", Toast.LENGTH_LONG).show();
+                        startActivity(new Intent(NfcLoginActivity.this, LoginActivity.class));
+                        finish();
                     } else {
-                        // do nothing (since nothing needs to be updated)
-                    }
+                        // Log the user in
+                        // Load to SharedPreferences object
+                        SharedPreferences.Editor e = (new ObscuredSharedPreferences(ctx, ctx.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE))).edit();
+                        e.putString("email", mEmail);
+                        e.putString("password", mPassword);
+                        e.commit();
 
-                    // Display confirmation of login/success
-                    Toast.makeText(ctx, "Logged in successfully as: " + mEmail, Toast.LENGTH_LONG).show();
-                    
-                    // Start retrieving unread emails
-                    Toast.makeText(ctx, "Retrieving unread emails...", Toast.LENGTH_LONG).show();
-                    Log.d(TAG, "Retrieving unread emails...");
-                    Timer timer = new Timer();
-                    timer.schedule(new TimerTask() {
-                        public void run() {
-                            getUnreadEmails();
+                        // Insert user into db if not already in it
+                        int uid = queryForUserId(mEmail);
+                        if (uid == -1) {
+                            // User does not exist in UserTable, so insert the user
+                            // Find the last row ID in the UserTable - the user we're inserting will be +1
+                            int last_uid = getLastInsertedId();
+
+                            ContentValues values = new ContentValues();
+                            values.put(UserTable.COL_NAME, "User");
+                            values.put(UserTable.COL_EMAIL, mEmail);
+                            values.put(UserTable.COL_IMG, "none");
+                            values.put(UserTable.COL_PASSWORD, "1234");
+                            values.put(UserTable.COL_OWNER_ID, last_uid + 1);
+                            Log.d(TAG, "Inserted owner ID is: " + (last_uid + 1));
+                            getContentResolver().insert(UserContentProvider.USER_CONTENT_URI, values);
+                        } else {
+                            // do nothing (since nothing needs to be updated)
                         }
-                    }, 0, REFRESH_INTERVAL);
-                    
-                    // Redirect user to PFrame
-                    startActivity(new Intent(NfcLoginActivity.this, UserMainActivity.class));
-                    finish();
+
+                        // Display confirmation of login/success
+                        Toast.makeText(ctx, "Logged in successfully as: " + mEmail, Toast.LENGTH_LONG).show();
+
+                        // Start retrieving unread emails
+                        //Toast.makeText(ctx, "Retrieving unread emails...", Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "Retrieving unread emails...");
+                        Timer timer = new Timer();
+                        timer.schedule(new TimerTask() {
+                            public void run() {
+                                getUnreadEmails();
+                            }
+                        }, 0, REFRESH_INTERVAL);
+
+                        // Redirect user to PFrame
+                        startActivity(new Intent(NfcLoginActivity.this, UserMainActivity.class));
+                        finish();
+                    }
                 } else {
                     mTextView.setText("The tag contains invalid credentials: " + result);   
                 }

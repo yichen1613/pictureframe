@@ -1,24 +1,22 @@
 package ca.taglab.PictureFrame;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
-import ca.taglab.PictureFrame.database.AddExistingPicture;
-import ca.taglab.PictureFrame.database.AddPicture;
-import ca.taglab.PictureFrame.database.DatabaseHelper;
+import ca.taglab.PictureFrame.database.ObscuredSharedPreferences;
 
 public class MyActivity extends ListActivity {
     private static Sample[] mSamples;
     
     private static final int START_USER_MAIN_SCREEN = 100;
-
+    private final static String TAG = "MyActivity";
+    
     private class Sample {
         private CharSequence title;
         private Class<? extends Activity> activityClass;
@@ -60,24 +58,18 @@ public class MyActivity extends ListActivity {
     protected void onResume() {
         super.onResume();
         
-        
         // Check that the user has logged in first
-        SharedPreferences prefs = getSharedPreferences("ca.taglab.PictureFrame", MODE_PRIVATE);
-        String mSenderEmail = prefs.getString("email", "");
-        String mSenderPwd = prefs.getString("password", "");
-
-        if (mSenderEmail.isEmpty() || mSenderPwd.isEmpty()) {
-            
-            Toast toast = Toast.makeText(this, "Please log in via NFC or keyboard first!", Toast.LENGTH_LONG);
-            LinearLayout toastLayout = (LinearLayout) toast.getView();
-            TextView toastTV = (TextView) toastLayout.getChildAt(0);
-            toastTV.setTextSize(30);
-            toast.show();
-             
-            //startActivityForResult(new Intent(this, LoginActivity.class), START_USER_MAIN_SCREEN);
+        SharedPreferences prefs = new ObscuredSharedPreferences(this, this.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE));
+        String mOwnerEmail = prefs.getString("email", "");
+        String mOwnerPwd = prefs.getString("password", "");
+        
+        if (mOwnerEmail.isEmpty() || mOwnerPwd.isEmpty()) { 
+            Log.d(TAG, "User has NOT logged in -- starting LoginActivity!");
+            startActivityForResult(new Intent(this, LoginActivity.class), START_USER_MAIN_SCREEN);
         }
+        Log.d(TAG, "User has logged in -- display MyActivity");
     }
-
+    
     @Override
     protected void onListItemClick(ListView listView, View view, int position, long id) {
         // Launch the activity associated with this list position
