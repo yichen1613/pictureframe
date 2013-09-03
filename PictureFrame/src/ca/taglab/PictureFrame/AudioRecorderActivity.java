@@ -29,15 +29,6 @@ public class AudioRecorderActivity extends Activity {
     private MediaRecorder mRecorder;
     private MediaPlayer mPlayer;
 
-    //private RecordButton mRecordButton = null;
-    //private MediaRecorder mRecorder = null;
-
-    //private PlayButton mPlayButton = null;
-    //private MediaPlayer mPlayer = null;
-    
-    //private SendButton mSendButton = null;
-    //private CancelButton mCancelButton = null;
-
     private void onRecord(boolean start) {
         if (start) {
             startRecording();
@@ -94,83 +85,6 @@ public class AudioRecorderActivity extends Activity {
         mRecorder.release();
         mRecorder = null;
         mSend.setVisibility(View.VISIBLE);
-    }
-
-    class RecordButton extends Button {
-        boolean mStartRecording = true;
-
-        OnClickListener clicker = new OnClickListener() {
-            public void onClick(View v) {
-                onRecord(mStartRecording);
-                if (mStartRecording) {
-                    setText("Stop recording");
-                } else {
-                    setText("Start recording");
-                }
-                mStartRecording = !mStartRecording;
-            }
-        };
-
-        public RecordButton(Context ctx) {
-            super(ctx);
-            setText("Start recording");
-            setOnClickListener(clicker);
-        }
-    }
-
-    class PlayButton extends Button {
-        boolean mStartPlaying = true;
-
-        OnClickListener clicker = new OnClickListener() {
-            public void onClick(View v) {
-                onPlay(mStartPlaying);
-                if (mStartPlaying) {
-                    setText("Stop playing");
-                } else {
-                    setText("Start playing");
-                }
-                mStartPlaying = !mStartPlaying;
-            }
-        };
-
-        public PlayButton(Context ctx) {
-            super(ctx);
-            setText("Start playing");
-            setOnClickListener(clicker);
-        }
-    }
-    
-    class SendButton extends Button {
-        OnClickListener clicker = new OnClickListener() {
-            public void onClick(View v) {
-                // set data (audio file location) to pass back
-                Intent data = new Intent();
-                data.putExtra("audio_location", mFileName);
-                setResult(RESULT_OK, data);
-                finish();
-            }
-        };
-        
-        public SendButton(Context context) {
-            super(context);
-            setText("Send");
-            setOnClickListener(clicker);
-        }
-    }
-    
-    class CancelButton extends Button {
-        OnClickListener clicker = new OnClickListener() {
-            public void onClick(View v) {
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-        };
-        
-        public CancelButton(Context context) {
-            super(context);
-            setText("Cancel");
-            setOnClickListener(clicker);
-        }
     }
 
     public AudioRecorderActivity() {
@@ -252,37 +166,6 @@ public class AudioRecorderActivity extends Activity {
                 finish();
             }
         });
-
-
-        /*
-        LinearLayout ll = new LinearLayout(this);
-        mRecordButton = new RecordButton(this);
-        ll.addView(mRecordButton,
-                new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        0));
-        mPlayButton = new PlayButton(this);
-        ll.addView(mPlayButton,
-                new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        0));
-        mCancelButton = new CancelButton(this);
-        ll.addView(mCancelButton,
-                new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        0));
-        mSendButton = new SendButton(this);
-        ll.addView(mSendButton,
-                new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        0));
-        mSendButton.setVisibility(View.GONE);
-        
-        setContentView(ll);  */
     }
 
     @Override
