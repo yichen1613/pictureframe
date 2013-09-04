@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 import ca.taglab.PictureFrame.database.MessageTable;
@@ -80,8 +81,8 @@ public class GmailReader {
                 //String msgFrom = message.getFrom()[0].toString(); // returns "John Doe <john.doe@gmail.com>"
                 Address[] from_array = message.getFrom();
                 String msgFrom = (from_array == null ? null : ((InternetAddress) from_array[0]).getAddress()).toLowerCase().trim(); // returns "john.doe@gmail.com"
-                String msgSubject = message.getSubject().trim();
-                if (msgSubject == null) {
+                String msgSubject = message.getSubject();
+                if (TextUtils.isEmpty(msgSubject)) {
                     msgSubject = "(no subject)";
                 }
 
