@@ -71,7 +71,10 @@ public class ReceiveMailActivity extends Activity {
         } else {
             Log.d(TAG, "No entries found in MessageTable");
         }
-        mCursor.close();
+
+        if (mCursor != null) {
+            mCursor.close();
+        }
     }
     
     public void cancel(View v) {

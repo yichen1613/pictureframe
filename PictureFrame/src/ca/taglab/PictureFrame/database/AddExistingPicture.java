@@ -183,7 +183,10 @@ public class AddExistingPicture extends Activity {
             Log.d(TAG, "queryForUserId(): No user matching the given email was found");
         }
 
-        mCursor.close();
+        if (mCursor != null) {
+            mCursor.close();
+        }
+
         return uid;
     }
     

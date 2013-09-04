@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:id="@+id/messages"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:showDividers="middle"
+            android:divider="?android:dividerHorizontal"
+            android:animateLayoutChanges="true"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" />
+
+    <LinearLayout
+            android:id="@+id/control"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true" >
+
+        <ImageView
+                android:id="@+id/close"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/cancel"
+                android:contentDescription="@string/app_name" />
+
+        <TextView
+                android:id="@+id/name"
+                android:layout_width="1050dp"
+                android:layout_height="wrap_content"
+                android:textSize="100sp"
+                android:gravity="center" />
+
+        <ImageView
+                android:id="@+id/msg"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_gravity="center_vertical"
+                android:visibility="invisible"
+                android:src="@drawable/mail_inactive"
+                android:contentDescription="@string/app_name" />
+
+    </LinearLayout>
+
+    <VideoView
+            android:id="@+id/video"
+            android:layout_height="fill_parent"
+            android:layout_width="fill_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone" />
+
+</RelativeLayout>

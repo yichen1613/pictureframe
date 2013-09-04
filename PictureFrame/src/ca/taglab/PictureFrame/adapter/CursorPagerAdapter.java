@@ -32,7 +32,17 @@ public class CursorPagerAdapter<F extends Fragment> extends FragmentStatePagerAd
         }
         Bundle args = new Bundle();
         for (int i = 0; i < projection.length; ++i) {
-            args.putString(projection[i], cursor.getString(i));
+            switch (cursor.getType(i)) {
+                case Cursor.FIELD_TYPE_STRING:
+                    args.putString(projection[i], cursor.getString(i));
+                    break;
+                case Cursor.FIELD_TYPE_INTEGER:
+                    args.putLong(projection[i], cursor.getLong(i));
+                    break;
+                case Cursor.FIELD_TYPE_FLOAT:
+                    args.putFloat(projection[i], cursor.getFloat(i));
+                    break;
+            }
         }
         frag.setArguments(args);
         return frag;

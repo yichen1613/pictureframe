@@ -59,6 +59,9 @@ public class ScreenSlidePageFragment extends Fragment {
      * The recipient's name.
      */
     private String mName;
+
+    private long mId;
+    private long mOwnerId;
     
     private static final String TAG = "ScreenSlidePageFragment";
 
@@ -93,6 +96,8 @@ public class ScreenSlidePageFragment extends Fragment {
         mImgPath = getArguments().getString(UserTable.COL_IMG);
         mEmail = getArguments().getString(UserTable.COL_EMAIL);
         mName = getArguments().getString(UserTable.COL_NAME);
+        mId = getArguments().getLong(UserTable.COL_ID);
+        mOwnerId = getArguments().getLong(UserTable.COL_OWNER_ID);
     }
 
     @Override
@@ -117,8 +122,10 @@ public class ScreenSlidePageFragment extends Fragment {
         mMsgHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), MessageHistoryActivity.class);
+                Intent intent = new Intent(getActivity(), MessagesActivity.class);
                 intent.putExtra("user_name", mName);
+                intent.putExtra("user_id", mId);
+                intent.putExtra("owner_id", mOwnerId);
                 startActivity(intent);
                 hideOptions();
             }
