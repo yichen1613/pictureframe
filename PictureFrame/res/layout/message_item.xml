@@ -19,4 +19,26 @@
         android:contentDescription="@string/photo"
         android:visibility="gone" />
 
+    <FrameLayout
+        android:id="@+id/video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" >
+
+        <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:contentDescription="@string/play_video"/>
+
+        <ImageView
+            android:layout_width="400dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:src="@drawable/videoalt"
+            android:contentDescription="@string/play_video"/>
+
+    </FrameLayout>
+
 </FrameLayout>

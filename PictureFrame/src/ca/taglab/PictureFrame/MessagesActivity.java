@@ -4,17 +4,19 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import ca.taglab.PictureFrame.database.MessageTable;
 import ca.taglab.PictureFrame.provider.UserContentProvider;
 
@@ -94,7 +96,7 @@ public class MessagesActivity extends Activity {
      * @param type  Type of message (i.e. text, photo, video)
      * @param body  Body of the message
      */
-    private void addMessage(String type, String body) {
+    private void addMessage(String type, final String body) {
         Log.i(TAG, "Type: " + type);
         Log.i(TAG, body);
 
@@ -109,6 +111,36 @@ public class MessagesActivity extends Activity {
         if (type.equals("image")) {
             newView.findViewById(R.id.photo).setVisibility(View.VISIBLE);
             ((ImageView) newView.findViewById(R.id.photo)).setImageBitmap(getImage(new File(body), 1000));
+        }
+
+        if (type.equals("video")) {
+            newView.findViewById(R.id.video).setVisibility(View.VISIBLE);
+            ((ImageView) newView.findViewById(R.id.thumbnail)).setImageBitmap(
+                    ThumbnailUtils.createVideoThumbnail(body, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND)
+            );
+
+            newView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final VideoView vd = (VideoView) findViewById(R.id.videoplayer);
+                    vd.setVisibility(View.VISIBLE);
+
+                    MediaController mediaController = new MediaController(MessagesActivity.this);
+                    vd.setMediaController(mediaController);
+                    vd.setVideoPath(body);
+                    vd.setZOrderOnTop(true);
+
+                    vd.start();
+
+                    // After video playback is done, hide the video player
+                    vd.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mediaPlayer) {
+                            vd.setVisibility(VideoView.INVISIBLE);
+                        }
+                    });
+                }
+            });
         }
 
         mMessages.addView(newView, 0);

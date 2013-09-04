@@ -56,7 +56,7 @@
     </LinearLayout>
 
     <VideoView
-            android:id="@+id/video"
+            android:id="@+id/videoplayer"
             android:layout_height="fill_parent"
             android:layout_width="fill_parent"
             android:layout_alignParentRight="true"
