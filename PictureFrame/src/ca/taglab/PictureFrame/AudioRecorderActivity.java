@@ -52,6 +52,14 @@ public class AudioRecorderActivity extends Activity {
             mPlayer.setDataSource(mFileName);
             mPlayer.prepare();
             mPlayer.start();
+            mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    stopPlaying();
+                    mStartPlaying = true;
+                    mPlay.setBackgroundResource(R.drawable.play);
+                }
+            });
         } catch (IOException e) {
             Log.e(TAG, "prepare() failed");
         }
