@@ -280,11 +280,11 @@ public class GmailReader {
         String mSelectionClause = UserTable.COL_EMAIL + "=\"" + email + "\"";
         Cursor mCursor = ctx.getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, mSelectionClause, null, UserTable.COL_ID);
         
-        if (mCursor != null && mCursor.moveToFirst() && mCursor.getCount() == 1) {
+        if (mCursor != null && mCursor.moveToFirst()) {
             int index = mCursor.getColumnIndex(UserTable.COL_ID);
             uid = mCursor.getInt(index);
         } else {
-            Log.d(TAG, "queryForUserId(): No user matching the given email was found");
+            Log.d(TAG, "queryForUserId(): No user matching the given email: " + email + " was found");
         }
 
         mCursor.close();
