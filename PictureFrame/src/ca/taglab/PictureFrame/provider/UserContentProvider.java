@@ -217,9 +217,11 @@ public class UserContentProvider extends ContentProvider {
         SQLiteDatabase sqlDB = dbHelper.getWritableDatabase();
         int rowsUpdated = 0;
         switch (uriMatcher.match(uri)) {
+
             case USERS:
                 rowsUpdated = sqlDB.update(UserTable.TABLE_NAME, values, selection, selectionArgs);
                 break;
+
             case USER_ID:
                 String id = uri.getLastPathSegment();
                 if (TextUtils.isEmpty(selection)) {
@@ -229,6 +231,11 @@ public class UserContentProvider extends ContentProvider {
                     rowsUpdated = sqlDB.update(UserTable.TABLE_NAME, values, UserTable.COL_ID + "=" + " and " + selection, selectionArgs);
                 }
                 break;
+
+            case MESSAGES:
+                rowsUpdated = sqlDB.update(MessageTable.TABLE_NAME, values, selection, selectionArgs);
+                break;
+
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }

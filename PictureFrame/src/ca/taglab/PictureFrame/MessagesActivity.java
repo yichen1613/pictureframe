@@ -1,6 +1,7 @@
 package ca.taglab.PictureFrame;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -60,6 +61,15 @@ public class MessagesActivity extends Activity {
 
         @Override
         protected Cursor doInBackground(Void... params) {
+            ContentValues values = new ContentValues();
+            values.put(MessageTable.COL_READ, 1);
+            getContentResolver().update(
+                    UserContentProvider.MESSAGE_CONTENT_URI,
+                    values,
+                    MessageTable.COL_TO_ID + "=? AND " + MessageTable.COL_FROM_ID + "=?",
+                    new String[] { Long.toString(mOwnerId), Long.toString(mUserId) }
+            );
+
             return getContentResolver().query(
                     UserContentProvider.MESSAGE_CONTENT_URI,
                     MessageTable.PROJECTION,

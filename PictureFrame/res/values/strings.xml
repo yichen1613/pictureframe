@@ -69,4 +69,5 @@
     <string name="message_history_6">Hi Grandma! Anita drew a family portrait of us today. :)</string>
     <string name="photo">Photo</string>
     <string name="play_video">Play video</string>
+    <string name="notification">Notification</string>
 </resources>

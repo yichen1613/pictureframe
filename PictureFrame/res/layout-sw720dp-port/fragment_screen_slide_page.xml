@@ -19,6 +19,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <ImageView
+            android:id="@+id/notification"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_above="@id/control"
+            android:src="@drawable/notification"
+            android:contentDescription="@string/notification"
+            android:visibility="invisible"/>
+
     <LinearLayout
             android:id="@+id/control"
             android:layout_width="match_parent"

@@ -36,8 +36,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import ca.taglab.PictureFrame.database.MessageTable;
 import ca.taglab.PictureFrame.database.UserTable;
 import ca.taglab.PictureFrame.email.SendEmailAsyncTask;
+import ca.taglab.PictureFrame.provider.UserContentProvider;
 
 /**
  * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
@@ -224,6 +226,31 @@ public class ScreenSlidePageFragment extends Fragment {
                 if (optionsOpen) hideOptions();
             }
         });
+
+        Cursor unread = getActivity().getContentResolver().query(
+                UserContentProvider.MESSAGE_CONTENT_URI,
+                MessageTable.PROJECTION,
+                MessageTable.COL_TO_ID + "=? AND " + MessageTable.COL_FROM_ID + "=? AND " + MessageTable.COL_READ + "=?",
+                new String[] { Long.toString(mOwnerId), Long.toString(mId), Long.toString(0) },
+                null
+        );
+        if (unread != null && unread.moveToFirst()) {
+            rootView.findViewById(R.id.notification).setVisibility(View.VISIBLE);
+            rootView.findViewById(R.id.notification).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), MessagesActivity.class);
+                    intent.putExtra("user_name", mName);
+                    intent.putExtra("user_id", mId);
+                    intent.putExtra("owner_id", mOwnerId);
+                    startActivity(intent);
+                    v.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
+        if (unread != null) {
+            unread.close();
+        }
 
         return rootView;
     }
