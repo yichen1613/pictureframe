@@ -100,23 +100,32 @@ public class AddExistingPicture extends Activity {
 
         if (!mName.isEmpty() && !mEmail.isEmpty()) {
             if (isValidEmail(mEmail)) {
-        
-                ContentValues values = new ContentValues();
 
                 SharedPreferences prefs = new ObscuredSharedPreferences(this, this.getSharedPreferences("ca.taglab.PictureFrame", Context.MODE_PRIVATE));
                 String ownerEmail = prefs.getString("email", "");
                 int ownerId = queryForUserId(ownerEmail);
                 
-                values.put(UserTable.COL_NAME, mName);
-                values.put(UserTable.COL_EMAIL, mEmail);
-                values.put(UserTable.COL_IMG, imagePath);
-                values.put(UserTable.COL_PASSWORD, "1234");
-                values.put(UserTable.COL_OWNER_ID, ownerId);
-                Log.d(TAG, "Owner id is: " + ownerId + ", Owner email is: " + ownerEmail);
-        
-                getContentResolver().insert(UserContentProvider.USER_CONTENT_URI, values);
-        
-                finish();
+                if (!isExistingContact(ownerId, mEmail)) {
+                    Log.d(TAG, "The contact is not an existing contact, so add it to the PFrame");
+                    ContentValues values = new ContentValues();
+
+                    values.put(UserTable.COL_NAME, mName);
+                    values.put(UserTable.COL_EMAIL, mEmail);
+                    values.put(UserTable.COL_IMG, imagePath);
+                    values.put(UserTable.COL_PASSWORD, "1234");
+                    values.put(UserTable.COL_OWNER_ID, ownerId);
+                    Log.d(TAG, "Owner id is: " + ownerId + ", Owner email is: " + ownerEmail);
+
+                    getContentResolver().insert(UserContentProvider.USER_CONTENT_URI, values);
+
+                    finish();
+                } else {
+                    Toast toast = Toast.makeText(this, "A contact already exists with that email address -- please enter another one", Toast.LENGTH_LONG);
+                    LinearLayout toastLayout = (LinearLayout) toast.getView();
+                    TextView toastTV = (TextView) toastLayout.getChildAt(0);
+                    toastTV.setTextSize(30);
+                    toast.show();
+                }
             } else {
                 Toast toast = Toast.makeText(this, "Invalid email address", Toast.LENGTH_LONG);
                 LinearLayout toastLayout = (LinearLayout) toast.getView();
@@ -189,5 +198,20 @@ public class AddExistingPicture extends Activity {
 
         return uid;
     }
-    
+
+    /**
+     * Return true if a contact belonging to the current owner already exists in the db with the given email address. 
+     * Otherwise, return false.
+     */
+    public boolean isExistingContact(int ownerId, String email) {
+        String mSelectionClause = UserTable.COL_EMAIL + "=\"" + email + "\"" + " AND " + UserTable.COL_OWNER_ID + "=" + ownerId;
+        Cursor mCursor = getContentResolver().query(UserContentProvider.USER_CONTENT_URI, UserTable.PROJECTION, mSelectionClause, null, UserTable.COL_ID);
+
+        if (mCursor != null && mCursor.moveToFirst() && mCursor.getCount() >= 1) {
+            Log.d(TAG, "A contact with the email: " + email + " already exists");
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
