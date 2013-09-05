@@ -66,8 +66,10 @@ public class MyActivity extends ListActivity {
         if (mOwnerEmail.isEmpty() || mOwnerPwd.isEmpty()) { 
             Log.d(TAG, "User has NOT logged in -- starting LoginActivity!");
             startActivityForResult(new Intent(this, LoginActivity.class), START_USER_MAIN_SCREEN);
-        }
-        Log.d(TAG, "User has logged in -- display MyActivity");
+        } else {
+            Log.d(TAG, "User has logged in");
+            startActivity(new Intent(this, UserMainActivity.class));
+        }        
     }
     
     @Override
