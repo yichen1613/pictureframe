@@ -19,12 +19,9 @@ import ca.taglab.PictureFrame.provider.UserContentProvider;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class LoginActivity extends Activity {
 
-    private final static int REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
     private final static String TAG = "LoginActivity";
     
     private EditText email;
@@ -79,14 +76,9 @@ public class LoginActivity extends Activity {
                     // do nothing (since nothing needs to be updated)
                 }
 
-                Toast.makeText(this, "Retrieving unread emails...", Toast.LENGTH_LONG);
+                //Toast.makeText(this, "Retrieving unread emails...", Toast.LENGTH_LONG);
                 Log.d(TAG, "Retrieving unread emails...");
-                Timer timer = new Timer();
-                timer.schedule(new TimerTask() {
-                    public void run() {
-                        getUnreadEmails();
-                    }
-                }, 0, REFRESH_INTERVAL);
+                getUnreadEmails();
 
                 setResult(RESULT_OK);
                 finish();

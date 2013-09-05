@@ -12,13 +12,9 @@ import ca.taglab.PictureFrame.database.MessageTable;
 import ca.taglab.PictureFrame.email.ReadEmailAsyncTask;
 import ca.taglab.PictureFrame.provider.UserContentProvider;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class ReceiveMailActivity extends Activity {
 
     private final static String TAG = "ReceiveMailActivity";
-    private final static int REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,12 +29,7 @@ public class ReceiveMailActivity extends Activity {
     }
     
     public void refreshMail(View v) {
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            public void run() {
-                getUnreadEmails();
-            }
-        }, 0, REFRESH_INTERVAL);
+        getUnreadEmails();
     }
     
     public void readMail(View v) {

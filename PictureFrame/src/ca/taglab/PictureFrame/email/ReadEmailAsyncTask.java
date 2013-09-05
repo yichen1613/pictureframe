@@ -80,7 +80,7 @@ public class ReadEmailAsyncTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String result){
         
         if (result.equalsIgnoreCase("Emails retrieved successfully")) {
-            Toast.makeText(ctx, "Emails retrieved successfully!", Toast.LENGTH_LONG).show();
+            //Toast.makeText(ctx, "Emails retrieved successfully!", Toast.LENGTH_LONG).show();
             
             if (this.mFlags.equals("UNREAD")) {
                 // Do query on MessageTable for COL_READ = 0 rows. These are unread messages that need to be notified to user!
