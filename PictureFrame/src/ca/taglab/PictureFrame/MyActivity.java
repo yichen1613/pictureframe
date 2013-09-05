@@ -68,7 +68,7 @@ public class MyActivity extends ListActivity {
             startActivityForResult(new Intent(this, LoginActivity.class), START_USER_MAIN_SCREEN);
         } else {
             Log.d(TAG, "User has logged in");
-            startActivity(new Intent(this, UserMainActivity.class));
+            //startActivity(new Intent(this, UserMainActivity.class));
         }        
     }
     
