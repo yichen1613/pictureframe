@@ -9,13 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textColor="@android:color/white"
-        android:textSize="30sp"
+        android:textSize="40sp"
         android:visibility="gone" />
 
     <ImageView
         android:id="@+id/photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="centerCrop"
         android:contentDescription="@string/photo"
         android:visibility="gone" />
 
@@ -30,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:scaleType="centerCrop"
                 android:contentDescription="@string/play_video"/>
 
         <ImageView

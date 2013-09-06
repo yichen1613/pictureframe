@@ -51,6 +51,13 @@ public class MessagesActivity extends Activity {
             }
         });
 
+        findViewById(R.id.gallery).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setVisibility(View.GONE);
+            }
+        });
+
         mMessages = (ViewGroup) findViewById(R.id.messages);
 
         new GetMessages().execute();
@@ -121,6 +128,15 @@ public class MessagesActivity extends Activity {
         if (type.equals("image")) {
             newView.findViewById(R.id.photo).setVisibility(View.VISIBLE);
             ((ImageView) newView.findViewById(R.id.photo)).setImageBitmap(getImage(new File(body), 1000));
+
+            newView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ImageView gallery = (ImageView) findViewById(R.id.gallery);
+                    gallery.setImageBitmap(getImage(new File(body), 1000));
+                    gallery.setVisibility(View.VISIBLE);
+                }
+            });
         }
 
         if (type.equals("video")) {

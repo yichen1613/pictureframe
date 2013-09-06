@@ -66,4 +66,16 @@
             android:layout_alignParentBottom="true"
             android:visibility="gone" />
 
+    <ImageView
+        android:id="@+id/gallery"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/photo"
+        android:background="@android:color/black"
+        android:visibility="gone" />
+
 </RelativeLayout>
